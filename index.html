@@ -555,7 +555,7 @@
     </div>
 
     <script>
-        // Firebase Configuratie met JUISTE database URL
+        // Firebase Configuratie
         const firebaseConfig = {
             apiKey: "AIzaSyDxzy6QHdh_XqDRpVe_fHKFQwUez-XamQw",
             authDomain: "mijn-startpagina.firebaseapp.com",
@@ -577,9 +577,11 @@
             if (snapshot.val() === true) {
                 statusElement.textContent = '✅ Online';
                 statusElement.style.background = '#4caf50';
+                console.log('Verbonden met Firebase');
             } else {
                 statusElement.textContent = '❌ Offline';
                 statusElement.style.background = '#ff6b6b';
+                console.log('Niet verbonden met Firebase');
             }
         });
 
@@ -595,7 +597,6 @@
             const today = new Date();
             const birthDate = new Date(birthdate);
             
-            // Vergelijk maand en dag (negeer jaar)
             return today.getMonth() === birthDate.getMonth() && 
                    today.getDate() === birthDate.getDate();
         }
@@ -604,13 +605,8 @@
             const surprise = document.getElementById('birthdaySurprise');
             const audio = document.getElementById('birthdaySong');
             
-            // Toon verrassing
             surprise.style.display = 'flex';
-            
-            // Speel verjaardagsliedje af
             audio.play().catch(e => console.log('Audio kon niet afgespeeld worden: ', e));
-            
-            // Voeg confetti toe
             createConfetti();
         }
 
@@ -634,7 +630,6 @@
                     confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
                     document.body.appendChild(confetti);
                     
-                    // Verwijder confetti na animatie
                     setTimeout(() => {
                         confetti.remove();
                     }, 5000);
@@ -647,15 +642,11 @@
             const createAccountBtn = document.getElementById('createAccountBtn');
             const timerElement = document.getElementById('createAccountTimer');
             
-            // Disable de knop
             createAccountBtn.disabled = true;
             createAccountBtn.textContent = 'Wacht ' + timerCount + ' seconden';
-            
-            // Toon timer
             timerElement.style.display = 'block';
             timerElement.textContent = 'Wacht ' + timerCount + ' seconden...';
             
-            // Start de timer
             accountCreationTimer = setInterval(() => {
                 timerCount--;
                 
@@ -663,14 +654,11 @@
                     createAccountBtn.textContent = 'Wacht ' + timerCount + ' seconden';
                     timerElement.textContent = 'Wacht ' + timerCount + ' seconden...';
                 } else {
-                    // Timer is afgelopen
                     clearInterval(accountCreationTimer);
                     createAccountBtn.disabled = false;
                     createAccountBtn.textContent = 'ACCOUNT AANMAKEN';
                     timerElement.style.display = 'none';
-                    timerCount = 10; // Reset voor volgende keer
-                    
-                    // Voer account aanmaak uit
+                    timerCount = 10;
                     createAccount();
                 }
             }, 1000);
@@ -711,7 +699,8 @@
 
         // Helper functies
         function getLocalData() {
-            return JSON.parse(localStorage.getItem('startpaginaSystem'));
+            const data = localStorage.getItem('startpaginaSystem');
+            return data ? JSON.parse(data) : null;
         }
 
         function saveLocalData(data) {
@@ -723,9 +712,9 @@
         async function syncToFirebase(data) {
             try {
                 await database.ref('startpaginaSystem').set(data);
-                console.log('Data naar Firebase gestuurd');
+                console.log('✅ Data opgeslagen in Firebase:', data);
             } catch (error) {
-                console.error('Fout bij sync naar Firebase:', error);
+                console.error('❌ Fout bij opslaan in Firebase:', error);
             }
         }
 
@@ -735,11 +724,11 @@
                 const firebaseData = snapshot.val();
                 if (firebaseData) {
                     saveLocalData(firebaseData);
-                    console.log('Data van Firebase gehaald');
+                    console.log('✅ Data geladen van Firebase');
                     return true;
                 }
             } catch (error) {
-                console.error('Fout bij sync van Firebase:', error);
+                console.error('❌ Fout bij laden van Firebase:', error);
             }
             return false;
         }
@@ -754,11 +743,9 @@
             const errorDiv = document.getElementById('createAccountError');
             const successDiv = document.getElementById('createAccountSuccess');
 
-            // Reset messages
             errorDiv.style.display = 'none';
             successDiv.style.display = 'none';
 
-            // Validatie
             if (!username || !password || !pincode || !birthdate) {
                 errorDiv.textContent = 'Vul alle velden in';
                 errorDiv.style.display = 'block';
@@ -773,31 +760,8 @@
                 return;
             }
 
-            if (password.length < 4) {
-                errorDiv.textContent = 'Wachtwoord moet minimaal 4 tekens zijn';
-                errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
-                return;
-            }
-
-            if (!/^\d{4}$/.test(pincode)) {
-                errorDiv.textContent = 'Pincode moet 4 cijfers zijn';
-                errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
-                return;
-            }
-
             const allData = initializeData();
 
-            // Check of account aanmaken enabled is
-            if (!allData.system.accountCreationEnabled) {
-                errorDiv.textContent = 'Account aanmaken is tijdelijk uitgeschakeld';
-                errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
-                return;
-            }
-
-            // Check of gebruiker al bestaat
             if (allData.users.find(u => u.username === username)) {
                 errorDiv.textContent = 'Gebruikersnaam bestaat al';
                 errorDiv.style.display = 'block';
@@ -823,6 +787,7 @@
                 lastLogin: null
             };
 
+            // Opslaan en syncen
             saveLocalData(allData);
             syncToFirebase(allData);
 
@@ -856,7 +821,6 @@
             if (user) {
                 currentUser = username;
                 
-                // Update last login
                 if (allData.userData[username]) {
                     allData.userData[username].lastLogin = new Date().toISOString();
                 }
@@ -864,12 +828,10 @@
                 saveLocalData(allData);
                 syncToFirebase(allData);
                 
-                // Scherm wisselen
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainScreen').style.display = 'block';
                 document.getElementById('userDisplay').textContent = username;
                 
-                // Check of het verjaardag is
                 if (checkBirthday(user.birthdate)) {
                     setTimeout(() => {
                         showBirthdaySurprise();
@@ -883,7 +845,7 @@
             }
         }
 
-        // Scherm navigatie
+        // Rest van de functies blijven hetzelfde...
         function showLoginScreen() {
             document.getElementById('createAccountScreen').style.display = 'none';
             document.getElementById('loginScreen').style.display = 'block';
@@ -902,7 +864,6 @@
             document.getElementById('loginScreen').style.display = 'block';
         }
 
-        // Modal functies
         function openAddCategoryModal() {
             document.getElementById('addCategoryModal').style.display = 'flex';
         }
@@ -911,7 +872,6 @@
             document.getElementById(modalId).style.display = 'none';
         }
 
-        // Categorie functies
         function saveCategory() {
             const name = document.getElementById('categoryName').value.trim();
             const icon = document.getElementById('categoryIcon').value.trim();
@@ -937,7 +897,6 @@
             loadUserData();
         }
 
-        // Default categories
         function getDefaultCategories() {
             return [
                 {
@@ -961,7 +920,6 @@
             ];
         }
 
-        // Load user data
         function loadUserData() {
             const allData = initializeData();
             const userData = allData.userData[currentUser];
@@ -1000,7 +958,6 @@
             });
         }
 
-        // Search functie
         document.getElementById('searchInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const query = this.value.trim();
@@ -1011,12 +968,10 @@
             }
         });
 
-        // Bij het laden van de pagina
         window.onload = function() {
             syncFromFirebase();
         };
 
-        // Placeholder functies voor de ontbrekende knoppen
         function editCategory(categoryId) {
             alert('Bewerk categorie: ' + categoryId);
         }
@@ -1028,7 +983,6 @@
         function deleteLink(categoryId, linkId) {
             if (confirm('Weet je zeker dat je deze link wilt verwijderen?')) {
                 alert('Verwijder link: ' + linkId + ' van categorie: ' + categoryId);
-                // Hier zou je de link daadwerkelijk verwijderen
                 loadUserData();
             }
         }
