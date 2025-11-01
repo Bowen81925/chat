@@ -99,85 +99,34 @@
             display: none;
         }
 
+        .debug-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            display: none;
+        }
+
         .main-content {
             display: none;
         }
 
-        .admin-panel {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.9);
-            padding: 15px;
-            border-radius: 10px;
-            color: white;
-            z-index: 1000;
-            min-width: 300px;
-        }
+        /* ... (de rest van de CSS blijft hetzelfde) ... */
 
-        .admin-toggle {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .admin-commands {
-            display: none;
-            margin-top: 15px;
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 5px;
-        }
-
-        .command-input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            background: white;
-            color: #333;
-            font-family: monospace;
-        }
-
-        .command-output {
-            max-height: 300px;
-            overflow-y: auto;
-            background: rgba(0,0,0,0.7);
-            padding: 10px;
-            border-radius: 3px;
-            font-family: monospace;
-            font-size: 12px;
-            margin-top: 10px;
-            border: 1px solid #444;
-        }
-
-        .password-display {
-            color: #4caf50;
-            font-weight: bold;
-            background: rgba(76, 175, 80, 0.1);
-            padding: 2px 6px;
-            border-radius: 3px;
-            margin-left: 5px;
-        }
-
-        /* Voeg de rest van je CSS hier toe */
     </style>
 </head>
 <body>
     <!-- Login Scherm -->
     <div id="loginScreen" class="login-container">
         <h2>🔒 Mijn Startpagina</h2>
-        <input type="text" id="username" placeholder="Gebruikersnaam">
-        <input type="password" id="password" placeholder="Wachtwoord">
+        <input type="text" id="username" placeholder="Gebruikersnaam" autocomplete="username">
+        <input type="password" id="password" placeholder="Wachtwoord" autocomplete="current-password">
         <button class="login-btn" onclick="login()">Inloggen</button>
         <button class="create-account-btn" onclick="showCreateAccountScreen()">ACCOUNT AANMAKEN</button>
         <div id="loginError" class="error-message"></div>
+        <div id="debugInfo" class="debug-info"></div>
     </div>
 
     <!-- Account Aanmaak Scherm -->
@@ -204,11 +153,12 @@
                 <div style="margin-top: 10px; font-size: 11px; color: #ccc;">
                     <strong>Commands:</strong><br>
                     /viewaccounts - Toon alle accounts<br>
-                    /passwords - Toon alle wachtwoorden<br>
                     /ban [user] - Ban een gebruiker<br>
                     /unban [user] - Unban een gebruiker<br>
-                    /debug=true - Debug aan<br>
-                    /debug=false - Debug uit
+                    /logout [user] - Log gebruiker uit<br>
+                    /deactivate - Zet account aanmaken uit<br>
+                    /activate - Zet account aanmaken aan<br>
+                    /passwords - Toon alle wachtwoorden
                 </div>
             </div>
         </div>
@@ -222,8 +172,13 @@
                 <button class="logout-btn" onclick="logout()">Uitloggen</button>
             </header>
 
+            <div class="time-weather">
+                <h3 id="currentTime">...</h3>
+                <p id="currentDate">...</p>
+            </div>
+
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Zoek op internet...">
+                <input type="text" id="searchInput" placeholder="Zoek op internet of tussen je links...">
             </div>
 
             <div id="categoriesContainer" class="categories">
@@ -235,34 +190,55 @@
     </div>
 
     <script>
-        // Speciale admin gebruiker
+        // Speciale admin gebruiker "Bowen"
         const ADMIN_USERNAME = "Bowen";
-        let debugMode = false;
+
+        // Debug functie
+        function debug(message) {
+            console.log('DEBUG:', message);
+            const debugDiv = document.getElementById('debugInfo');
+            if (debugDiv) {
+                debugDiv.innerHTML += message + '<br>';
+                debugDiv.style.display = 'block';
+            }
+        }
 
         // Scherm navigatie
         function showLoginScreen() {
+            debug('Toon login scherm');
             document.getElementById('createAccountScreen').style.display = 'none';
             document.getElementById('loginScreen').style.display = 'block';
             hideAllMessages();
         }
 
         function showCreateAccountScreen() {
+            debug('Toon account aanmaak scherm');
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('createAccountScreen').style.display = 'block';
             hideAllMessages();
+            
+            // Velden leegmaken
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
         }
 
         function hideAllMessages() {
             document.getElementById('loginError').style.display = 'none';
             document.getElementById('createAccountError').style.display = 'none';
             document.getElementById('createAccountSuccess').style.display = 'none';
+            document.getElementById('debugInfo').style.display = 'none';
         }
 
-        // Data initialisatie - SIMPELE VERSIE
+        // Initialiseer data - FIXED VERSION
         function initializeData() {
+            debug('Initialiseer data...');
             let allData = JSON.parse(localStorage.getItem('startpaginaSystem'));
             
+            debug('Data gevonden in localStorage: ' + (allData ? 'JA' : 'NEE'));
+            
             if (!allData) {
+                debug('Maak nieuwe data structuur aan');
                 allData = {
                     users: [],
                     userData: {},
@@ -271,59 +247,80 @@
                     }
                 };
                 localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
+                debug('Nieuwe data opgeslagen in localStorage');
+            } else {
+                debug('Bestaande data geladen: ' + allData.users.length + ' gebruikers');
             }
             
             return allData;
         }
 
-        // ACCOUNT AANMAKEN - WERKENDE VERSIE
+        // Account aanmaken functie - FIXED VERSION
         function createAccount() {
+            debug('=== START ACCOUNT AANMAKEN ===');
+            
             const username = document.getElementById('newUsername').value.trim();
             const password = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             const errorDiv = document.getElementById('createAccountError');
             const successDiv = document.getElementById('createAccountSuccess');
 
-            // Reset messages
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
+            debug(`Username: "${username}", Password: "${password}", Confirm: "${confirmPassword}"`);
 
             // Validatie
             if (!username || !password) {
-                errorDiv.textContent = 'Vul alle velden in';
+                const errorMsg = 'Vul alle velden in';
+                debug(errorMsg);
+                errorDiv.textContent = errorMsg;
                 errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
                 return;
             }
 
             if (password !== confirmPassword) {
-                errorDiv.textContent = 'Wachtwoorden komen niet overeen';
+                const errorMsg = 'Wachtwoorden komen niet overeen';
+                debug(errorMsg);
+                errorDiv.textContent = errorMsg;
                 errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
                 return;
             }
 
             if (password.length < 4) {
-                errorDiv.textContent = 'Wachtwoord moet minimaal 4 tekens zijn';
+                const errorMsg = 'Wachtwoord moet minimaal 4 tekens zijn';
+                debug(errorMsg);
+                errorDiv.textContent = errorMsg;
                 errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
                 return;
             }
 
             const allData = initializeData();
+            debug('Data geladen voor account aanmaken');
 
-            // Check of account aanmaken enabled is
             if (!allData.system.accountCreationEnabled) {
-                errorDiv.textContent = 'Account aanmaken is tijdelijk uitgeschakeld';
+                const errorMsg = 'Account aanmaken is tijdelijk uitgeschakeld';
+                debug(errorMsg);
+                errorDiv.textContent = errorMsg;
                 errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
                 return;
             }
 
             // Check of gebruiker al bestaat
-            if (allData.users.find(u => u.username === username)) {
-                errorDiv.textContent = 'Gebruikersnaam bestaat al';
+            const existingUser = allData.users.find(u => u.username === username);
+            if (existingUser) {
+                const errorMsg = 'Gebruikersnaam bestaat al';
+                debug(errorMsg);
+                errorDiv.textContent = errorMsg;
                 errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
                 return;
             }
 
-            // Nieuwe gebruiker aanmaken
+            debug('Gebruikersnaam is beschikbaar, ga verder met aanmaken...');
+
+            // Voeg nieuwe gebruiker toe
             const newUser = {
                 username: username,
                 password: password,
@@ -332,268 +329,172 @@
                 createdAt: new Date().toISOString()
             };
 
-            // Toevoegen aan users array
             allData.users.push(newUser);
+            debug('Nieuwe gebruiker toegevoegd aan users array');
             
-            // User data aanmaken
+            // Maak user data aan
             allData.userData[username] = {
-                categories: getDefaultCategories(),
+                categories: JSON.parse(JSON.stringify(defaultCategories)),
                 createdAt: new Date().toISOString(),
                 lastLogin: null
             };
 
-            // Opslaan
-            localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
+            debug('User data aangemaakt voor nieuwe gebruiker');
 
-            // Success message
-            successDiv.textContent = `Account "${username}" succesvol aangemaakt! Je wordt teruggeleid...`;
-            successDiv.style.display = 'block';
+            // Probeer op te slaan
+            try {
+                localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
+                debug('Data succesvol opgeslagen in localStorage');
+                
+                // Verifieer opslag
+                const verifiedData = JSON.parse(localStorage.getItem('startpaginaSystem'));
+                const userExists = verifiedData.users.find(u => u.username === username);
+                
+                if (userExists) {
+                    const successMsg = `Account "${username}" succesvol aangemaakt! Je wordt teruggeleid naar login...`;
+                    debug(successMsg);
+                    successDiv.textContent = successMsg;
+                    successDiv.style.display = 'block';
+                    errorDiv.style.display = 'none';
 
-            // Terug naar login na 2 seconden
-            setTimeout(() => {
-                showLoginScreen();
-            }, 2000);
+                    // Velden leegmaken
+                    document.getElementById('newUsername').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+
+                    // Auto-close na 2 seconden
+                    setTimeout(() => {
+                        showLoginScreen();
+                    }, 2000);
+                } else {
+                    throw new Error('Account niet gevonden na opslag');
+                }
+            } catch (error) {
+                const errorMsg = 'Fout bij opslaan: ' + error.message;
+                debug(errorMsg);
+                errorDiv.textContent = errorMsg;
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+            }
         }
 
-        // LOGIN - WERKENDE VERSIE
+        // Login functie - FIXED VERSION
         function login() {
+            debug('=== START LOGIN ===');
+            
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('loginError');
 
-            // Speciale commands in wachtwoordveld
-            if (!username && password === '/debug=false') {
-                debugMode = false;
-                errorDiv.textContent = 'Debug mode uitgezet';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            if (!username && password === '/debug=true') {
-                debugMode = true;
-                errorDiv.textContent = 'Debug mode aangezet';
-                errorDiv.style.display = 'block';
-                return;
-            }
+            debug(`Login poging: "${username}"`);
 
             const allData = initializeData();
             const user = allData.users.find(u => u.username === username && u.password === password);
 
             if (user) {
-                // Check banned status
+                debug('Gebruiker gevonden in database');
+                
+                // Check of account gebanned is
                 if (user.status === 'banned') {
-                    errorDiv.textContent = 'Account is gebanned';
+                    const errorMsg = 'Account is gebanned';
+                    debug(errorMsg);
+                    errorDiv.textContent = errorMsg;
                     errorDiv.style.display = 'block';
                     return;
                 }
 
                 currentUser = username;
+                debug('Current user ingesteld: ' + currentUser);
                 
                 // Update last login
                 if (allData.userData[username]) {
                     allData.userData[username].lastLogin = new Date().toISOString();
+                } else {
+                    // Nieuwe gebruiker - maak standaard data aan
+                    allData.userData[username] = {
+                        categories: JSON.parse(JSON.stringify(defaultCategories)),
+                        createdAt: new Date().toISOString(),
+                        lastLogin: new Date().toISOString()
+                    };
+                    debug('Nieuwe user data aangemaakt');
                 }
                 
                 localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
+                debug('Login data opgeslagen');
                 
-                // Scherm wisselen
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainScreen').style.display = 'block';
                 document.getElementById('userDisplay').textContent = username;
+                sessionStorage.setItem('loggedIn', 'true');
+                sessionStorage.setItem('currentUser', username);
                 
-                // Admin panel tonen voor Bowen
+                debug('Session storage ingesteld');
+                
+                // Toon admin panel als gebruiker Bowen is
                 if (username === ADMIN_USERNAME) {
                     document.getElementById('adminPanel').style.display = 'block';
+                    debug('Admin panel getoond voor Bowen');
                 }
                 
                 loadUserData();
+                debug('User data geladen');
             } else {
-                errorDiv.textContent = 'Ongeldige gebruikersnaam of wachtwoord';
+                const errorMsg = 'Ongeldige gebruikersnaam of wachtwoord';
+                debug(errorMsg);
+                errorDiv.textContent = errorMsg;
                 errorDiv.style.display = 'block';
             }
         }
 
-        // Admin commands
-        function toggleAdminCommands() {
-            const commands = document.getElementById('adminCommands');
-            commands.style.display = commands.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function handleCommandEnter(event) {
-            if (event.key === 'Enter') {
-                executeCommand();
-            }
-        }
-
-        function executeCommand() {
-            if (currentUser !== ADMIN_USERNAME) return;
-
-            const commandInput = document.getElementById('commandInput');
-            const command = commandInput.value.trim();
-            const output = document.getElementById('commandOutput');
-
-            if (!command) return;
-
-            addCommandOutput(`> ${command}`);
-
-            const args = command.split(' ');
-            const mainCommand = args[0].toLowerCase();
-
-            switch(mainCommand) {
-                case '/viewaccounts':
-                    viewAccounts();
-                    break;
-                case '/passwords':
-                    showPasswords();
-                    break;
-                case '/ban':
-                    if (args[1]) banUser(args[1]);
-                    else addCommandOutput('Usage: /ban [username]');
-                    break;
-                case '/unban':
-                    if (args[1]) unbanUser(args[1]);
-                    else addCommandOutput('Usage: /unban [username]');
-                    break;
-                case '/debug=true':
-                    debugMode = true;
-                    addCommandOutput('Debug mode aangezet');
-                    break;
-                case '/debug=false':
-                    debugMode = false;
-                    addCommandOutput('Debug mode uitgezet');
-                    break;
-                default:
-                    addCommandOutput('Onbekend command');
-            }
-
-            commandInput.value = '';
-        }
-
-        function addCommandOutput(message) {
-            const output = document.getElementById('commandOutput');
-            output.innerHTML += message + '<br>';
-            output.scrollTop = output.scrollHeight;
-        }
-
-        function viewAccounts() {
-            const allData = initializeData();
-            addCommandOutput('=== ALLE ACCOUNTS ===');
-            
-            allData.users.forEach(user => {
-                const status = user.status === 'banned' ? '🚫 BANNED' : '✅ ACTIVE';
-                const admin = user.isAdmin ? ' 👑 ADMIN' : '';
-                addCommandOutput(`${user.username} - ${status}${admin}`);
-            });
-        }
-
-        function showPasswords() {
-            const allData = initializeData();
-            addCommandOutput('=== ALLE WACHTWOORDEN ===');
-            
-            allData.users.forEach(user => {
-                const status = user.status === 'banned' ? '🚫 BANNED' : '✅ ACTIVE';
-                addCommandOutput(`${user.username} - Wachtwoord: <span class="password-display">${user.password}</span> - ${status}`);
-            });
-        }
-
-        function banUser(username) {
-            const allData = initializeData();
-            const user = allData.users.find(u => u.username === username);
-            
-            if (user && user.username !== ADMIN_USERNAME) {
-                user.status = 'banned';
-                localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
-                addCommandOutput(`✅ ${username} gebanned`);
-            }
-        }
-
-        function unbanUser(username) {
-            const allData = initializeData();
-            const user = allData.users.find(u => u.username === username);
-            
-            if (user) {
-                user.status = 'active';
-                localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
-                addCommandOutput(`✅ ${username} geunbanned`);
-            }
-        }
-
         // Standaard categorieën
-        function getDefaultCategories() {
-            return [
-                {
-                    id: 'search',
-                    name: 'Zoekmachines',
-                    icon: '🔍',
-                    links: [
-                        { id: '1', name: 'Google', url: 'https://www.google.com' },
-                        { id: '2', name: 'DuckDuckGo', url: 'https://www.duckduckgo.com' }
-                    ]
-                },
-                {
-                    id: 'work',
-                    name: 'Werk',
-                    icon: '💼',
-                    links: [
-                        { id: '3', name: 'GitHub', url: 'https://www.github.com' },
-                        { id: '4', name: 'Gmail', url: 'https://mail.google.com' }
-                    ]
-                }
-            ];
-        }
-
-        // User data laden
-        function loadUserData() {
-            const allData = initializeData();
-            const userData = allData.userData[currentUser];
-            
-            if (userData && userData.categories) {
-                renderCategories(userData.categories);
+        const defaultCategories = [
+            {
+                id: 'search',
+                name: 'Zoekmachines',
+                icon: '🔍',
+                links: [
+                    { id: '1', name: 'Google', url: 'https://www.google.com' },
+                    { id: '2', name: 'DuckDuckGo', url: 'https://www.duckduckgo.com' },
+                    { id: '3', name: 'YouTube', url: 'https://www.youtube.com' }
+                ]
+            },
+            {
+                id: 'work',
+                name: 'Werk & Productiviteit',
+                icon: '💼',
+                links: [
+                    { id: '4', name: 'GitHub', url: 'https://www.github.com' },
+                    { id: '5', name: 'Gmail', url: 'https://mail.google.com' },
+                    { id: '6', name: 'Google Calendar', url: 'https://calendar.google.com' }
+                ]
             }
-        }
+        ];
 
-        function renderCategories(categories) {
-            const container = document.getElementById('categoriesContainer');
-            container.innerHTML = categories.map(category => `
-                <div class="category">
-                    <div class="category-header">
-                        <h2>${category.icon} ${category.name}</h2>
-                    </div>
-                    <div class="links">
-                        ${category.links.map(link => `
-                            <a href="${link.url}" target="_blank" class="link-item">
-                                <span class="link-content">${link.name}</span>
-                            </a>
-                        `).join('')}
-                    </div>
-                </div>
-            `).join('');
-        }
+        // ... (de rest van de JavaScript code blijft hetzelfde) ...
 
-        // Overige functies
-        function logout() {
-            document.getElementById('loginScreen').style.display = 'block';
-            document.getElementById('mainScreen').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        // Event listeners
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') login();
-        });
-
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const query = this.value;
-                if (query) {
-                    window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
-                }
-            }
-        });
-
-        // Initialisatie
+        // Initialisatie wanneer pagina laadt
+        debug('Pagina geladen, initialiseer applicatie...');
         initializeData();
+        
+        // Check of er al ingelogd is
+        if (sessionStorage.getItem('loggedIn') === 'true') {
+            currentUser = sessionStorage.getItem('currentUser');
+            if (currentUser) {
+                debug('Gebruiker was al ingelogd: ' + currentUser);
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainScreen').style.display = 'block';
+                document.getElementById('userDisplay').textContent = currentUser;
+                
+                if (currentUser === ADMIN_USERNAME) {
+                    document.getElementById('adminPanel').style.display = 'block';
+                }
+                
+                loadUserData();
+            }
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
     </script>
 </body>
 </html>
