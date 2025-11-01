@@ -195,6 +195,7 @@
             color: #333;
             transition: all 0.3s ease;
             border-left: 4px solid #667eea;
+            text-align: left;
         }
 
         .link-item:hover {
@@ -255,7 +256,7 @@
         }
 
         .admin-commands {
-            display: none;
+            display: block;
         }
 
         .command-section {
@@ -280,8 +281,9 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-align: left;
+            text-align: center;
             transition: background 0.3s ease;
+            font-size: 14px;
         }
 
         .command-btn:hover {
@@ -893,15 +895,6 @@
         initializeData();
         updateTime();
         setInterval(updateTime, 1000);
-
-        // Auto-login check
-        if (sessionStorage.getItem('loggedIn') === 'true') {
-            const savedUser = sessionStorage.getItem('currentUser');
-            if (savedUser) {
-                document.getElementById('username').value = savedUser;
-                // login() wordt niet automatisch aangeroepen - gebruiker moet zelf op inloggen klikken
-            }
-        }
     </script>
 </body>
 </html>
