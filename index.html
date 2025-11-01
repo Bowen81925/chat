@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Mijn Startpagina</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -273,242 +278,25 @@
             background: #8e24aa;
         }
 
-        .modal {
-            display: none;
+        .firebase-status {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal h3 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .modal input, .modal select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .modal-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .modal-btn.primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .modal-btn.secondary {
-            background: #ccc;
-            color: #333;
-        }
-
-        .admin-panel {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.95);
-            padding: 20px;
-            border-radius: 15px;
-            color: white;
-            z-index: 1000;
-            min-width: 350px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 2px solid #ff6b6b;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #444;
-        }
-
-        .admin-toggle {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .admin-commands {
-            display: block;
-        }
-
-        .command-section {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-        }
-
-        .command-section h4 {
-            margin-bottom: 10px;
-            color: #ff6b6b;
-        }
-
-        .command-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
+            top: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 1001;
             background: #4caf50;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            transition: background 0.3s ease;
-            font-size: 14px;
-        }
-
-        .command-btn:hover {
-            background: #45a049;
-        }
-
-        .command-btn.danger {
-            background: #ff6b6b;
-        }
-
-        .command-btn.danger:hover {
-            background: #ff5252;
-        }
-
-        .command-btn.warning {
-            background: #ffa726;
-        }
-
-        .command-btn.warning:hover {
-            background: #ff9800;
-        }
-
-        .accounts-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin: 10px 0;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 5px;
-        }
-
-        .account-item {
-            padding: 8px;
-            border-bottom: 1px solid #444;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .account-item:last-child {
-            border-bottom: none;
-        }
-
-        .account-actions {
-            display: flex;
-            gap: 5px;
-        }
-
-        .account-btn {
-            padding: 3px 8px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 10px;
-        }
-
-        .account-btn.ban {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .account-btn.unban {
-            background: #4caf50;
-            color: white;
-        }
-
-        .account-btn.delete {
-            background: #f44336;
-            color: white;
-        }
-
-        .command-output {
-            max-height: 150px;
-            overflow-y: auto;
-            background: rgba(0,0,0,0.7);
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 12px;
-            margin-top: 10px;
-            border: 1px solid #444;
-        }
-
-        .password-display {
-            color: #4caf50;
-            font-weight: bold;
-            background: rgba(76, 175, 80, 0.1);
-            padding: 2px 6px;
-            border-radius: 3px;
-        }
-
-        .system-status {
-            font-size: 12px;
-            color: #ccc;
-            margin-top: 10px;
-            padding: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 5px;
-        }
-
-        .time-weather {
-            background: rgba(255,255,255,0.9);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
     </style>
 </head>
 <body>
+    <!-- Firebase Status -->
+    <div id="firebaseStatus" class="firebase-status">
+        🔄 Verbinden met database...
+    </div>
+
     <!-- Login Scherm -->
     <div id="loginScreen" class="login-container">
         <h2>🔒 Mijn Startpagina</h2>
@@ -525,6 +313,7 @@
         <input type="text" id="newUsername" placeholder="Kies een gebruikersnaam">
         <input type="password" id="newPassword" placeholder="Kies een wachtwoord">
         <input type="password" id="confirmPassword" placeholder="Bevestig wachtwoord">
+        <input type="text" id="newPincode" placeholder="Kies een pincode (4 cijfers)" maxlength="4">
         <button class="create-account-btn" onclick="createAccount()">Account Aanmaken</button>
         <button class="back-to-login-btn" onclick="showLoginScreen()">← Terug naar Inloggen</button>
         <div id="createAccountError" class="error-message"></div>
@@ -533,49 +322,6 @@
 
     <!-- Hoofd Content -->
     <div id="mainScreen" class="main-content">
-        <!-- Admin Panel - ALLEEN VOOR BOWEN -->
-        <div id="adminPanel" class="admin-panel" style="display: none;">
-            <div class="admin-header">
-                <h3>👑 Admin Panel</h3>
-                <button class="admin-toggle" onclick="toggleAdminCommands()">📋</button>
-            </div>
-            <div id="adminCommands" class="admin-commands">
-                <!-- Account Beheer -->
-                <div class="command-section">
-                    <h4>📊 Account Beheer</h4>
-                    <button class="command-btn" onclick="viewAccounts()">Toon Alle Accounts</button>
-                    <button class="command-btn" onclick="showPasswords()">Toon Wachtwoorden</button>
-                    
-                    <div class="accounts-list" id="accountsList">
-                        <!-- Accounts worden hier geladen -->
-                    </div>
-                </div>
-
-                <!-- Account Acties -->
-                <div class="command-section">
-                    <h4>⚡ Snelle Acties</h4>
-                    <button class="command-btn warning" onclick="deactivateAccountCreation()">Account Aanmaken Uitzetten</button>
-                    <button class="command-btn" onclick="activateAccountCreation()">Account Aanmaken Aanzetten</button>
-                    <button class="command-btn danger" onclick="resetAllData()">Alle Data Resetten</button>
-                </div>
-
-                <!-- Systeem Info -->
-                <div class="command-section">
-                    <h4>ℹ️ Systeem Info</h4>
-                    <div class="system-status">
-                        <div>Totaal Accounts: <span id="totalAccounts">0</span></div>
-                        <div>Account Aanmaken: <span id="accountCreationStatus">AAN</span></div>
-                        <div>Ingelogd als: <span id="adminUser">Bowen</span></div>
-                    </div>
-                </div>
-
-                <!-- Command Output -->
-                <div class="command-output" id="commandOutput">
-                    Admin panel geladen. Kies een actie.
-                </div>
-            </div>
-        </div>
-
         <div class="container">
             <header>
                 <div>
@@ -584,11 +330,6 @@
                 </div>
                 <button class="logout-btn" onclick="logout()">Uitloggen</button>
             </header>
-
-            <div class="time-weather">
-                <h3 id="currentTime">...</h3>
-                <p id="currentDate">...</p>
-            </div>
 
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Zoek op internet...">
@@ -602,115 +343,126 @@
         </div>
     </div>
 
-    <!-- Modals voor links en categorieën -->
-    <div id="addLinkModal" class="modal">
-        <div class="modal-content">
-            <h3>Nieuwe Link Toevoegen</h3>
-            <input type="text" id="linkName" placeholder="Naam van de website">
-            <input type="url" id="linkUrl" placeholder="https://voorbeeld.nl">
-            <select id="linkCategory"></select>
-            <div class="modal-buttons">
-                <button class="modal-btn primary" onclick="saveLink()">Opslaan</button>
-                <button class="modal-btn secondary" onclick="closeModal('addLinkModal')">Annuleren</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="editLinkModal" class="modal">
-        <div class="modal-content">
-            <h3>Link Bewerken</h3>
-            <input type="text" id="editLinkName" placeholder="Naam van de website">
-            <input type="url" id="editLinkUrl" placeholder="https://voorbeeld.nl">
-            <select id="editLinkCategory"></select>
-            <div class="modal-buttons">
-                <button class="modal-btn primary" onclick="updateLink()">Bijwerken</button>
-                <button class="modal-btn secondary" onclick="closeModal('editLinkModal')">Annuleren</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="addCategoryModal" class="modal">
-        <div class="modal-content">
-            <h3>Nieuwe Categorie Toevoegen</h3>
-            <input type="text" id="categoryName" placeholder="Naam van categorie">
-            <input type="text" id="categoryIcon" placeholder="Emoji (bijv. 🔍)">
-            <div class="modal-buttons">
-                <button class="modal-btn primary" onclick="saveCategory()">Opslaan</button>
-                <button class="modal-btn secondary" onclick="closeModal('addCategoryModal')">Annuleren</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="editCategoryModal" class="modal">
-        <div class="modal-content">
-            <h3>Categorie Bewerken</h3>
-            <input type="text" id="editCategoryName" placeholder="Naam van categorie">
-            <input type="text" id="editCategoryIcon" placeholder="Emoji (bijv. 🔍)">
-            <div class="modal-buttons">
-                <button class="modal-btn primary" onclick="updateCategory()">Bijwerken</button>
-                <button class="modal-btn secondary" onclick="closeModal('editCategoryModal')">Annuleren</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Speciale admin gebruiker - ALLEEN BOWEN HEEFT ADMIN RECHTEN
+        // Firebase Configuratie
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxzy6QHdh_XqDRpVe_fHKFQwUez-XamQw",
+            authDomain: "mijn-startpagina.firebaseapp.com",
+            databaseURL: "https://mijn-startpagina-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mijn-startpagina",
+            storageBucket: "mijn-startpagina.firebasestorage.app",
+            messagingSenderId: "44245658637",
+            appId: "1:44245658637:web:b1c544978d52e4f5b57944",
+            measurementId: "G-0WDW1WMZ0X"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Firebase status bijwerken
+        database.ref('.info/connected').on('value', (snapshot) => {
+            const statusElement = document.getElementById('firebaseStatus');
+            if (snapshot.val() === true) {
+                statusElement.textContent = '✅ Online';
+                statusElement.style.background = '#4caf50';
+            } else {
+                statusElement.textContent = '❌ Offline';
+                statusElement.style.background = '#ff6b6b';
+            }
+        });
+
+        // Rest van je code blijft hetzelfde...
         const ADMIN_USERNAME = "Bowen";
         let currentUser = null;
-        let currentEditLinkId = null;
-        let currentEditCategoryId = null;
-
-        // Scherm navigatie
-        function showLoginScreen() {
-            document.getElementById('createAccountScreen').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'block';
-            hideAllMessages();
-        }
-
-        function showCreateAccountScreen() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('createAccountScreen').style.display = 'block';
-            hideAllMessages();
-        }
-
-        function hideAllMessages() {
-            document.getElementById('loginError').style.display = 'none';
-            document.getElementById('createAccountError').style.display = 'none';
-            document.getElementById('createAccountSuccess').style.display = 'none';
-        }
 
         // Data initialisatie
         function initializeData() {
-            let allData = JSON.parse(localStorage.getItem('startpaginaSystem'));
+            let allData = getLocalData();
             
             if (!allData) {
                 allData = {
                     users: [],
                     userData: {},
+                    passwords: {},
                     system: {
-                        accountCreationEnabled: true
+                        accountCreationEnabled: true,
+                        lastSync: new Date().toISOString()
                     }
                 };
-                localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
+                saveLocalData(allData);
+                syncToFirebase(allData);
             }
             
             return allData;
         }
 
-        // Account aanmaken - WERKENDE VERSIE
+        // Helper functies
+        function getLocalData() {
+            return JSON.parse(localStorage.getItem('startpaginaSystem'));
+        }
+
+        function saveLocalData(data) {
+            data.system.lastSync = new Date().toISOString();
+            localStorage.setItem('startpaginaSystem', JSON.stringify(data));
+        }
+
+        // Firebase sync functies
+        async function syncToFirebase(data) {
+            try {
+                await database.ref('startpaginaSystem').set(data);
+                console.log('Data naar Firebase gestuurd');
+            } catch (error) {
+                console.error('Fout bij sync naar Firebase:', error);
+            }
+        }
+
+        async function syncFromFirebase() {
+            try {
+                const snapshot = await database.ref('startpaginaSystem').once('value');
+                const firebaseData = snapshot.val();
+                if (firebaseData) {
+                    saveLocalData(firebaseData);
+                    console.log('Data van Firebase gehaald');
+                    return true;
+                }
+            } catch (error) {
+                console.error('Fout bij sync van Firebase:', error);
+            }
+            return false;
+        }
+
+        // Login functie
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            const allData = initializeData();
+            const user = allData.users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                currentUser = username;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainScreen').style.display = 'block';
+                document.getElementById('userDisplay').textContent = username;
+                loadUserData();
+            } else {
+                errorDiv.textContent = 'Ongeldige gebruikersnaam of wachtwoord';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Account aanmaken functie
         function createAccount() {
             const username = document.getElementById('newUsername').value.trim();
             const password = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
+            const pincode = document.getElementById('newPincode').value;
             const errorDiv = document.getElementById('createAccountError');
             const successDiv = document.getElementById('createAccountSuccess');
 
-            // Reset messages
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
-
-            // Validatie
-            if (!username || !password) {
+            if (!username || !password || !pincode) {
                 errorDiv.textContent = 'Vul alle velden in';
                 errorDiv.style.display = 'block';
                 return;
@@ -722,529 +474,120 @@
                 return;
             }
 
-            if (password.length < 4) {
-                errorDiv.textContent = 'Wachtwoord moet minimaal 4 tekens zijn';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
             const allData = initializeData();
 
-            // Check of account aanmaken enabled is
-            if (!allData.system.accountCreationEnabled) {
-                errorDiv.textContent = 'Account aanmaken is tijdelijk uitgeschakeld';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            // Check of gebruiker al bestaat
             if (allData.users.find(u => u.username === username)) {
                 errorDiv.textContent = 'Gebruikersnaam bestaat al';
                 errorDiv.style.display = 'block';
                 return;
             }
 
-            // Nieuwe gebruiker aanmaken
             const newUser = {
                 username: username,
                 password: password,
-                isAdmin: username === ADMIN_USERNAME, // ALLEEN BOWEN WORDT ADMIN
+                pincode: pincode,
+                isAdmin: username === ADMIN_USERNAME,
                 status: 'active',
                 createdAt: new Date().toISOString()
             };
 
-            // Toevoegen aan users array
             allData.users.push(newUser);
-            
-            // User data aanmaken
             allData.userData[username] = {
                 categories: getDefaultCategories(),
-                createdAt: new Date().toISOString(),
-                lastLogin: null
+                createdAt: new Date().toISOString()
             };
 
-            // Opslaan
-            localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
+            allData.passwords[username] = [];
 
-            // Success message
-            successDiv.textContent = `Account "${username}" succesvol aangemaakt! Je wordt teruggeleid...`;
+            saveLocalData(allData);
+            syncToFirebase(allData);
+
+            successDiv.textContent = 'Account aangemaakt!';
             successDiv.style.display = 'block';
 
-            // Terug naar login na 2 seconden
             setTimeout(() => {
                 showLoginScreen();
             }, 2000);
         }
 
-        // Login functie - ALLEEN BOWEN KRIJGT ADMIN PANEL
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
-
-            const allData = initializeData();
-            const user = allData.users.find(u => u.username === username && u.password === password);
-
-            if (user) {
-                // Check banned status
-                if (user.status === 'banned') {
-                    errorDiv.textContent = 'Account is gebanned';
-                    errorDiv.style.display = 'block';
-                    return;
-                }
-
-                currentUser = username;
-                
-                // Update last login
-                if (allData.userData[username]) {
-                    allData.userData[username].lastLogin = new Date().toISOString();
-                }
-                
-                localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
-                
-                // Scherm wisselen
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainScreen').style.display = 'block';
-                document.getElementById('userDisplay').textContent = username;
-                
-                // ALLEEN BOWEN KRIJGT ADMIN PANEL
-                if (username === ADMIN_USERNAME) {
-                    document.getElementById('adminPanel').style.display = 'block';
-                    updateAdminPanel();
-                }
-                
-                loadUserData();
-            } else {
-                errorDiv.textContent = 'Ongeldige gebruikersnaam of wachtwoord';
-                errorDiv.style.display = 'block';
-            }
+        // Scherm navigatie
+        function showLoginScreen() {
+            document.getElementById('createAccountScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'block';
         }
 
-        // User data laden
-        function loadUserData() {
-            const allData = initializeData();
-            const userData = allData.userData[currentUser];
-            
-            if (userData && userData.categories) {
-                renderCategories(userData.categories);
-            }
+        function showCreateAccountScreen() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('createAccountScreen').style.display = 'block';
         }
 
-        // Categorieën renderen MET BEWERK KNOppen
-        function renderCategories(categories) {
-            const container = document.getElementById('categoriesContainer');
-            container.innerHTML = '';
-
-            categories.forEach(category => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'category';
-                categoryDiv.innerHTML = `
-                    <div class="category-header">
-                        <h2>${category.icon} ${category.name}</h2>
-                        <button class="edit-category-btn" onclick="openEditCategoryModal('${category.id}')">Bewerken</button>
-                    </div>
-                    <div class="links" id="links-${category.id}">
-                        ${category.links.map(link => `
-                            <div class="link-item">
-                                <a href="${link.url}" target="_blank" class="link-content">${link.name}</a>
-                                <div class="link-actions">
-                                    <button class="edit-link-btn" onclick="openEditLinkModal('${link.id}')">✏️</button>
-                                    <button class="delete-link-btn" onclick="deleteLink('${category.id}', '${link.id}')">🗑️</button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <button class="add-link-btn" onclick="openAddLinkModal('${category.id}')">+ Link toevoegen</button>
-                `;
-                container.appendChild(categoryDiv);
-            });
+        function logout() {
+            currentUser = null;
+            document.getElementById('mainScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'block';
         }
 
-        // Modal functies voor links
-        function openAddLinkModal(categoryId = null) {
-            const allData = initializeData();
-            const userData = allData.userData[currentUser];
-            const categorySelect = document.getElementById('linkCategory');
-            categorySelect.innerHTML = userData.categories.map(cat => 
-                `<option value="${cat.id}" ${cat.id === categoryId ? 'selected' : ''}>${cat.icon} ${cat.name}</option>`
-            ).join('');
-            
-            document.getElementById('addLinkModal').style.display = 'flex';
-        }
-
-        function openEditLinkModal(linkId) {
-            const allData = initializeData();
-            const userData = allData.userData[currentUser];
-            const link = findLinkById(userData.categories, linkId);
-            
-            if (link) {
-                currentEditLinkId = linkId;
-                document.getElementById('editLinkName').value = link.link.name;
-                document.getElementById('editLinkUrl').value = link.link.url;
-                
-                const categorySelect = document.getElementById('editLinkCategory');
-                categorySelect.innerHTML = userData.categories.map(cat => 
-                    `<option value="${cat.id}" ${cat.id === link.categoryId ? 'selected' : ''}>${cat.icon} ${cat.name}</option>`
-                ).join('');
-                
-                document.getElementById('editLinkModal').style.display = 'flex';
-            }
-        }
-
-        function openAddCategoryModal() {
-            document.getElementById('addCategoryModal').style.display = 'flex';
-        }
-
-        function openEditCategoryModal(categoryId) {
-            const allData = initializeData();
-            const userData = allData.userData[currentUser];
-            const category = userData.categories.find(cat => cat.id === categoryId);
-            
-            if (category) {
-                currentEditCategoryId = categoryId;
-                document.getElementById('editCategoryName').value = category.name;
-                document.getElementById('editCategoryIcon').value = category.icon;
-                document.getElementById('editCategoryModal').style.display = 'flex';
-            }
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Link functies - BEWERKEN EN VERWIJDEREN
-        function saveLink() {
-            const name = document.getElementById('linkName').value;
-            const url = document.getElementById('linkUrl').value;
-            const categoryId = document.getElementById('linkCategory').value;
-            
-            if (name && url) {
-                const allData = initializeData();
-                const userData = allData.userData[currentUser];
-                const category = userData.categories.find(cat => cat.id === categoryId);
-                
-                if (category) {
-                    category.links.push({
-                        id: Date.now().toString(),
-                        name: name,
-                        url: url
-                    });
-                    
-                    saveUserData(userData.categories);
-                    renderCategories(userData.categories);
-                    closeModal('addLinkModal');
-                    
-                    document.getElementById('linkName').value = '';
-                    document.getElementById('linkUrl').value = '';
-                }
-            }
-        }
-
-        function updateLink() {
-            const name = document.getElementById('editLinkName').value;
-            const url = document.getElementById('editLinkUrl').value;
-            const categoryId = document.getElementById('editLinkCategory').value;
-            
-            if (name && url && currentEditLinkId) {
-                const allData = initializeData();
-                const userData = allData.userData[currentUser];
-                
-                // Verwijder link van oude categorie
-                userData.categories.forEach(category => {
-                    category.links = category.links.filter(link => link.id !== currentEditLinkId);
-                });
-                
-                // Voeg toe aan nieuwe categorie
-                const newCategory = userData.categories.find(cat => cat.id === categoryId);
-                if (newCategory) {
-                    newCategory.links.push({
-                        id: currentEditLinkId,
-                        name: name,
-                        url: url
-                    });
-                }
-                
-                saveUserData(userData.categories);
-                renderCategories(userData.categories);
-                closeModal('editLinkModal');
-                currentEditLinkId = null;
-            }
-        }
-
-        function deleteLink(categoryId, linkId) {
-            if (confirm('Weet je zeker dat je deze link wilt verwijderen?')) {
-                const allData = initializeData();
-                const userData = allData.userData[currentUser];
-                const category = userData.categories.find(cat => cat.id === categoryId);
-                
-                if (category) {
-                    category.links = category.links.filter(link => link.id !== linkId);
-                    saveUserData(userData.categories);
-                    renderCategories(userData.categories);
-                }
-            }
-        }
-
-        // Categorie functies
-        function saveCategory() {
-            const name = document.getElementById('categoryName').value;
-            const icon = document.getElementById('categoryIcon').value;
-            
-            if (name) {
-                const allData = initializeData();
-                const userData = allData.userData[currentUser];
-                userData.categories.push({
-                    id: Date.now().toString(),
-                    name: name,
-                    icon: icon || '📁',
-                    links: []
-                });
-                
-                saveUserData(userData.categories);
-                renderCategories(userData.categories);
-                closeModal('addCategoryModal');
-                
-                document.getElementById('categoryName').value = '';
-                document.getElementById('categoryIcon').value = '';
-            }
-        }
-
-        function updateCategory() {
-            const name = document.getElementById('editCategoryName').value;
-            const icon = document.getElementById('editCategoryIcon').value;
-            
-            if (name && currentEditCategoryId) {
-                const allData = initializeData();
-                const userData = allData.userData[currentUser];
-                const category = userData.categories.find(cat => cat.id === currentEditCategoryId);
-                
-                if (category) {
-                    category.name = name;
-                    category.icon = icon || '📁';
-                    saveUserData(userData.categories);
-                    renderCategories(userData.categories);
-                    closeModal('editCategoryModal');
-                    currentEditCategoryId = null;
-                }
-            }
-        }
-
-        // Helper functies
-        function findLinkById(categories, linkId) {
-            for (const category of categories) {
-                const link = category.links.find(link => link.id === linkId);
-                if (link) {
-                    return { link, categoryId: category.id };
-                }
-            }
-            return null;
-        }
-
-        function saveUserData(categories) {
-            const allData = initializeData();
-            allData.userData[currentUser].categories = categories;
-            localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
-        }
-
-        // Admin Panel functies - ALLEEN VOOR BOWEN
-        function toggleAdminCommands() {
-            const commands = document.getElementById('adminCommands');
-            commands.style.display = commands.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function updateAdminPanel() {
-            const allData = initializeData();
-            document.getElementById('totalAccounts').textContent = allData.users.length;
-            document.getElementById('accountCreationStatus').textContent = 
-                allData.system.accountCreationEnabled ? 'AAN' : 'UIT';
-            document.getElementById('adminUser').textContent = currentUser;
-        }
-
-        function addCommandOutput(message) {
-            const output = document.getElementById('commandOutput');
-            output.innerHTML = message + '<br>' + output.innerHTML;
-        }
-
-        function viewAccounts() {
-            const allData = initializeData();
-            const accountsList = document.getElementById('accountsList');
-            
-            accountsList.innerHTML = '';
-            
-            if (allData.users.length === 0) {
-                accountsList.innerHTML = '<div class="account-item">Geen accounts gevonden</div>';
-                return;
-            }
-
-            allData.users.forEach(user => {
-                const accountItem = document.createElement('div');
-                accountItem.className = 'account-item';
-                
-                const status = user.status === 'banned' ? '🚫' : '✅';
-                const admin = user.isAdmin ? ' 👑' : '';
-                
-                accountItem.innerHTML = `
-                    <div>
-                        <strong>${user.username}</strong>
-                        ${admin} ${status}
-                    </div>
-                    <div class="account-actions">
-                        ${user.username !== ADMIN_USERNAME ? `
-                            <button class="account-btn ban" onclick="banUser('${user.username}')">Ban</button>
-                            <button class="account-btn unban" onclick="unbanUser('${user.username}')">Unban</button>
-                            <button class="account-btn delete" onclick="deleteAccount('${user.username}')">X</button>
-                        ` : ''}
-                    </div>
-                `;
-                
-                accountsList.appendChild(accountItem);
-            });
-            
-            addCommandOutput(`✅ Toon ${allData.users.length} accounts`);
-        }
-
-        function showPasswords() {
-            const allData = initializeData();
-            let output = '🔐 <strong>Alle Wachtwoorden:</strong><br>';
-            
-            allData.users.forEach(user => {
-                const status = user.status === 'banned' ? '🚫' : '✅';
-                output += `${user.username}: <span class="password-display">${user.password}</span> ${status}<br>`;
-            });
-            
-            addCommandOutput(output);
-        }
-
-        function banUser(username) {
-            const allData = initializeData();
-            const user = allData.users.find(u => u.username === username);
-            
-            if (user && user.username !== ADMIN_USERNAME) {
-                user.status = 'banned';
-                localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
-                addCommandOutput(`✅ ${username} gebanned`);
-                viewAccounts(); // Refresh lijst
-            }
-        }
-
-        function unbanUser(username) {
-            const allData = initializeData();
-            const user = allData.users.find(u => u.username === username);
-            
-            if (user) {
-                user.status = 'active';
-                localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
-                addCommandOutput(`✅ ${username} geunbanned`);
-                viewAccounts(); // Refresh lijst
-            }
-        }
-
-        // NIEUWE COMMAND: Account verwijderen
-        function deleteAccount(username) {
-            if (username === ADMIN_USERNAME) {
-                addCommandOutput('❌ Kan admin account niet verwijderen');
-                return;
-            }
-
-            if (confirm(`Weet je zeker dat je account "${username}" wilt verwijderen?`)) {
-                const allData = initializeData();
-                
-                // Verwijder uit users array
-                allData.users = allData.users.filter(u => u.username !== username);
-                
-                // Verwijder user data
-                delete allData.userData[username];
-                
-                localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
-                addCommandOutput(`✅ Account "${username}" verwijderd`);
-                viewAccounts(); // Refresh lijst
-            }
-        }
-
-        function deactivateAccountCreation() {
-            const allData = initializeData();
-            allData.system.accountCreationEnabled = false;
-            localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
-            addCommandOutput('✅ Account aanmaken uitgezet');
-            updateAdminPanel();
-        }
-
-        function activateAccountCreation() {
-            const allData = initializeData();
-            allData.system.accountCreationEnabled = true;
-            localStorage.setItem('startpaginaSystem', JSON.stringify(allData));
-            addCommandOutput('✅ Account aanmaken aangezet');
-            updateAdminPanel();
-        }
-
-        function resetAllData() {
-            if (confirm('WEET JE ZEKER DAT JE ALLE DATA WILT RESETTEN? Alle accounts gaan verloren!')) {
-                localStorage.removeItem('startpaginaSystem');
-                initializeData();
-                addCommandOutput('✅ Alle data gereset');
-                viewAccounts();
-                updateAdminPanel();
-            }
-        }
-
-        // Standaard categorieën
+        // Default categories
         function getDefaultCategories() {
             return [
                 {
-                    id: 'search',
+                    id: '1',
                     name: 'Zoekmachines',
                     icon: '🔍',
                     links: [
-                        { id: '1', name: 'Google', url: 'https://www.google.com' },
-                        { id: '2', name: 'DuckDuckGo', url: 'https://www.duckduckgo.com' },
-                        { id: '3', name: 'YouTube', url: 'https://www.youtube.com' }
+                        { id: '1', name: 'Google', url: 'https://google.com' },
+                        { id: '2', name: 'DuckDuckGo', url: 'https://duckduckgo.com' }
                     ]
                 },
                 {
-                    id: 'work',
-                    name: 'Werk & Productiviteit',
-                    icon: '💼',
+                    id: '2', 
+                    name: 'Social Media',
+                    icon: '👥',
                     links: [
-                        { id: '4', name: 'GitHub', url: 'https://www.github.com' },
-                        { id: '5', name: 'Gmail', url: 'https://mail.google.com' },
-                        { id: '6', name: 'Google Calendar', url: 'https://calendar.google.com' }
+                        { id: '1', name: 'YouTube', url: 'https://youtube.com' },
+                        { id: '2', name: 'Reddit', url: 'https://reddit.com' }
                     ]
                 }
             ];
         }
 
-        // Overige functies
-        function logout() {
-            currentUser = null;
-            document.getElementById('loginScreen').style.display = 'block';
-            document.getElementById('mainScreen').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('nl-NL');
-            const dateString = now.toLocaleDateString('nl-NL', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
+        // Load user data
+        function loadUserData() {
+            const allData = initializeData();
+            const userData = allData.userData[currentUser];
             
-            document.getElementById('currentTime').textContent = timeString;
-            document.getElementById('currentDate').textContent = dateString;
+            if (userData && userData.categories) {
+                displayCategories(userData.categories);
+            }
         }
 
-        // Event listeners
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') login();
-        });
+        function displayCategories(categories) {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
 
+            categories.forEach(category => {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category';
+                categoryElement.innerHTML = `
+                    <div class="category-header">
+                        <h2>${category.icon} ${category.name}</h2>
+                    </div>
+                    <div class="links">
+                        ${category.links.map(link => `
+                            <a href="${link.url}" target="_blank" class="link-item">
+                                <div class="link-content">${link.name}</div>
+                            </a>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(categoryElement);
+            });
+        }
+
+        // Search functie
         document.getElementById('searchInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                const query = this.value;
+                const query = this.value.trim();
                 if (query) {
                     window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
                     this.value = '';
@@ -1252,10 +595,11 @@
             }
         });
 
-        // Initialisatie
-        initializeData();
-        updateTime();
-        setInterval(updateTime, 1000);
+        // Bij het laden van de pagina
+        window.onload = function() {
+            // Probeer data van Firebase te halen
+            syncFromFirebase();
+        };
     </script>
 </body>
 </html>
