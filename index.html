@@ -3,366 +3,631 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Chat</title>
+    <title>Bowen Chat</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CryptoJS voor encryptie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
     <style>
-        .chat-container {
-            max-width: 800px;
-            margin: 20px auto;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: white;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .messages-container {
-            height: 400px;
-            overflow-y: auto;
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #4ecdc4;
+            --danger: #ff6b6b;
+            --warning: #ffd166;
+            --info: #118ab2;
+            --dark: #2d3748;
+            --light: #f8f9fa;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            transition: all 0.3s ease;
             padding: 10px;
-            background: #f9f9f9;
         }
 
-        .message-group {
-            margin: 5px 0;
-            padding: 2px 0;
+        .hidden {
+            display: none !important;
         }
 
-        .message {
-            padding: 2px 0;
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Storage Info */
+        .storage-info {
+            background: var(--success);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 5px;
+            text-align: center;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        /* Login Container */
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            margin: 20px auto;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .login-header h1 {
+            color: var(--dark);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 45px 14px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            padding: 8px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .error-message {
+            background: var(--danger);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: var(--success);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e1e1;
+        }
+
+        .switch-form a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main App */
+        .app-container {
+            min-height: 100vh;
             display: flex;
-            align-items: flex-start;
+            flex-direction: column;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
-        .message:first-child .message-content {
-            border-radius: 16px 16px 16px 4px;
+        /* Header */
+        .app-header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e1e1e1;
         }
 
-        .message:not(:first-child) {
-            margin-top: 1px;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--dark);
         }
 
-        .message:not(:first-child) .message-avatar {
-            visibility: hidden;
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .message-avatar {
+        .user-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: #7289da;
-            margin-right: 10px;
+            background: var(--primary);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-weight: bold;
-            flex-shrink: 0;
+            font-size: 1.1rem;
         }
 
-        .message-content {
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--light);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Messages System */
+        .messages-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 0;
+            height: calc(100vh - 80px);
+        }
+
+        .users-list {
             background: white;
-            padding: 8px 12px;
-            border-radius: 16px;
-            max-width: 70%;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border-right: 1px solid #e1e1e1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
-        .message-header {
+        .users-header {
+            padding: 20px;
+            border-bottom: 1px solid #e1e1e1;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .storage-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .users-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .chat-type-item {
             display: flex;
             align-items: center;
-            margin-bottom: 4px;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+            border: 2px solid transparent;
         }
 
-        .username {
-            font-weight: bold;
-            color: #333;
-            margin-right: 8px;
+        .chat-type-item:hover, .chat-type-item.active {
+            background: var(--light);
         }
 
-        .timestamp {
-            font-size: 0.8em;
-            color: #999;
+        .chat-type-item.global-chat {
+            border-color: var(--info);
+            background: rgba(17, 138, 178, 0.1);
         }
 
-        .message-text {
-            color: #333;
-            line-height: 1.4;
+        .chat-type-item.global-chat.active {
+            background: var(--info);
+            color: white;
         }
 
-        .input-container {
+        .chat-type-item.global-chat.active .chat-type-icon {
+            color: white;
+        }
+
+        .chat-type-icon {
+            font-size: 1.2rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
             display: flex;
-            padding: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .global-chat .chat-type-icon {
+            background: var(--info);
+        }
+
+        .user-chat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+        }
+
+        .user-chat-item:hover, .user-chat-item.active {
+            background: var(--light);
+        }
+
+        .user-avatar-small {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .status-indicator {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .status-online {
+            background: var(--success);
+        }
+
+        .status-offline {
+            background: #ccc;
+        }
+
+        .user-info-small {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 2px;
+        }
+
+        .user-status {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .chat-window {
             background: white;
-            border-top: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid #e1e1e1;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .global-chat-header {
+            background: var(--info);
+            color: white;
+        }
+
+        .global-chat-header .chat-type-icon {
+            background: white;
+            color: var(--info);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 85%;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message.sent {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 6px;
+        }
+
+        .message.received {
+            background: white;
+            color: var(--dark);
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.global {
+            background: var(--info);
+            color: white;
+            max-width: 90%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message.received .message-time {
+            text-align: left;
+        }
+
+        .message.global .message-time {
+            text-align: left;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            opacity: 0.9;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid #e1e1e1;
+            background: white;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
         }
 
         .message-input {
             flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            outline: none;
-            font-size: 14px;
+            padding: 14px 16px;
+            border: 2px solid #e1e1e1;
+            border-radius: 25px;
+            font-size: 1rem;
+            resize: none;
+            max-height: 120px;
+            min-height: 50px;
         }
 
         .message-input:focus {
-            border-color: #7289da;
+            outline: none;
+            border-color: var(--primary);
         }
 
-        .send-button {
-            margin-left: 10px;
-            padding: 12px 20px;
-            background: #7289da;
+        .global-chat .message-input:focus {
+            border-color: var(--info);
+        }
+
+        .send-btn {
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        .send-button:hover {
-            background: #677bc4;
-        }
-
-        .user-setup {
-            padding: 15px;
-            background: #f0f0f0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .user-input {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-
-        .settings {
-            padding: 10px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #ddd;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
             display: flex;
-            gap: 10px;
-        }
-
-        .settings-input {
-            padding: 6px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        .settings-button {
-            padding: 6px 12px;
-            background: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            font-size: 12px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .global-chat .send-btn {
+            background: var(--info);
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .global-chat .send-btn:hover:not(:disabled) {
+            background: #0a7a9c;
+        }
+
+        .send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="user-setup" id="userSetup">
-            <input type="text" class="user-input" id="usernameInput" placeholder="Kies een gebruikersnaam">
-            <input type="password" class="user-input" id="passwordInput" placeholder="Kies een wachtwoord">
-            <button class="send-button" onclick="registerUser()">Start Chatten</button>
-        </div>
-
-        <div class="settings" id="settingsPanel" style="display: none;">
-            <input type="text" class="settings-input" id="displayNameInput" placeholder="Nieuwe display name">
-            <input type="password" class="settings-input" id="newPasswordInput" placeholder="Nieuw wachtwoord">
-            <button class="settings-button" onclick="updateDisplayName()">Naam Wijzigen</button>
-            <button class="settings-button" onclick="updatePassword()">Wachtwoord Wijzigen</button>
-            <button class="settings-button" onclick="logout()">Uitloggen</button>
-        </div>
-
-        <div class="messages-container" id="messagesContainer">
-            <!-- Berichten komen hier -->
-        </div>
-
-        <div class="input-container" id="inputContainer" style="display: none;">
-            <input type="text" class="message-input" id="messageInput" placeholder="Typ je bericht...">
-            <button class="send-button" onclick="sendMessage()">Verstuur</button>
-        </div>
-    </div>
-
-    <script>
-        // Firebase configuratie
-        const firebaseConfig = {
-            databaseURL: "https://globalmessages-default-rtdb.europe-west1.firebasedatabase.app/"
-        };
-
-        // Firebase initialiseren
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        let currentUser = null;
-        let lastUser = null;
-        let lastTimestamp = null;
-
-        // Eenvoudige user authentication
-        function registerUser() {
-            const username = document.getElementById('usernameInput').value.trim();
-            const password = document.getElementById('passwordInput').value.trim();
-            
-            if (!username || !password) {
-                alert('Voer zowel gebruikersnaam als wachtwoord in');
-                return;
-            }
-
-            // Check of gebruiker bestaat
-            database.ref('users/' + username).once('value', (snapshot) => {
-                if (snapshot.exists()) {
-                    // Login
-                    const userData = snapshot.val();
-                    if (userData.password === password) {
-                        loginUser(username, userData.displayName || username);
-                    } else {
-                        alert('Ongeldig wachtwoord');
-                    }
-                } else {
-                    // Nieuwe gebruiker
-                    const userData = {
-                        password: password,
-                        displayName: username,
-                        createdAt: Date.now()
-                    };
-                    database.ref('users/' + username).set(userData);
-                    loginUser(username, username);
-                }
-            });
-        }
-
-        function loginUser(username, displayName) {
-            currentUser = {
-                username: username,
-                displayName: displayName
-            };
-
-            document.getElementById('userSetup').style.display = 'none';
-            document.getElementById('settingsPanel').style.display = 'block';
-            document.getElementById('inputContainer').style.display = 'flex';
-            document.getElementById('displayNameInput').value = displayName;
-
-            loadMessages();
-        }
-
-        function updateDisplayName() {
-            const newDisplayName = document.getElementById('displayNameInput').value.trim();
-            if (newDisplayName && currentUser) {
-                database.ref('users/' + currentUser.username).update({
-                    displayName: newDisplayName
-                });
-                currentUser.displayName = newDisplayName;
-                alert('Display name bijgewerkt!');
-            }
-        }
-
-        function updatePassword() {
-            const newPassword = document.getElementById('newPasswordInput').value.trim();
-            if (newPassword && currentUser) {
-                database.ref('users/' + currentUser.username).update({
-                    password: newPassword
-                });
-                document.getElementById('newPasswordInput').value = '';
-                alert('Wachtwoord bijgewerkt!');
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            document.getElementById('userSetup').style.display = 'block';
-            document.getElementById('settingsPanel').style.display = 'none';
-            document.getElementById('inputContainer').style.display = 'none';
-            document.getElementById('usernameInput').value = '';
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('messagesContainer').innerHTML = '';
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (message === '' || !currentUser) return;
-            
-            const messageData = {
-                user: currentUser.displayName,
-                text: message,
-                timestamp: Date.now(),
-                username: currentUser.username // Voor tracking
-            };
-            
-            database.ref('messages').push(messageData);
-            input.value = '';
-        }
-
-        function addMessage(user, text, timestamp) {
-            const container = document.getElementById('messagesContainer');
-            const now = new Date(timestamp);
-            const timeDiff = lastTimestamp ? now - lastTimestamp : Infinity;
-            
-            const shouldGroup = user === lastUser && timeDiff < 300000;
-            
-            if (!shouldGroup) {
-                const group = document.createElement('div');
-                group.className = 'message-group';
-                container.appendChild(group);
-            }
-            
-            const groups = container.getElementsByClassName('message-group');
-            const currentGroup = groups[groups.length - 1];
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message';
-            
-            const timeString = now.toLocaleTimeString('nl-NL', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            
-            messageDiv.innerHTML = `
-                <div class="message-avatar">${user.charAt(0).toUpperCase()}</div>
-                <div class="message-content">
-                    ${!shouldGroup ? 
-                        `<div class="message-header">
-                            <span class="username">${user}</span>
-                            <span class="timestamp">${timeString}</span>
-                        </div>` 
-                        : ''
-                    }
-                    <div class="message-text">${text}</div>
-                </div>
-            `;
-            
-            currentGroup.appendChild(messageDiv);
-            
-            lastUser = user;
-            lastTimestamp = now;
-            
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // Luister naar Firebase berichten
-        database.ref('messages').on('child_added', (snapshot) => {
-            const message = snapshot.val();
-            addMessage(message.user, message.text, message.timestamp);
-        });
-
-        // Enter-toets ondersteuning
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                registerUser();
-            }
-        });
-    </script>
-</body>
-</html>
+    <!-- Storage Info -->
+    <div class="storage-info" id="storageInfo">
+        <i class="fas fa-database"></i>
+        <span id="storageText">Ber
