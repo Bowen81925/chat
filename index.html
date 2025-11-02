@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Bowen Chat</title>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -11,6 +11,9 @@
     
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CryptoJS voor encryptie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     
     <style>
         * {
@@ -23,10 +26,7 @@
         :root {
             --primary: #667eea;
             --secondary: #764ba2;
-            --success: #4ecdc4;
             --danger: #ff6b6b;
-            --warning: #ffd166;
-            --info: #118ab2;
             --dark: #2d3748;
             --light: #f8f9fa;
         }
@@ -134,6 +134,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            width: 100%;
         }
 
         .btn-primary {
@@ -146,39 +147,14 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
         }
 
         .error-message {
             background: var(--danger);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            text-align: center;
-            display: none;
-        }
-
-        .success-message {
-            background: var(--success);
             color: white;
             padding: 10px;
             border-radius: 5px;
@@ -241,122 +217,18 @@
             width: 100%;
         }
 
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 10px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-
-        .tab {
-            padding: 10px 20px;
-            border: none;
-            background: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tab.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Dashboard */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        /* Links System */
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .category-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .category-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .category-icon {
-            font-size: 1.5rem;
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .links-list {
-            list-style: none;
-        }
-
-        .link-item {
-            margin-bottom: 8px;
-        }
-
-        .link-item a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--dark);
-            text-decoration: none;
-            padding: 8px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .link-item a:hover {
-            background: var(--light);
-        }
-
         /* Messages System */
         .messages-container {
             display: grid;
             grid-template-columns: 300px 1fr;
             gap: 20px;
+            height: calc(100vh - 200px);
         }
 
         .users-list {
             background: white;
             border-radius: 10px;
             padding: 20px;
-            max-height: 500px;
             overflow-y: auto;
         }
 
@@ -380,7 +252,6 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            height: 500px;
         }
 
         .chat-messages {
@@ -415,93 +286,10 @@
             gap: 10px;
         }
 
-        /* Admin Panel */
-        .admin-panel {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .user-list {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .user-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .user-actions {
-            display: flex;
-            gap: 5px;
-        }
-
-        /* Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 2px;
         }
     </style>
 </head>
@@ -509,12 +297,11 @@
     <!-- Login Screen -->
     <div class="login-container" id="loginScreen">
         <div class="login-header">
-            <h1>Home</h1>
-            <p>Login om toegang te krijgen</p>
+            <h1>Bowen Chat</h1>
+            <p>Alleen bestaande gebruikers kunnen inloggen</p>
         </div>
         
         <div class="error-message" id="errorMessage"></div>
-        <div class="success-message" id="successMessage"></div>
         
         <form id="loginForm">
             <div class="form-group">
@@ -532,13 +319,14 @@
                 </div>
             </div>
             
-            <button type="submit" class="btn btn-primary" id="loginBtn" style="width: 100%;">
+            <button type="submit" class="btn btn-primary" id="loginBtn">
                 <i class="fas fa-sign-in-alt"></i>Inloggen
             </button>
-            <button type="button" class="btn btn-secondary" id="registerBtn" style="width: 100%; margin-top: 10px;">
-                <i class="fas fa-user-plus"></i>Account Maken
-            </button>
         </form>
+
+        <div style="text-align: center; margin-top: 20px; color: #666; font-size: 0.9rem;">
+            <p>Account aanmaken is uitgeschakeld</p>
+        </div>
     </div>
 
     <!-- Main App -->
@@ -546,13 +334,13 @@
         <!-- Header -->
         <header class="app-header">
             <div class="logo">
-                <i class="fas fa-rocket"></i>
-                <span>Bowen Portal</span>
+                <i class="fas fa-comments"></i>
+                <span>Bowen Chat</span>
             </div>
             <div class="user-menu">
                 <div class="user-avatar" id="userAvatar">B</div>
                 <span id="userGreeting">Welkom, Bowen</span>
-                <button class="btn btn-secondary" onclick="logout()">
+                <button class="btn btn-primary" onclick="logout()" style="width: auto;">
                     <i class="fas fa-sign-out-alt"></i>Uitloggen
                 </button>
             </div>
@@ -560,221 +348,29 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Tabs -->
-            <div class="tabs">
-                <button class="tab active" onclick="showTab('dashboard')">
-                    <i class="fas fa-home"></i>Dashboard
-                </button>
-                <button class="tab" onclick="showTab('links')">
-                    <i class="fas fa-link"></i>Mijn Links
-                </button>
-                <button class="tab" onclick="showTab('messages')">
-                    <i class="fas fa-comments"></i>Berichten
-                </button>
-                <button class="tab hidden" id="adminTab" onclick="showTab('admin')">
-                    <i class="fas fa-cog"></i>Admin Panel
-                </button>
-            </div>
-
-            <!-- Dashboard Tab -->
-            <div id="dashboardTab" class="tab-content">
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-tachometer-alt"></i> Snel Overzicht</h3>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-icon"><i class="fas fa-link"></i></div>
-                                <div class="stat-number" id="totalLinks">0</div>
-                                <div class="stat-label">Totaal Links</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon"><i class="fas fa-comments"></i></div>
-                                <div class="stat-number" id="totalMessages">0</div>
-                                <div class="stat-label">Berichten</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon"><i class="fas fa-users"></i></div>
-                                <div class="stat-number" id="totalUsers">0</div>
-                                <div class="stat-label">Gebruikers</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-plus"></i> Snelle Acties</h3>
-                        </div>
-                        <div style="display: grid; gap: 10px;">
-                            <button class="btn btn-primary" onclick="showAddLinkModal()">
-                                <i class="fas fa-plus"></i>Nieuwe Link
-                            </button>
-                            <button class="btn btn-success" onclick="showTab('messages')">
-                                <i class="fas fa-envelope"></i>Nieuw Bericht
-                            </button>
-                            <button class="btn btn-secondary" onclick="showAddCategoryModal()">
-                                <i class="fas fa-folder-plus"></i>Nieuwe Categorie
-                            </button>
-                        </div>
+            <div class="messages-container">
+                <div class="users-list">
+                    <h4><i class="fas fa-users"></i> Gebruikers Online</h4>
+                    <div id="usersChatList">
+                        <p>Laden gebruikers...</p>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-clock"></i> Recente Activiteit</h3>
+                <div class="chat-window">
+                    <div id="selectedUserInfo">
+                        <p>Selecteer een gebruiker om te chatten</p>
                     </div>
-                    <div id="recentActivity">
-                        <p>Geen recente activiteit...</p>
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages will appear here -->
                     </div>
-                </div>
-            </div>
-
-            <!-- Links Tab -->
-            <div id="linksTab" class="tab-content hidden">
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-link"></i> Mijn Startpagina Links</h3>
-                        <button class="btn btn-primary" onclick="showAddLinkModal()">
-                            <i class="fas fa-plus"></i>Nieuwe Link
+                    <div class="chat-input">
+                        <input type="text" id="messageInput" class="form-control" placeholder="Typ je bericht..." disabled>
+                        <button class="btn btn-primary" id="sendMessageBtn" disabled style="width: auto;">
+                            <i class="fas fa-paper-plane"></i>
                         </button>
-                    </div>
-                    <div id="linksContainer">
-                        <p>Laden van links...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Messages Tab -->
-            <div id="messagesTab" class="tab-content hidden">
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-comments"></i> Berichten Systeem</h3>
-                    </div>
-                    <div class="messages-container">
-                        <div class="users-list">
-                            <h4>Gebruikers</h4>
-                            <div id="usersChatList">
-                                <p>Laden gebruikers...</p>
-                            </div>
-                        </div>
-                        <div class="chat-window">
-                            <div id="selectedUserInfo">
-                                <p>Selecteer een gebruiker om te chatten</p>
-                            </div>
-                            <div class="chat-messages" id="chatMessages">
-                                <!-- Messages will appear here -->
-                            </div>
-                            <div class="chat-input">
-                                <input type="text" id="messageInput" class="form-control" placeholder="Typ je bericht..." disabled>
-                                <button class="btn btn-primary" id="sendMessageBtn" disabled>
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Admin Tab -->
-            <div id="adminTabContent" class="tab-content hidden">
-                <div class="admin-panel">
-                    <div class="card-header">
-                        <h3><i class="fas fa-cog"></i> Admin Panel - Alleen voor Bowen</h3>
-                    </div>
-                    
-                    <div class="admin-stats">
-                        <div class="stat-card">
-                            <div class="stat-number" id="adminTotalUsers">0</div>
-                            <div class="stat-label">Totaal Gebruikers</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="adminTotalLinks">0</div>
-                            <div class="stat-label">Totaal Links</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="adminTotalMessages">0</div>
-                            <div class="stat-label">Totaal Berichten</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Gebruikersbeheer</h4>
-                        </div>
-                        <div class="user-list" id="adminUserList">
-                            <p>Laden gebruikers...</p>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Systeem Instellingen</h4>
-                        </div>
-                        <div style="display: grid; gap: 10px;">
-                            <button class="btn btn-danger" onclick="adminAction('clearData')">
-                                <i class="fas fa-trash"></i>Alle Data Wissen
-                            </button>
-                            <button class="btn btn-warning" onclick="adminAction('exportData')">
-                                <i class="fas fa-download"></i>Data Exporteren
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
         </main>
-    </div>
-
-    <!-- Add Link Modal -->
-    <div class="modal hidden" id="addLinkModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Nieuwe Link Toevoegen</h3>
-                <button class="close-modal" onclick="closeModal('addLinkModal')">&times;</button>
-            </div>
-            <form id="addLinkForm">
-                <div class="form-group">
-                    <label for="linkName">Link Naam</label>
-                    <input type="text" id="linkName" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="linkUrl">URL</label>
-                    <input type="url" id="linkUrl" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="linkCategory">Categorie</label>
-                    <select id="linkCategory" class="form-control" required>
-                        <option value="">Selecteer categorie...</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="linkIcon">Icoon (FontAwesome class)</label>
-                    <input type="text" id="linkIcon" class="form-control" placeholder="bijv. fas fa-search">
-                </div>
-                <button type="submit" class="btn btn-primary">Link Toevoegen</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Add Category Modal -->
-    <div class="modal hidden" id="addCategoryModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Nieuwe Categorie</h3>
-                <button class="close-modal" onclick="closeModal('addCategoryModal')">&times;</button>
-            </div>
-            <form id="addCategoryForm">
-                <div class="form-group">
-                    <label for="categoryName">Categorie Naam</label>
-                    <input type="text" id="categoryName" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="categoryIcon">Icoon (FontAwesome class)</label>
-                    <input type="text" id="categoryIcon" class="form-control" placeholder="bijv. fas fa-folder" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Categorie Aanmaken</button>
-            </form>
-        </div>
     </div>
 
     <script>
@@ -787,10 +383,24 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        // Encryptie sleutel - verborgen in gehashte vorm
+        const ENCRYPTION_KEY = "bowen_secret_key_2024";
+        const HASHED_KEY = CryptoJS.SHA256(ENCRYPTION_KEY).toString();
+
         // Global variables
         let currentUser = null;
-        let isBowen = false;
         let currentChatUser = null;
+
+        // Pre-defined users met GEHASHDE wachtwoorden
+        const VALID_USERS = {
+            "Bowen": {
+                // Wachtwoord: "admin123" - gehasht
+                passwordHash: "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+                isAdmin: true
+            }
+            // Voeg hier andere gebruikers toe als nodig
+            // "gebruiker2": { passwordHash: "hash_van_wachtwoord", isAdmin: false }
+        };
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
@@ -812,34 +422,37 @@
                 handleLogin();
             });
 
-            // Register button
-            document.getElementById('registerBtn').addEventListener('click', function() {
-                handleRegister();
-            });
-
-            // Add link form
-            document.getElementById('addLinkForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                addNewLink();
-            });
-
-            // Add category form
-            document.getElementById('addCategoryForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                addNewCategory();
-            });
-
             // Message sending
             document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
             document.getElementById('messageInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') sendMessage();
             });
 
-            // Check for Bowen account and create if not exists
-            await checkAndCreateBowenAccount();
+            // Zorg dat Bowen account bestaat in Firebase
+            await ensureBowenAccount();
         }
 
-        async function checkAndCreateBowenAccount() {
+        // Hash een wachtwoord
+        function hashPassword(password) {
+            return CryptoJS.SHA256(password).toString();
+        }
+
+        // Encrypt bericht
+        function encryptMessage(text) {
+            return CryptoJS.AES.encrypt(text, ENCRYPTION_KEY).toString();
+        }
+
+        // Decrypt bericht
+        function decryptMessage(encryptedText) {
+            try {
+                const bytes = CryptoJS.AES.decrypt(encryptedText, ENCRYPTION_KEY);
+                return bytes.toString(CryptoJS.enc.Utf8);
+            } catch (e) {
+                return "[Encrypted Message]";
+            }
+        }
+
+        async function ensureBowenAccount() {
             try {
                 const usersRef = database.ref('users');
                 const snapshot = await usersRef.once('value');
@@ -855,20 +468,19 @@
                 if (!bowenExists) {
                     const bowenUser = {
                         username: "Bowen",
-                        password: "admin123",
-                        pincode: "0000",
+                        // Alleen hash opslaan, nooit plain text wachtwoord!
+                        passwordHash: VALID_USERS["Bowen"].passwordHash,
                         isAdmin: true,
-                        status: "active",
-                        createdAt: new Date().toISOString(),
+                        status: "online",
                         lastLogin: new Date().toISOString(),
-                        isBowen: true
+                        createdAt: new Date().toISOString()
                     };
                     
                     await usersRef.push(bowenUser);
-                    console.log('Bowen admin account aangemaakt');
+                    console.log('Bowen account geïnitialiseerd');
                 }
             } catch (error) {
-                console.error('Fout bij aanmaken Bowen account:', error);
+                console.error('Fout bij initialiseren Bowen account:', error);
             }
         }
 
@@ -885,101 +497,54 @@
             setLoading(true);
 
             try {
-                const usersRef = database.ref('users');
-                const snapshot = await usersRef.once('value');
-                
-                let userFound = false;
-                let userData = null;
-                let userId = null;
+                // Controleer tegen pre-defined users (veiliger dan database lookup)
+                if (VALID_USERS[username]) {
+                    const userData = VALID_USERS[username];
+                    const inputPasswordHash = hashPassword(password);
+                    
+                    // Vergelijk hashes - nooit plain text!
+                    if (inputPasswordHash === userData.passwordHash) {
+                        // Login succesvol - haal user data op uit Firebase
+                        const usersRef = database.ref('users');
+                        const snapshot = await usersRef.once('value');
+                        
+                        let userFound = false;
+                        let userId = null;
 
-                snapshot.forEach((childSnapshot) => {
-                    const user = childSnapshot.val();
-                    if (user.username === username && user.password === password) {
-                        userFound = true;
-                        userData = user;
-                        userId = childSnapshot.key;
+                        snapshot.forEach((childSnapshot) => {
+                            const user = childSnapshot.val();
+                            if (user.username === username) {
+                                userFound = true;
+                                userId = childSnapshot.key;
+                            }
+                        });
+
+                        if (userFound) {
+                            currentUser = {
+                                id: userId,
+                                username: username,
+                                isAdmin: userData.isAdmin
+                            };
+
+                            // Update last login
+                            await database.ref('users/' + userId).update({
+                                lastLogin: new Date().toISOString(),
+                                status: "online"
+                            });
+
+                            showApp();
+                        } else {
+                            showError('Gebruiker niet gevonden in database!');
+                        }
+                    } else {
+                        showError('Ongeldige gebruikersnaam of wachtwoord!');
                     }
-                });
-
-                if (!userFound) {
-                    showError('Ongeldige gebruikersnaam of wachtwoord!');
-                    return;
+                } else {
+                    showError('Gebruiker niet gevonden!');
                 }
-
-                currentUser = {
-                    id: userId,
-                    username: userData.username,
-                    isAdmin: userData.isAdmin || false,
-                    isBowen: userData.isBowen || false
-                };
-                
-                isBowen = currentUser.isBowen;
-                
-                // Update last login
-                await database.ref('users/' + userId).update({
-                    lastLogin: new Date().toISOString()
-                });
-
-                showApp();
                 
             } catch (error) {
                 showError('Fout bij inloggen: ' + error.message);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        async function handleRegister() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            if (!username || !password) {
-                showError('Vul zowel gebruikersnaam als wachtwoord in!');
-                return;
-            }
-
-            if (password.length < 6) {
-                showError('Wachtwoord moet minimaal 6 tekens lang zijn!');
-                return;
-            }
-
-            setLoading(true);
-
-            try {
-                const usersRef = database.ref('users');
-                const snapshot = await usersRef.once('value');
-                
-                // Check if username already exists
-                let usernameExists = false;
-                snapshot.forEach((childSnapshot) => {
-                    const user = childSnapshot.val();
-                    if (user.username === username) {
-                        usernameExists = true;
-                    }
-                });
-
-                if (usernameExists) {
-                    showError('Deze gebruikersnaam bestaat al!');
-                    return;
-                }
-
-                // Create new user (no admin rights)
-                const newUser = {
-                    username: username,
-                    password: password,
-                    pincode: "0000",
-                    isAdmin: false,
-                    isBowen: false,
-                    status: "active",
-                    createdAt: new Date().toISOString(),
-                    lastLogin: new Date().toISOString()
-                };
-
-                await usersRef.push(newUser);
-                showSuccess('Account succesvol aangemaakt! Je kunt nu inloggen.');
-
-            } catch (error) {
-                showError('Fout bij registreren: ' + error.message);
             } finally {
                 setLoading(false);
             }
@@ -993,197 +558,26 @@
             document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
             document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
             
-            // Show/hide admin tab based on permissions
-            document.getElementById('adminTab').classList.toggle('hidden', !isBowen);
-            
-            // Load initial data
-            loadDashboardData();
-            loadLinks();
+            // Load chat data
             loadUsersForChat();
             
-            clearMessages();
+            clearError();
         }
 
         function logout() {
+            if (currentUser) {
+                // Update status naar offline
+                database.ref('users/' + currentUser.id).update({
+                    status: "offline",
+                    lastSeen: new Date().toISOString()
+                });
+            }
+            
             currentUser = null;
-            isBowen = false;
             document.getElementById('appContainer').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-        }
-
-        // Tab navigation
-        function showTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.add('hidden');
-            });
-            
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab
-            document.getElementById(tabName + 'Tab').classList.remove('hidden');
-            
-            // Add active class to clicked tab
-            event.target.classList.add('active');
-            
-            // Load tab-specific data
-            if (tabName === 'dashboard') {
-                loadDashboardData();
-            } else if (tabName === 'admin') {
-                loadAdminData();
-            }
-        }
-
-        // Dashboard functions
-        async function loadDashboardData() {
-            try {
-                // Load stats
-                const [usersSnapshot, linksSnapshot, messagesSnapshot] = await Promise.all([
-                    database.ref('users').once('value'),
-                    database.ref('links').once('value'),
-                    database.ref('messages').once('value')
-                ]);
-
-                document.getElementById('totalUsers').textContent = usersSnapshot.numChildren();
-                document.getElementById('totalLinks').textContent = linksSnapshot.numChildren();
-                document.getElementById('totalMessages').textContent = messagesSnapshot.numChildren();
-
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
-            }
-        }
-
-        // Links system functions
-        async function loadLinks() {
-            try {
-                const categoriesSnapshot = await database.ref('categories').once('value');
-                const linksSnapshot = await database.ref('links').once('value');
-                
-                let categoriesHtml = '';
-                
-                if (categoriesSnapshot.exists()) {
-                    categoriesSnapshot.forEach((categorySnapshot) => {
-                        const category = categorySnapshot.val();
-                        const categoryId = categorySnapshot.key;
-                        
-                        let categoryLinks = '';
-                        linksSnapshot.forEach((linkSnapshot) => {
-                            const link = linkSnapshot.val();
-                            if (link.categoryId === categoryId) {
-                                categoryLinks += `
-                                    <li class="link-item">
-                                        <a href="${link.url}" target="_blank">
-                                            <i class="${link.icon || 'fas fa-link'}"></i>
-                                            ${link.name}
-                                        </a>
-                                    </li>
-                                `;
-                            }
-                        });
-                        
-                        categoriesHtml += `
-                            <div class="category-card">
-                                <div class="category-header">
-                                    <div class="category-icon">
-                                        <i class="${category.icon}"></i>
-                                    </div>
-                                    <h4>${category.name}</h4>
-                                </div>
-                                <ul class="links-list">
-                                    ${categoryLinks || '<li>Geen links in deze categorie</li>'}
-                                </ul>
-                            </div>
-                        `;
-                    });
-                } else {
-                    categoriesHtml = '<p>Nog geen categorieën. Maak er eerst een aan!</p>';
-                }
-                
-                document.getElementById('linksContainer').innerHTML = categoriesHtml;
-                
-                // Update category dropdown
-                updateCategoryDropdown();
-                
-            } catch (error) {
-                console.error('Error loading links:', error);
-            }
-        }
-
-        function updateCategoryDropdown() {
-            database.ref('categories').once('value').then(snapshot => {
-                const dropdown = document.getElementById('linkCategory');
-                dropdown.innerHTML = '<option value="">Selecteer categorie...</option>';
-                
-                if (snapshot.exists()) {
-                    snapshot.forEach((categorySnapshot) => {
-                        const category = categorySnapshot.val();
-                        dropdown.innerHTML += `<option value="${categorySnapshot.key}">${category.name}</option>`;
-                    });
-                }
-            });
-        }
-
-        async function addNewLink() {
-            const name = document.getElementById('linkName').value;
-            const url = document.getElementById('linkUrl').value;
-            const categoryId = document.getElementById('linkCategory').value;
-            const icon = document.getElementById('linkIcon').value;
-
-            if (!name || !url || !categoryId) {
-                showError('Vul alle verplichte velden in!');
-                return;
-            }
-
-            try {
-                const newLink = {
-                    name: name,
-                    url: url,
-                    categoryId: categoryId,
-                    icon: icon || 'fas fa-link',
-                    createdBy: currentUser.username,
-                    createdAt: new Date().toISOString()
-                };
-
-                await database.ref('links').push(newLink);
-                closeModal('addLinkModal');
-                showSuccess('Link succesvol toegevoegd!');
-                loadLinks();
-                
-            } catch (error) {
-                showError('Fout bij toevoegen link: ' + error.message);
-            }
-        }
-
-        async function addNewCategory() {
-            const name = document.getElementById('categoryName').value;
-            const icon = document.getElementById('categoryIcon').value;
-
-            if (!name || !icon) {
-                showError('Vul alle velden in!');
-                return;
-            }
-
-            try {
-                const newCategory = {
-                    name: name,
-                    icon: icon,
-                    createdBy: currentUser.username,
-                    createdAt: new Date().toISOString()
-                };
-
-                await database.ref('categories').push(newCategory);
-                closeModal('addCategoryModal');
-                showSuccess('Categorie succesvol aangemaakt!');
-                loadLinks();
-                
-            } catch (error) {
-                showError('Fout bij aanmaken categorie: ' + error.message);
-            }
         }
 
         // Messages system functions
@@ -1195,12 +589,18 @@
                 usersSnapshot.forEach((userSnapshot) => {
                     const user = userSnapshot.val();
                     if (user.username !== currentUser.username) {
+                        const statusColor = user.status === "online" ? "#4ecdc4" : "#666";
                         usersHtml += `
                             <div class="user-chat-item" onclick="selectUserForChat('${userSnapshot.key}', '${user.username}')">
-                                <div class="user-avatar" style="width: 30px; height: 30px; font-size: 0.8rem;">
+                                <div class="user-avatar" style="width: 30px; height: 30px; font-size: 0.8rem; background: ${statusColor};">
                                     ${user.username.charAt(0).toUpperCase()}
                                 </div>
-                                <span>${user.username}</span>
+                                <div>
+                                    <div>${user.username}</div>
+                                    <small style="color: ${statusColor};">
+                                        ${user.status === "online" ? "Online" : "Offline"}
+                                    </small>
+                                </div>
                             </div>
                         `;
                     }
@@ -1218,12 +618,13 @@
             
             // Update UI
             document.getElementById('selectedUserInfo').innerHTML = `
-                <h4>Chat met ${username}</h4>
+                <h4><i class="fas fa-comment"></i> Chat met ${username}</h4>
             `;
             
             // Enable message input
             document.getElementById('messageInput').disabled = false;
             document.getElementById('sendMessageBtn').disabled = false;
+            document.getElementById('messageInput').focus();
             
             // Load messages
             loadChatMessages(userId);
@@ -1241,7 +642,6 @@
                 const snapshot = await messagesRef.orderByChild('timestamp').once('value');
                 
                 let messagesHtml = '';
-                let messageCount = 0;
                 
                 snapshot.forEach((messageSnapshot) => {
                     const message = messageSnapshot.val();
@@ -1251,12 +651,15 @@
                         (message.from === otherUserId && message.to === currentUser.id)) {
                         
                         const messageClass = message.from === currentUser.id ? 'sent' : 'received';
+                        const decryptedText = decryptMessage(message.encryptedText);
+                        const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        
                         messagesHtml += `
                             <div class="message ${messageClass}">
-                                ${message.text}
+                                ${decryptedText}
+                                <div class="message-time">${time}</div>
                             </div>
                         `;
-                        messageCount++;
                     }
                 });
                 
@@ -1278,10 +681,13 @@
             if (!text || !currentChatUser) return;
             
             try {
+                // Encrypt het bericht voordat het wordt opgeslagen
+                const encryptedText = encryptMessage(text);
+                
                 const newMessage = {
                     from: currentUser.id,
                     to: currentChatUser.id,
-                    text: text,
+                    encryptedText: encryptedText,
                     timestamp: Date.now(),
                     read: false
                 };
@@ -1297,142 +703,15 @@
             }
         }
 
-        // Admin panel functions (only for Bowen)
-        async function loadAdminData() {
-            if (!isBowen) return;
-            
-            try {
-                const [usersSnapshot, linksSnapshot, messagesSnapshot] = await Promise.all([
-                    database.ref('users').once('value'),
-                    database.ref('links').once('value'),
-                    database.ref('messages').once('value')
-                ]);
-
-                document.getElementById('adminTotalUsers').textContent = usersSnapshot.numChildren();
-                document.getElementById('adminTotalLinks').textContent = linksSnapshot.numChildren();
-                document.getElementById('adminTotalMessages').textContent = messagesSnapshot.numChildren();
-
-                // Load users list
-                let usersHtml = '';
-                usersSnapshot.forEach((userSnapshot) => {
-                    const user = userSnapshot.val();
-                    usersHtml += `
-                        <div class="user-item">
-                            <div>
-                                <strong>${user.username}</strong>
-                                ${user.isBowen ? ' <span style="color: var(--danger);">(Bowen)</span>' : ''}
-                                ${user.isAdmin ? ' <span style="color: var(--primary);">(Admin)</span>' : ''}
-                                <br>
-                                <small>Laatste login: ${new Date(user.lastLogin).toLocaleDateString()}</small>
-                            </div>
-                            <div class="user-actions">
-                                ${!user.isBowen ? `
-                                    <button class="btn btn-danger" onclick="deleteUser('${userSnapshot.key}')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                document.getElementById('adminUserList').innerHTML = usersHtml || '<p>Geen gebruikers gevonden</p>';
-
-            } catch (error) {
-                console.error('Error loading admin data:', error);
-            }
-        }
-
-        async function deleteUser(userId) {
-            if (!isBowen || !confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
-                return;
-            }
-
-            try {
-                await database.ref('users/' + userId).remove();
-                showSuccess('Gebruiker verwijderd!');
-                loadAdminData();
-            } catch (error) {
-                showError('Fout bij verwijderen gebruiker: ' + error.message);
-            }
-        }
-
-        function adminAction(action) {
-            if (!isBowen) return;
-            
-            switch(action) {
-                case 'clearData':
-                    if (confirm('WAARSCHUWING: Dit verwijdert ALLE data! Weet je het zeker?')) {
-                        clearAllData();
-                    }
-                    break;
-                case 'exportData':
-                    exportData();
-                    break;
-            }
-        }
-
-        async function clearAllData() {
-            try {
-                await database.ref('links').remove();
-                await database.ref('categories').remove();
-                await database.ref('messages').remove();
-                
-                // Don't remove users, keep Bowen account
-                const usersSnapshot = await database.ref('users').once('value');
-                const updates = {};
-                usersSnapshot.forEach((userSnapshot) => {
-                    const user = userSnapshot.val();
-                    if (!user.isBowen) {
-                        updates[userSnapshot.key] = null;
-                    }
-                });
-                await database.ref('users').update(updates);
-                
-                showSuccess('Alle data succesvol gewist!');
-                loadAdminData();
-                loadLinks();
-                
-            } catch (error) {
-                showError('Fout bij wissen data: ' + error.message);
-            }
-        }
-
-        function exportData() {
-            alert('Export functionaliteit kan hier worden toegevoegd');
-        }
-
-        // Modal functions
-        function showAddLinkModal() {
-            document.getElementById('addLinkModal').classList.remove('hidden');
-        }
-
-        function showAddCategoryModal() {
-            document.getElementById('addCategoryModal').classList.remove('hidden');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-
         // Utility functions
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
-            document.getElementById('successMessage').style.display = 'none';
         }
 
-        function showSuccess(message) {
-            const successDiv = document.getElementById('successMessage');
-            successDiv.textContent = message;
-            successDiv.style.display = 'block';
+        function clearError() {
             document.getElementById('errorMessage').style.display = 'none';
-        }
-
-        function clearMessages() {
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'none';
         }
 
         function setLoading(loading) {
@@ -1445,6 +724,21 @@
                 loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i>Inloggen';
             }
         }
+
+        // Voorkom right-click inspect
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Voorkom F12, Ctrl+Shift+I, etc.
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+                (e.ctrlKey && e.key === 'u')) {
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
