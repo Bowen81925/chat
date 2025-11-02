@@ -272,8 +272,8 @@
     <!-- Login Scherm -->
     <div id="loginScreen" class="login-container">
         <h2>🔒 Mijn Startpagina</h2>
-        <input type="text" id="username" placeholder="Gebruikersnaam">
-        <input type="password" id="password" placeholder="Wachtwoord">
+        <input type="text" id="username" placeholder="Gebruikersnaam" value="Bowen">
+        <input type="password" id="password" placeholder="Wachtwoord" value="admin123">
         <button class="login-btn" onclick="login()">Inloggen</button>
         <button class="create-account-btn" onclick="showCreateAccountScreen()">ACCOUNT AANMAKEN</button>
         <div id="loginError" class="error-message"></div>
@@ -355,14 +355,17 @@
             }
         });
 
-        // ALLEEN FIREBASE - GEEN LOCALSTORAGE
+        // SIMPELE FIREBASE FUNCTIES
         async function getFirebaseData() {
             try {
                 const snapshot = await database.ref('startpaginaSystem').once('value');
-                return snapshot.val();
+                const data = snapshot.val();
+                console.log('Firebase data geladen:', data);
+                return data;
             } catch (error) {
                 console.error('Fout bij ophalen data:', error);
-                return null;
+                // Maak standaard data aan als het niet bestaat
+                return await createInitialData();
             }
         }
 
@@ -377,59 +380,53 @@
             }
         }
 
-        async function initializeFirebaseData() {
-            let data = await getFirebaseData();
-            
-            if (!data) {
-                // Eerste keer: maak Bowen admin account aan
-                data = {
-                    users: [
-                        {
-                            username: "Bowen",
-                            password: "admin123",
-                            pincode: "0000",
-                            isAdmin: true,
-                            status: 'active',
-                            createdAt: new Date().toISOString()
-                        }
-                    ],
-                    userData: {
-                        "Bowen": {
-                            categories: [
-                                {
-                                    id: '1',
-                                    name: 'Zoekmachines',
-                                    icon: '🔍',
-                                    links: [
-                                        { id: '1', name: 'Google', url: 'https://google.com' },
-                                        { id: '2', name: 'DuckDuckGo', url: 'https://duckduckgo.com' }
-                                    ]
-                                },
-                                {
-                                    id: '2', 
-                                    name: 'Social Media',
-                                    icon: '👥',
-                                    links: [
-                                        { id: '1', name: 'YouTube', url: 'https://youtube.com' },
-                                        { id: '2', name: 'Reddit', url: 'https://reddit.com' }
-                                    ]
-                                }
-                            ],
-                            createdAt: new Date().toISOString(),
-                            lastLogin: null
-                        }
-                    },
-                    system: {
-                        accountCreationEnabled: true,
-                        lastSync: new Date().toISOString()
+        async function createInitialData() {
+            console.log('Maak initiële data aan in Firebase...');
+            const initialData = {
+                users: [
+                    {
+                        username: "Bowen",
+                        password: "admin123",
+                        pincode: "0000",
+                        isAdmin: true,
+                        status: 'active',
+                        createdAt: new Date().toISOString()
                     }
-                };
-                
-                await saveFirebaseData(data);
-                console.log("Bowen admin account aangemaakt in Firebase");
-            }
+                ],
+                userData: {
+                    "Bowen": {
+                        categories: [
+                            {
+                                id: '1',
+                                name: 'Zoekmachines',
+                                icon: '🔍',
+                                links: [
+                                    { id: '1', name: 'Google', url: 'https://google.com' },
+                                    { id: '2', name: 'DuckDuckGo', url: 'https://duckduckgo.com' }
+                                ]
+                            },
+                            {
+                                id: '2', 
+                                name: 'Social Media',
+                                icon: '👥',
+                                links: [
+                                    { id: '1', name: 'YouTube', url: 'https://youtube.com' },
+                                    { id: '2', name: 'Reddit', url: 'https://reddit.com' }
+                                ]
+                            }
+                        ],
+                        createdAt: new Date().toISOString(),
+                        lastLogin: null
+                    }
+                },
+                system: {
+                    accountCreationEnabled: true,
+                    lastSync: new Date().toISOString()
+                }
+            };
             
-            return data;
+            await saveFirebaseData(initialData);
+            return initialData;
         }
 
         // Timer functies voor account aanmaken
@@ -517,7 +514,7 @@
                 return;
             }
 
-            const data = await initializeFirebaseData();
+            const data = await getFirebaseData();
 
             // Check of account aanmaken enabled is
             if (!data.system.accountCreationEnabled) {
@@ -571,6 +568,9 @@
                 lastLogin: null
             };
 
+            // Update lastSync
+            data.system.lastSync = new Date().toISOString();
+
             // Opslaan in Firebase
             const success = await saveFirebaseData(data);
 
@@ -605,7 +605,7 @@
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('loginError');
 
-            const data = await initializeFirebaseData();
+            const data = await getFirebaseData();
             const user = data.users.find(u => u.username === username && u.password === password);
 
             if (user) {
@@ -615,6 +615,7 @@
                 // Update last login
                 if (data.userData[username]) {
                     data.userData[username].lastLogin = new Date().toISOString();
+                    data.system.lastSync = new Date().toISOString();
                     await saveFirebaseData(data);
                 }
                 
@@ -652,7 +653,7 @@
 
         // Load user data
         async function loadUserData() {
-            const data = await initializeFirebaseData();
+            const data = await getFirebaseData();
             const userData = data.userData[currentUser];
             
             if (userData && userData.categories) {
@@ -702,7 +703,7 @@
         // Bij het laden van de pagina
         window.onload = async function() {
             console.log("Pagina geladen - initialiseer Firebase data");
-            await initializeFirebaseData();
+            await createInitialData();
             console.log("Bowen admin account is beschikbaar: gebruikersnaam='Bowen', wachtwoord='admin123'");
         };
     </script>
