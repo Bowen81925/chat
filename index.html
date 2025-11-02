@@ -21,8 +21,6 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
         }
 
         .login-container, .create-account-container {
@@ -122,15 +120,11 @@
 
         .main-content {
             display: none;
-            flex: 1;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
         }
 
         header {
@@ -184,7 +178,6 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
-            flex: 1;
         }
 
         .category {
@@ -192,11 +185,6 @@
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .category:hover {
-            transform: translateY(-5px);
         }
 
         .category-header {
@@ -212,21 +200,6 @@
             color: #333;
             margin: 0;
             font-size: 1.4em;
-        }
-
-        .edit-category-btn {
-            background: #ffa726;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s ease;
-        }
-
-        .edit-category-btn:hover {
-            background: #ff9800;
         }
 
         .links {
@@ -250,54 +223,6 @@
         .link-item:hover {
             background: #667eea;
             color: white;
-            transform: translateX(5px);
-        }
-
-        .link-content {
-            flex: 1;
-            font-weight: 500;
-        }
-
-        .link-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .edit-link-btn, .delete-link-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .edit-link-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .delete-link-btn:hover {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .add-link-btn {
-            background: #4caf50;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-            width: 100%;
-            font-size: 14px;
-        }
-
-        .add-link-btn:hover {
-            background: #45a049;
-            transform: translateY(-2px);
         }
 
         .add-category-btn {
@@ -310,147 +235,10 @@
             font-size: 16px;
             transition: all 0.3s ease;
             margin-top: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .add-category-btn:hover {
             background: #8e24aa;
-            transform: translateY(-2px);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .modal h3 {
-            margin-bottom: 20px;
-            color: #333;
-            text-align: center;
-        }
-
-        .modal input, .modal select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
-
-        .modal input:focus, .modal select:focus {
-            border-color: #667eea;
-            outline: none;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .modal-btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            flex: 1;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .modal-btn.primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .modal-btn.primary:hover {
-            background: #5a6fd8;
-        }
-
-        .modal-btn.secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .modal-btn.secondary:hover {
-            background: #5a6268;
-        }
-
-        .firebase-status {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            z-index: 1001;
-            background: #4caf50;
-            color: white;
-        }
-
-        .birthday-surprise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 215, 0, 0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 10000;
-            animation: confetti 5s ease-in-out;
-        }
-
-        .birthday-cake {
-            font-size: 100px;
-            animation: bounce 2s infinite;
-        }
-
-        .birthday-message {
-            font-size: 3em;
-            color: #ff4081;
-            text-align: center;
-            margin: 20px;
-            animation: pulse 1.5s infinite;
-        }
-
-        .birthday-submessage {
-            font-size: 1.5em;
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .close-birthday {
-            background: #ff4081;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.2em;
-            cursor: pointer;
-            animation: pulse 2s infinite;
         }
 
         .version-footer {
@@ -461,59 +249,14 @@
             font-size: 14px;
             opacity: 0.8;
         }
-
-        @keyframes confetti {
-            0% { transform: translateY(-100%); }
-            50% { transform: translateY(0); }
-            100% { transform: translateY(0); }
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #ff0000;
-            animation: confetti-fall 5s linear forwards;
-        }
-
-        @keyframes confetti-fall {
-            0% { transform: translateY(-100px) rotate(0deg); }
-            100% { transform: translateY(100vh) rotate(360deg); }
-        }
     </style>
 </head>
 <body>
-    <!-- Verjaardagsverrassing -->
-    <div id="birthdaySurprise" class="birthday-surprise">
-        <div class="birthday-cake">🎂</div>
-        <div class="birthday-message">Gefeliciteerd! 🎉</div>
-        <div class="birthday-submessage">Jij bent jarig vandaag!<br>祝你生日快乐！</div>
-        <audio id="birthdaySong" loop>
-            <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-song-208.mp3" type="audio/mpeg">
-        </audio>
-        <button class="close-birthday" onclick="closeBirthdaySurprise()">Sluiten</button>
-    </div>
-
-    <!-- Firebase Status -->
-    <div id="firebaseStatus" class="firebase-status">
-        🔄 Verbinden met database...
-    </div>
-
     <!-- Login Scherm -->
     <div id="loginScreen" class="login-container">
         <h2>🔒 Mijn Startpagina</h2>
-        <input type="text" id="username" placeholder="Gebruikersnaam">
-        <input type="password" id="password" placeholder="Wachtwoord">
+        <input type="text" id="username" placeholder="Gebruikersnaam" value="test">
+        <input type="password" id="password" placeholder="Wachtwoord" value="test123">
         <button class="login-btn" onclick="login()">Inloggen</button>
         <button class="create-account-btn" onclick="showCreateAccountScreen()">ACCOUNT AANMAKEN</button>
         <div id="loginError" class="error-message"></div>
@@ -562,21 +305,8 @@
         </div>
     </div>
 
-    <!-- Modals -->
-    <div id="addCategoryModal" class="modal">
-        <div class="modal-content">
-            <h3>Nieuwe Categorie Toevoegen</h3>
-            <input type="text" id="categoryName" placeholder="Naam van categorie">
-            <input type="text" id="categoryIcon" placeholder="Emoji (bijv. 🔍)">
-            <div class="modal-buttons">
-                <button class="modal-btn primary" onclick="saveCategory()">Opslaan</button>
-                <button class="modal-btn secondary" onclick="closeModal('addCategoryModal')">Annuleren</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Firebase Configuratie
+        // SIMPELE FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyDxzy6QHdh_XqDRpVe_fHKFQwUez-XamQw",
             authDomain: "mijn-startpagina.firebaseapp.com",
@@ -592,74 +322,102 @@
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Firebase status bijwerken
-        database.ref('.info/connected').on('value', (snapshot) => {
-            const statusElement = document.getElementById('firebaseStatus');
-            if (snapshot.val() === true) {
-                statusElement.textContent = '✅ Online';
-                statusElement.style.background = '#4caf50';
-                console.log('Verbonden met Firebase');
-            } else {
-                statusElement.textContent = '❌ Offline';
-                statusElement.style.background = '#ff6b6b';
-                console.log('Niet verbonden met Firebase');
-            }
-        });
-
-        const ADMIN_USERNAME = "Bowen";
         let currentUser = null;
         let accountCreationTimer = null;
         let timerCount = 10;
 
-        // Verjaardagsfuncties
-        function checkBirthday(birthdate) {
-            if (!birthdate) return false;
+        // INITIELE DATA - ZORG DAT ER ALTIJD EEN TEST ACCOUNT IS
+        function initializeData() {
+            let data = localStorage.getItem('startpaginaData');
             
-            const today = new Date();
-            const birthDate = new Date(birthdate);
+            if (!data) {
+                // Maak standaard data aan met test account
+                const defaultData = {
+                    users: [
+                        {
+                            username: "test",
+                            password: "test123",
+                            pincode: "1234",
+                            birthdate: "2000-01-01",
+                            isAdmin: false,
+                            status: 'active',
+                            createdAt: new Date().toISOString()
+                        }
+                    ],
+                    userData: {
+                        "test": {
+                            categories: [
+                                {
+                                    id: '1',
+                                    name: 'Zoekmachines',
+                                    icon: '🔍',
+                                    links: [
+                                        { id: '1', name: 'Google', url: 'https://google.com' },
+                                        { id: '2', name: 'DuckDuckGo', url: 'https://duckduckgo.com' }
+                                    ]
+                                },
+                                {
+                                    id: '2', 
+                                    name: 'Social Media',
+                                    icon: '👥',
+                                    links: [
+                                        { id: '1', name: 'YouTube', url: 'https://youtube.com' },
+                                        { id: '2', name: 'Reddit', url: 'https://reddit.com' }
+                                    ]
+                                }
+                            ],
+                            createdAt: new Date().toISOString(),
+                            lastLogin: null
+                        }
+                    }
+                };
+                
+                localStorage.setItem('startpaginaData', JSON.stringify(defaultData));
+                console.log("Standaard data aangemaakt met test account");
+                return defaultData;
+            }
             
-            return today.getMonth() === birthDate.getMonth() && 
-                   today.getDate() === birthDate.getDate();
+            return JSON.parse(data);
         }
 
-        function showBirthdaySurprise() {
-            const surprise = document.getElementById('birthdaySurprise');
-            const audio = document.getElementById('birthdaySong');
+        // LOGIN FUNCTIE - SIMPEL EN WERKEND
+        function login() {
+            console.log("Login functie gestart");
             
-            surprise.style.display = 'flex';
-            audio.play().catch(e => console.log('Audio kon niet afgespeeld worden: ', e));
-            createConfetti();
-        }
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
 
-        function closeBirthdaySurprise() {
-            const surprise = document.getElementById('birthdaySurprise');
-            const audio = document.getElementById('birthdaySong');
-            
-            surprise.style.display = 'none';
-            audio.pause();
-            audio.currentTime = 0;
-        }
+            const data = initializeData();
+            const user = data.users.find(u => u.username === username && u.password === password);
 
-        function createConfetti() {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-            for (let i = 0; i < 100; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                    document.body.appendChild(confetti);
-                    
-                    setTimeout(() => {
-                        confetti.remove();
-                    }, 5000);
-                }, i * 50);
+            if (user) {
+                console.log("Login succesvol voor:", username);
+                currentUser = username;
+                
+                // Update last login
+                if (data.userData[username]) {
+                    data.userData[username].lastLogin = new Date().toISOString();
+                    localStorage.setItem('startpaginaData', JSON.stringify(data));
+                }
+                
+                // Toon hoofdscherm
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainScreen').style.display = 'block';
+                document.getElementById('userDisplay').textContent = username;
+                
+                // Laad gebruikersdata
+                loadUserData();
+            } else {
+                console.log("Login mislukt");
+                errorDiv.textContent = 'Ongeldige gebruikersnaam of wachtwoord';
+                errorDiv.style.display = 'block';
             }
         }
 
-        // Timer functies voor account aanmaken
+        // ACCOUNT AANMAKEN FUNCTIE
         function startAccountCreation() {
+            console.log("Start account creation");
             const createAccountBtn = document.getElementById('createAccountBtn');
             const timerElement = document.getElementById('createAccountTimer');
             
@@ -685,77 +443,9 @@
             }, 1000);
         }
 
-        function resetAccountCreationTimer() {
-            if (accountCreationTimer) {
-                clearInterval(accountCreationTimer);
-            }
-            timerCount = 10;
-            const createAccountBtn = document.getElementById('createAccountBtn');
-            const timerElement = document.getElementById('createAccountTimer');
-            
-            createAccountBtn.disabled = false;
-            createAccountBtn.textContent = 'ACCOUNT AANMAKEN';
-            timerElement.style.display = 'none';
-        }
-
-        // Data initialisatie
-        function initializeData() {
-            let allData = getLocalData();
-            
-            if (!allData) {
-                allData = {
-                    users: [],
-                    userData: {},
-                    system: {
-                        accountCreationEnabled: true,
-                        lastSync: new Date().toISOString()
-                    }
-                };
-                saveLocalData(allData);
-                syncToFirebase(allData);
-            }
-            
-            return allData;
-        }
-
-        // Helper functies
-        function getLocalData() {
-            const data = localStorage.getItem('startpaginaSystem');
-            return data ? JSON.parse(data) : null;
-        }
-
-        function saveLocalData(data) {
-            data.system.lastSync = new Date().toISOString();
-            localStorage.setItem('startpaginaSystem', JSON.stringify(data));
-        }
-
-        // Firebase sync functies
-        async function syncToFirebase(data) {
-            try {
-                await database.ref('startpaginaSystem').set(data);
-                console.log('✅ Data opgeslagen in Firebase:', data);
-            } catch (error) {
-                console.error('❌ Fout bij opslaan in Firebase:', error);
-            }
-        }
-
-        async function syncFromFirebase() {
-            try {
-                const snapshot = await database.ref('startpaginaSystem').once('value');
-                const firebaseData = snapshot.val();
-                if (firebaseData) {
-                    saveLocalData(firebaseData);
-                    console.log('✅ Data geladen van Firebase');
-                    return true;
-                }
-            } catch (error) {
-                console.error('❌ Fout bij laden van Firebase:', error);
-            }
-            return false;
-        }
-
-        // Account aanmaken functie
         function createAccount() {
+            console.log("Account aanmaken gestart");
+            
             const username = document.getElementById('newUsername').value.trim();
             const password = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
@@ -764,29 +454,29 @@
             const errorDiv = document.getElementById('createAccountError');
             const successDiv = document.getElementById('createAccountSuccess');
 
+            // Reset messages
             errorDiv.style.display = 'none';
             successDiv.style.display = 'none';
 
+            // Validatie
             if (!username || !password || !pincode || !birthdate) {
                 errorDiv.textContent = 'Vul alle velden in';
                 errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
                 return;
             }
 
             if (password !== confirmPassword) {
                 errorDiv.textContent = 'Wachtwoorden komen niet overeen';
                 errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
                 return;
             }
 
-            const allData = initializeData();
+            const data = initializeData();
 
-            if (allData.users.find(u => u.username === username)) {
+            // Check of gebruiker al bestaat
+            if (data.users.find(u => u.username === username)) {
                 errorDiv.textContent = 'Gebruikersnaam bestaat al';
                 errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
                 return;
             }
 
@@ -796,87 +486,61 @@
                 password: password,
                 pincode: pincode,
                 birthdate: birthdate,
-                isAdmin: username === ADMIN_USERNAME,
+                isAdmin: false,
                 status: 'active',
                 createdAt: new Date().toISOString()
             };
 
-            allData.users.push(newUser);
-            allData.userData[username] = {
-                categories: getDefaultCategories(),
+            data.users.push(newUser);
+            data.userData[username] = {
+                categories: [
+                    {
+                        id: '1',
+                        name: 'Zoekmachines',
+                        icon: '🔍',
+                        links: [
+                            { id: '1', name: 'Google', url: 'https://google.com' },
+                            { id: '2', name: 'DuckDuckGo', url: 'https://duckduckgo.com' }
+                        ]
+                    },
+                    {
+                        id: '2', 
+                        name: 'Social Media',
+                        icon: '👥',
+                        links: [
+                            { id: '1', name: 'YouTube', url: 'https://youtube.com' },
+                            { id: '2', name: 'Reddit', url: 'https://reddit.com' }
+                        ]
+                    }
+                ],
                 createdAt: new Date().toISOString(),
                 lastLogin: null
             };
 
-            // Opslaan en syncen
-            saveLocalData(allData);
-            syncToFirebase(allData);
-
-            // Success message
-            successDiv.textContent = `ACCOUNT AANGEMAAKT! Account "${username}" succesvol aangemaakt! Je wordt teruggeleid...`;
+            // Opslaan
+            localStorage.setItem('startpaginaData', JSON.stringify(data));
+            
+            // Toon succes
+            successDiv.textContent = `ACCOUNT AANGEMAAKT! Account "${username}" succesvol aangemaakt!`;
             successDiv.style.display = 'block';
 
-            // Velden leegmaken
-            document.getElementById('newUsername').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
-            document.getElementById('newPincode').value = '';
-            document.getElementById('birthdate').value = '';
+            console.log("Account aangemaakt:", username);
 
             // Terug naar login na 2 seconden
             setTimeout(() => {
                 showLoginScreen();
-                resetAccountCreationTimer();
             }, 2000);
         }
 
-        // Login functie
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
-
-            const allData = initializeData();
-            const user = allData.users.find(u => u.username === username && u.password === password);
-
-            if (user) {
-                currentUser = username;
-                
-                if (allData.userData[username]) {
-                    allData.userData[username].lastLogin = new Date().toISOString();
-                }
-                
-                saveLocalData(allData);
-                syncToFirebase(allData);
-                
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainScreen').style.display = 'block';
-                document.getElementById('userDisplay').textContent = username;
-                
-                if (checkBirthday(user.birthdate)) {
-                    setTimeout(() => {
-                        showBirthdaySurprise();
-                    }, 1000);
-                }
-                
-                loadUserData();
-            } else {
-                errorDiv.textContent = 'Ongeldige gebruikersnaam of wachtwoord';
-                errorDiv.style.display = 'block';
-            }
-        }
-
-        // Rest van de functies blijven hetzelfde...
+        // SCHEM NAVIGATIE
         function showLoginScreen() {
             document.getElementById('createAccountScreen').style.display = 'none';
             document.getElementById('loginScreen').style.display = 'block';
-            resetAccountCreationTimer();
         }
 
         function showCreateAccountScreen() {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('createAccountScreen').style.display = 'block';
-            resetAccountCreationTimer();
         }
 
         function logout() {
@@ -885,65 +549,10 @@
             document.getElementById('loginScreen').style.display = 'block';
         }
 
-        function openAddCategoryModal() {
-            document.getElementById('addCategoryModal').style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        function saveCategory() {
-            const name = document.getElementById('categoryName').value.trim();
-            const icon = document.getElementById('categoryIcon').value.trim();
-
-            if (!name) {
-                alert('Voer een categorienaam in');
-                return;
-            }
-
-            const allData = initializeData();
-            const newCategory = {
-                id: Date.now().toString(),
-                name: name,
-                icon: icon || '📁',
-                links: []
-            };
-
-            allData.userData[currentUser].categories.push(newCategory);
-            saveLocalData(allData);
-            syncToFirebase(allData);
-
-            closeModal('addCategoryModal');
-            loadUserData();
-        }
-
-        function getDefaultCategories() {
-            return [
-                {
-                    id: '1',
-                    name: 'Zoekmachines',
-                    icon: '🔍',
-                    links: [
-                        { id: '1', name: 'Google', url: 'https://google.com' },
-                        { id: '2', name: 'DuckDuckGo', url: 'https://duckduckgo.com' }
-                    ]
-                },
-                {
-                    id: '2', 
-                    name: 'Social Media',
-                    icon: '👥',
-                    links: [
-                        { id: '1', name: 'YouTube', url: 'https://youtube.com' },
-                        { id: '2', name: 'Reddit', url: 'https://reddit.com' }
-                    ]
-                }
-            ];
-        }
-
+        // LAAD GEBRUIKERSDATA
         function loadUserData() {
-            const allData = initializeData();
-            const userData = allData.userData[currentUser];
+            const data = initializeData();
+            const userData = data.userData[currentUser];
             
             if (userData && userData.categories) {
                 displayCategories(userData.categories);
@@ -960,25 +569,20 @@
                 categoryElement.innerHTML = `
                     <div class="category-header">
                         <h2>${category.icon} ${category.name}</h2>
-                        <button class="edit-category-btn" onclick="editCategory('${category.id}')">Bewerken</button>
                     </div>
                     <div class="links">
                         ${category.links.map(link => `
                             <a href="${link.url}" target="_blank" class="link-item">
-                                <div class="link-content">${link.name}</div>
-                                <div class="link-actions">
-                                    <button class="edit-link-btn" onclick="event.preventDefault(); editLink('${category.id}', '${link.id}')">✏️</button>
-                                    <button class="delete-link-btn" onclick="event.preventDefault(); deleteLink('${category.id}', '${link.id}')">🗑️</button>
-                                </div>
+                                <div>${link.name}</div>
                             </a>
                         `).join('')}
                     </div>
-                    <button class="add-link-btn" onclick="openAddLinkModal('${category.id}')">+ Link Toevoegen</button>
                 `;
                 container.appendChild(categoryElement);
             });
         }
 
+        // ZOEKFUNCTIE
         document.getElementById('searchInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const query = this.value.trim();
@@ -989,28 +593,17 @@
             }
         });
 
+        // INITIELE INSTELLINGEN
+        function openAddCategoryModal() {
+            alert('Deze functie komt in de volgende versie!');
+        }
+
+        // BIJ LADEN PAGINA
         window.onload = function() {
-            syncFromFirebase();
+            console.log("Pagina geladen - test account is beschikbaar");
+            console.log("Gebruikersnaam: test, Wachtwoord: test123");
+            initializeData(); // Zorg dat data bestaat
         };
-
-        function editCategory(categoryId) {
-            alert('Bewerk categorie: ' + categoryId);
-        }
-
-        function editLink(categoryId, linkId) {
-            alert('Bewerk link: ' + linkId + ' in categorie: ' + categoryId);
-        }
-
-        function deleteLink(categoryId, linkId) {
-            if (confirm('Weet je zeker dat je deze link wilt verwijderen?')) {
-                alert('Verwijder link: ' + linkId + ' van categorie: ' + categoryId);
-                loadUserData();
-            }
-        }
-
-        function openAddLinkModal(categoryId) {
-            alert('Voeg link toe aan categorie: ' + categoryId);
-        }
     </script>
 </body>
 </html>
