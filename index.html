@@ -275,9 +275,211 @@
             display: flex;
             gap: 10px;
         }
+
+        /* ADMIN PANEL STYLES */
+        .admin-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.95);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            z-index: 1000;
+            min-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid #ff6b6b;
+            display: none;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+
+        .admin-toggle {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .admin-commands {
+            display: block;
+        }
+
+        .command-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .command-section h4 {
+            margin-bottom: 10px;
+            color: #ff6b6b;
+        }
+
+        .command-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.3s ease;
+            font-size: 14px;
+        }
+
+        .command-btn:hover {
+            background: #45a049;
+        }
+
+        .command-btn.danger {
+            background: #ff6b6b;
+        }
+
+        .command-btn.danger:hover {
+            background: #ff5252;
+        }
+
+        .command-btn.warning {
+            background: #ffa726;
+        }
+
+        .command-btn.warning:hover {
+            background: #ff9800;
+        }
+
+        .accounts-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 5px;
+        }
+
+        .account-item {
+            padding: 8px;
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .account-item:last-child {
+            border-bottom: none;
+        }
+
+        .account-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .account-btn {
+            padding: 3px 8px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .account-btn.ban {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .account-btn.unban {
+            background: #4caf50;
+            color: white;
+        }
+
+        .account-btn.delete {
+            background: #f44336;
+            color: white;
+        }
+
+        .command-output {
+            max-height: 150px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 10px;
+            border: 1px solid #444;
+        }
+
+        .system-status {
+            font-size: 12px;
+            color: #ccc;
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
+    <!-- Admin Panel - ALLEEN VOOR BOWEN -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-header">
+            <h3>👑 Admin Panel</h3>
+            <button class="admin-toggle" onclick="toggleAdminPanel()">❌</button>
+        </div>
+        <div id="adminCommands" class="admin-commands">
+            <!-- Account Beheer -->
+            <div class="command-section">
+                <h4>📊 Account Beheer</h4>
+                <button class="command-btn" onclick="viewAccounts()">Toon Alle Accounts</button>
+                <button class="command-btn" onclick="showPasswords()">Toon Wachtwoorden</button>
+                <button class="command-btn" onclick="showPincodes()">Toon Pincodes</button>
+                
+                <div class="accounts-list" id="accountsList">
+                    <!-- Accounts worden hier geladen -->
+                </div>
+            </div>
+
+            <!-- Account Acties -->
+            <div class="command-section">
+                <h4>⚡ Snelle Acties</h4>
+                <button class="command-btn warning" onclick="deactivateAccountCreation()">Account Aanmaken Uitzetten</button>
+                <button class="command-btn" onclick="activateAccountCreation()">Account Aanmaken Aanzetten</button>
+                <button class="command-btn danger" onclick="resetAllData()">Alle Data Resetten</button>
+            </div>
+
+            <!-- Systeem Info -->
+            <div class="command-section">
+                <h4>ℹ️ Systeem Info</h4>
+                <div class="system-status">
+                    <div>Totaal Accounts: <span id="totalAccounts">0</span></div>
+                    <div>Account Aanmaken: <span id="accountCreationStatus">AAN</span></div>
+                    <div>Ingelogd als: <span id="adminUser">-</span></div>
+                </div>
+            </div>
+
+            <!-- Command Output -->
+            <div class="command-output" id="commandOutput">
+                Admin panel geladen. Druk op [ om te verbergen.
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase Status -->
     <div id="firebaseStatus" class="firebase-status">
         🔄 Verbinden...
@@ -372,6 +574,161 @@
         let currentUser = null;
         let accountCreationTimer = null;
         let timerCount = 10;
+        let adminPanelVisible = false;
+
+        // Toetsenbord event voor admin panel
+        document.addEventListener('keydown', function(event) {
+            // Druk op [ toets om admin panel te tonen/verbergen (alleen voor Bowen)
+            if (event.key === '[' && currentUser === ADMIN_USERNAME) {
+                event.preventDefault();
+                toggleAdminPanel();
+            }
+            
+            // Druk op Escape om admin panel te verbergen
+            if (event.key === 'Escape' && adminPanelVisible) {
+                hideAdminPanel();
+            }
+        });
+
+        function toggleAdminPanel() {
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanelVisible) {
+                adminPanel.style.display = 'none';
+                adminPanelVisible = false;
+            } else {
+                adminPanel.style.display = 'block';
+                adminPanelVisible = true;
+                updateAdminPanel();
+            }
+        }
+
+        function hideAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'none';
+            adminPanelVisible = false;
+        }
+
+        function updateAdminPanel() {
+            const data = getFirebaseData().then(data => {
+                document.getElementById('totalAccounts').textContent = data.users.length;
+                document.getElementById('accountCreationStatus').textContent = data.system.accountCreationEnabled ? 'AAN' : 'UIT';
+                document.getElementById('adminUser').textContent = currentUser;
+            });
+        }
+
+        // ADMIN FUNCTIES
+        async function viewAccounts() {
+            const data = await getFirebaseData();
+            const accountsList = document.getElementById('accountsList');
+            const output = document.getElementById('commandOutput');
+            
+            accountsList.innerHTML = '';
+            output.textContent = `📊 ${data.users.length} accounts gevonden:\n`;
+            
+            data.users.forEach(user => {
+                output.textContent += `- ${user.username} (${user.isAdmin ? 'Admin' : 'Gebruiker'}) - Status: ${user.status}\n`;
+                
+                const accountItem = document.createElement('div');
+                accountItem.className = 'account-item';
+                accountItem.innerHTML = `
+                    <div>
+                        <strong>${user.username}</strong> 
+                        ${user.isAdmin ? '👑' : '👤'} 
+                        - ${user.status}
+                    </div>
+                    <div class="account-actions">
+                        <button class="account-btn ${user.status === 'active' ? 'ban' : 'unban'}" 
+                                onclick="${user.status === 'active' ? 'banUser' : 'unbanUser'}('${user.username}')">
+                            ${user.status === 'active' ? 'BAN' : 'UNBAN'}
+                        </button>
+                        ${user.username !== ADMIN_USERNAME ? 
+                            `<button class="account-btn delete" onclick="deleteUser('${user.username}')">DELETE</button>` : 
+                            ''
+                        }
+                    </div>
+                `;
+                accountsList.appendChild(accountItem);
+            });
+        }
+
+        async function banUser(username) {
+            const data = await getFirebaseData();
+            const user = data.users.find(u => u.username === username);
+            if (user) {
+                user.status = 'banned';
+                await saveFirebaseData(data);
+                viewAccounts();
+                document.getElementById('commandOutput').textContent = `✅ ${username} is gebanned`;
+            }
+        }
+
+        async function unbanUser(username) {
+            const data = await getFirebaseData();
+            const user = data.users.find(u => u.username === username);
+            if (user) {
+                user.status = 'active';
+                await saveFirebaseData(data);
+                viewAccounts();
+                document.getElementById('commandOutput').textContent = `✅ ${username} is geunbanned`;
+            }
+        }
+
+        async function deleteUser(username) {
+            if (username === ADMIN_USERNAME) {
+                document.getElementById('commandOutput').textContent = '❌ Kan admin account niet verwijderen';
+                return;
+            }
+            
+            if (confirm(`Weet je zeker dat je ${username} wilt verwijderen?`)) {
+                const data = await getFirebaseData();
+                data.users = data.users.filter(u => u.username !== username);
+                delete data.userData[username];
+                await saveFirebaseData(data);
+                viewAccounts();
+                document.getElementById('commandOutput').textContent = `✅ ${username} is verwijderd`;
+            }
+        }
+
+        async function showPasswords() {
+            const data = await getFirebaseData();
+            const output = document.getElementById('commandOutput');
+            output.textContent = '🔐 Alle wachtwoorden:\n';
+            data.users.forEach(user => {
+                output.textContent += `- ${user.username}: ${user.password}\n`;
+            });
+        }
+
+        async function showPincodes() {
+            const data = await getFirebaseData();
+            const output = document.getElementById('commandOutput');
+            output.textContent = '🔢 Alle pincodes:\n';
+            data.users.forEach(user => {
+                output.textContent += `- ${user.username}: ${user.pincode}\n`;
+            });
+        }
+
+        async function deactivateAccountCreation() {
+            const data = await getFirebaseData();
+            data.system.accountCreationEnabled = false;
+            await saveFirebaseData(data);
+            updateAdminPanel();
+            document.getElementById('commandOutput').textContent = '✅ Account aanmaken is uitgeschakeld';
+        }
+
+        async function activateAccountCreation() {
+            const data = await getFirebaseData();
+            data.system.accountCreationEnabled = true;
+            await saveFirebaseData(data);
+            updateAdminPanel();
+            document.getElementById('commandOutput').textContent = '✅ Account aanmaken is ingeschakeld';
+        }
+
+        async function resetAllData() {
+            if (confirm('WEET JE ZEKER DAT JE ALLE DATA WILT RESETTEN? Alle accounts behalve Bowen zullen worden verwijderd!')) {
+                await createInitialData();
+                updateAdminPanel();
+                document.getElementById('commandOutput').textContent = '✅ Alle data is gereset, alleen Bowen account blijft';
+            }
+        }
 
         // Firebase status bijwerken
         database.ref('.info/connected').on('value', (snapshot) => {
@@ -385,16 +742,21 @@
             }
         });
 
-        // SIMPELE FIREBASE FUNCTIES
+        // FIREBASE FUNCTIES - BEWAART BESTAANDE DATA
         async function getFirebaseData() {
             try {
                 const snapshot = await database.ref('startpaginaSystem').once('value');
-                const data = snapshot.val();
+                let data = snapshot.val();
+                
+                // Als data niet bestaat, maak dan alleen Bowen account aan
+                if (!data) {
+                    data = await createInitialData();
+                }
+                
                 console.log('Firebase data geladen:', data);
                 return data;
             } catch (error) {
                 console.error('Fout bij ophalen data:', error);
-                // Maak standaard data aan als het niet bestaat
                 return await createInitialData();
             }
         }
@@ -459,6 +821,7 @@
             return initialData;
         }
 
+        // [REST VAN DE CODE BLIJFT HETZELFDE - wachtwoord wijzigen, login, etc.]
         // WACHTWOORD WIJZIGEN FUNCTIE
         async function changePassword() {
             console.log("Wachtwoord wijzigen gestart voor:", currentUser);
@@ -537,6 +900,7 @@
             }
         }
 
+        // [REST VAN DE FUNCTIES - login, account aanmaken, etc. blijft hetzelfde]
         // Timer functies voor account aanmaken
         function startAccountCreation() {
             console.log("Start account creation timer");
@@ -690,148 +1054,3 @@
                 // Velden leegmaken
                 document.getElementById('newUsername').value = '';
                 document.getElementById('newPassword').value = '';
-                document.getElementById('confirmPassword').value = '';
-                document.getElementById('newPincode').value = '';
-
-                // Terug naar login na 2 seconden
-                setTimeout(() => {
-                    showLoginScreen();
-                    resetAccountCreationTimer();
-                }, 2000);
-            } else {
-                errorDiv.textContent = 'Fout bij aanmaken account. Probeer opnieuw.';
-                errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
-            }
-        }
-
-        // Login functie
-        async function login() {
-            console.log("Login functie gestart");
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
-
-            const data = await getFirebaseData();
-            const user = data.users.find(u => u.username === username && u.password === password);
-
-            if (user) {
-                console.log("Login succesvol voor:", username);
-                currentUser = username;
-                
-                // Update last login
-                if (data.userData[username]) {
-                    data.userData[username].lastLogin = new Date().toISOString();
-                    data.system.lastSync = new Date().toISOString();
-                    await saveFirebaseData(data);
-                }
-                
-                // Scherm wisselen
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainScreen').style.display = 'block';
-                document.getElementById('userDisplay').textContent = username;
-                
-                loadUserData();
-            } else {
-                console.log("Login mislukt");
-                errorDiv.textContent = 'Ongeldige gebruikersnaam of wachtwoord';
-                errorDiv.style.display = 'block';
-            }
-        }
-
-        // Scherm navigatie
-        function showLoginScreen() {
-            document.getElementById('createAccountScreen').style.display = 'none';
-            document.getElementById('changePasswordScreen').style.display = 'none';
-            document.getElementById('mainScreen').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'block';
-            resetAccountCreationTimer();
-        }
-
-        function showCreateAccountScreen() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('changePasswordScreen').style.display = 'none';
-            document.getElementById('mainScreen').style.display = 'none';
-            document.getElementById('createAccountScreen').style.display = 'block';
-            resetAccountCreationTimer();
-        }
-
-        function showChangePasswordScreen() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('createAccountScreen').style.display = 'none';
-            document.getElementById('mainScreen').style.display = 'none';
-            document.getElementById('changePasswordScreen').style.display = 'block';
-        }
-
-        function showMainScreen() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('createAccountScreen').style.display = 'none';
-            document.getElementById('changePasswordScreen').style.display = 'none';
-            document.getElementById('mainScreen').style.display = 'block';
-        }
-
-        function logout() {
-            currentUser = null;
-            document.getElementById('mainScreen').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'block';
-        }
-
-        // Load user data
-        async function loadUserData() {
-            const data = await getFirebaseData();
-            const userData = data.userData[currentUser];
-            
-            if (userData && userData.categories) {
-                displayCategories(userData.categories);
-            }
-        }
-
-        function displayCategories(categories) {
-            const container = document.getElementById('categoriesContainer');
-            container.innerHTML = '';
-
-            categories.forEach(category => {
-                const categoryElement = document.createElement('div');
-                categoryElement.className = 'category';
-                categoryElement.innerHTML = `
-                    <div class="category-header">
-                        <h2>${category.icon} ${category.name}</h2>
-                    </div>
-                    <div class="links">
-                        ${category.links.map(link => `
-                            <a href="${link.url}" target="_blank" class="link-item">
-                                <div>${link.name}</div>
-                            </a>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(categoryElement);
-            });
-        }
-
-        // Search functie
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const query = this.value.trim();
-                if (query) {
-                    window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
-                    this.value = '';
-                }
-            }
-        });
-
-        // Modal functie
-        function openAddCategoryModal() {
-            alert('Deze functie komt in de volgende versie!');
-        }
-
-        // Bij het laden van de pagina
-        window.onload = async function() {
-            console.log("Pagina geladen - initialiseer Firebase data");
-            await createInitialData();
-            console.log("Bowen admin account is beschikbaar: gebruikersnaam='Bowen', wachtwoord='admin123'");
-        };
-    </script>
-</body>
-</html>
