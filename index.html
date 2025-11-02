@@ -3,1054 +3,817 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mijn Startpagina</title>
+    <title>Login Systeem</title>
     
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
+            transition: all 0.3s ease;
         }
 
-        .login-container, .create-account-container, .change-password-container {
-            max-width: 400px;
-            margin: 50px auto;
-            background: white;
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Login Container */
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
         }
 
-        .login-container h2, .create-account-container h2, .change-password-container h2 {
+        .login-header {
+            text-align: center;
             margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .login-header p {
+            color: #666;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+        }
+
+        .password-toggle:hover {
             color: #333;
         }
 
-        .login-container input, .create-account-container input, .change-password-container input {
+        .btn-login {
             width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
-
-        .login-container input:focus, .create-account-container input:focus, .change-password-container input:focus {
-            border-color: #667eea;
-            outline: none;
-        }
-
-        .login-btn, .create-account-btn, .back-to-login-btn, .change-password-btn {
-            width: 100%;
-            padding: 15px;
-            background: #667eea;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
         }
 
-        .create-account-btn {
-            background: #4caf50;
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .create-account-btn:hover {
-            background: #45a049;
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .create-account-btn:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
+        .btn-register:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .change-password-btn {
-            background: #ff9800;
-        }
-
-        .change-password-btn:hover {
-            background: #f57c00;
-        }
-
-        .back-to-login-btn {
-            background: #6c757d;
-        }
-
-        .back-to-login-btn:hover {
-            background: #5a6268;
-        }
-
-        .login-btn:hover {
-            background: #5a6fd8;
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.9rem;
         }
 
         .error-message {
-            color: #ff6b6b;
-            margin-top: 10px;
+            background: #ff6b6b;
+            color: white;
             padding: 10px;
             border-radius: 5px;
-            background: #fff5f5;
-            display: none;
-        }
-
-        .success-message {
-            color: #4caf50;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            background: #f8fff8;
-            display: none;
-        }
-
-        .timer-message {
-            color: #ff9800;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            background: #fff3e0;
-            display: none;
-        }
-
-        .main-content {
-            display: none;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header {
+            margin-bottom: 15px;
             text-align: center;
-            margin-bottom: 40px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: none;
         }
 
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .logout-btn, .change-password-header-btn {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 2px solid white;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            margin-left: 10px;
-        }
-
-        .logout-btn:hover, .change-password-header-btn:hover {
-            background: white;
-            color: #667eea;
-        }
-
-        .search-bar {
-            max-width: 600px;
-            margin: 30px auto;
-        }
-
-        .search-bar input {
+        /* Main Menu */
+        .menu-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px;
             width: 100%;
-            padding: 15px 25px;
-            font-size: 16px;
-            border: none;
-            border-radius: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            outline: none;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
         }
 
-        .categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+        .menu-header {
+            text-align: center;
             margin-bottom: 30px;
         }
 
-        .category {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        .menu-header h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
 
-        .category-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .user-info {
+            color: #666;
+            font-size: 1rem;
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #667eea;
         }
 
-        .category h2 {
-            color: #333;
-            margin: 0;
-            font-size: 1.4em;
-        }
-
-        .links {
+        .menu-buttons {
             display: grid;
-            gap: 12px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .link-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .menu-btn {
             padding: 15px;
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
             border-radius: 10px;
-            text-decoration: none;
-            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
             transition: all 0.3s ease;
-            border-left: 4px solid #667eea;
+            text-align: center;
         }
 
-        .link-item:hover {
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .menu-btn.secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .menu-btn.secondary:hover {
             background: #667eea;
             color: white;
         }
 
-        .add-category-btn {
-            background: #9c27b0;
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            margin-top: 30px;
+        .menu-btn.admin {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
         }
 
-        .add-category-btn:hover {
-            background: #8e24aa;
+        .menu-btn.admin:hover {
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
         }
 
-        .version-footer {
-            text-align: center;
-            color: white;
-            margin-top: 40px;
-            padding: 20px;
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        .firebase-status {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            padding: 8px 12px;
+        /* Admin Panel */
+        .admin-container {
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            font-size: 12px;
-            z-index: 1001;
-            background: #4caf50;
-            color: white;
-        }
-
-        .header-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        /* ADMIN PANEL STYLES */
-        .admin-panel {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.95);
-            padding: 20px;
-            border-radius: 15px;
-            color: white;
-            z-index: 1000;
-            min-width: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 2px solid #ff6b6b;
-            display: none;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
         }
 
         .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #444;
-        }
-
-        .admin-toggle {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .admin-commands {
-            display: block;
-        }
-
-        .command-section {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-        }
-
-        .command-section h4 {
-            margin-bottom: 10px;
-            color: #ff6b6b;
-        }
-
-        .command-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            background: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
             text-align: center;
-            transition: background 0.3s ease;
-            font-size: 14px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
         }
 
-        .command-btn:hover {
-            background: #45a049;
+        .admin-header h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
         }
 
-        .command-btn.danger {
-            background: #ff6b6b;
+        .admin-subtitle {
+            color: #ff6b6b;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
-        .command-btn.danger:hover {
-            background: #ff5252;
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
-        .command-btn.warning {
-            background: #ffa726;
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
         }
 
-        .command-btn.warning:hover {
-            background: #ff9800;
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
 
-        .accounts-list {
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .admin-section {
+            margin-bottom: 30px;
+        }
+
+        .admin-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .user-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
             max-height: 200px;
             overflow-y: auto;
-            margin: 10px 0;
-            padding: 10px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 5px;
         }
 
-        .account-item {
-            padding: 8px;
-            border-bottom: 1px solid #444;
+        .user-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
         }
 
-        .account-item:last-child {
+        .user-item:last-child {
             border-bottom: none;
         }
 
-        .account-actions {
-            display: flex;
-            gap: 5px;
-        }
-
-        .account-btn {
-            padding: 3px 8px;
+        .user-actions button {
+            padding: 5px 10px;
+            margin-left: 5px;
             border: none;
-            border-radius: 3px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 10px;
+            font-size: 0.8rem;
         }
 
-        .account-btn.ban {
+        .btn-edit {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .btn-delete {
             background: #ff6b6b;
             color: white;
         }
 
-        .account-btn.unban {
-            background: #4caf50;
+        .back-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .back-btn:hover {
+            background: #667eea;
             color: white;
         }
 
-        .account-btn.delete {
-            background: #f44336;
-            color: white;
-        }
-
-        .command-output {
-            max-height: 150px;
-            overflow-y: auto;
-            background: rgba(0,0,0,0.7);
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 12px;
-            margin-top: 10px;
-            border: 1px solid #444;
-        }
-
-        .system-status {
-            font-size: 12px;
-            color: #ccc;
-            margin-top: 10px;
-            padding: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 5px;
+        @media (max-width: 480px) {
+            .login-container,
+            .menu-container,
+            .admin-container {
+                padding: 30px 20px;
+            }
+            
+            .login-header h1,
+            .menu-header h1,
+            .admin-header h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Admin Panel - ALLEEN VOOR BOWEN -->
-    <div id="adminPanel" class="admin-panel">
-        <div class="admin-header">
-            <h3>👑 Admin Panel</h3>
-            <button class="admin-toggle" onclick="toggleAdminPanel()">❌</button>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-header">
+            <h1>Welkom</h1>
+            <p>Voer uw inloggegevens in</p>
         </div>
-        <div id="adminCommands" class="admin-commands">
-            <!-- Account Beheer -->
-            <div class="command-section">
-                <h4>📊 Account Beheer</h4>
-                <button class="command-btn" onclick="viewAccounts()">Toon Alle Accounts</button>
-                <button class="command-btn" onclick="showPasswords()">Toon Wachtwoorden</button>
-                <button class="command-btn" onclick="showPincodes()">Toon Pincodes</button>
-                
-                <div class="accounts-list" id="accountsList">
-                    <!-- Accounts worden hier geladen -->
-                </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Gebruikersnaam</label>
+                <input type="text" id="username" class="form-control" placeholder="Voer uw gebruikersnaam in" required>
             </div>
-
-            <!-- Account Acties -->
-            <div class="command-section">
-                <h4>⚡ Snelle Acties</h4>
-                <button class="command-btn warning" onclick="deactivateAccountCreation()">Account Aanmaken Uitzetten</button>
-                <button class="command-btn" onclick="activateAccountCreation()">Account Aanmaken Aanzetten</button>
-                <button class="command-btn danger" onclick="resetAllData()">Alle Data Resetten</button>
-            </div>
-
-            <!-- Systeem Info -->
-            <div class="command-section">
-                <h4>ℹ️ Systeem Info</h4>
-                <div class="system-status">
-                    <div>Totaal Accounts: <span id="totalAccounts">0</span></div>
-                    <div>Account Aanmaken: <span id="accountCreationStatus">AAN</span></div>
-                    <div>Ingelogd als: <span id="adminUser">-</span></div>
-                </div>
-            </div>
-
-            <!-- Command Output -->
-            <div class="command-output" id="commandOutput">
-                Admin panel geladen. Druk op [ om te verbergen.
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase Status -->
-    <div id="firebaseStatus" class="firebase-status">
-        🔄 Verbinden...
-    </div>
-
-    <!-- Login Scherm -->
-    <div id="loginScreen" class="login-container">
-        <h2>🔒 Mijn Startpagina</h2>
-        <input type="text" id="username" placeholder="Gebruikersnaam" value="Bowen">
-        <input type="password" id="password" placeholder="Wachtwoord" value="admin123">
-        <button class="login-btn" onclick="login()">Inloggen</button>
-        <button class="create-account-btn" onclick="showCreateAccountScreen()">ACCOUNT AANMAKEN</button>
-        <div id="loginError" class="error-message"></div>
-    </div>
-
-    <!-- Account Aanmaak Scherm -->
-    <div id="createAccountScreen" class="create-account-container" style="display: none;">
-        <h2>👤 Account Aanmaken</h2>
-        <input type="text" id="newUsername" placeholder="Kies een gebruikersnaam">
-        <input type="password" id="newPassword" placeholder="Kies een wachtwoord">
-        <input type="password" id="confirmPassword" placeholder="Bevestig wachtwoord">
-        <input type="text" id="newPincode" placeholder="Kies een pincode (4 cijfers)" maxlength="4">
-        <button class="create-account-btn" id="createAccountBtn" onclick="startAccountCreation()">ACCOUNT AANMAKEN</button>
-        <div id="createAccountTimer" class="timer-message"></div>
-        <button class="back-to-login-btn" onclick="showLoginScreen()">← Terug naar Inloggen</button>
-        <div id="createAccountError" class="error-message"></div>
-        <div id="createAccountSuccess" class="success-message"></div>
-    </div>
-
-    <!-- Wachtwoord Wijzigen Scherm -->
-    <div id="changePasswordScreen" class="change-password-container" style="display: none;">
-        <h2>🔑 Wachtwoord Wijzigen</h2>
-        <input type="password" id="currentPassword" placeholder="Huidig wachtwoord">
-        <input type="password" id="newPasswordChange" placeholder="Nieuw wachtwoord">
-        <input type="password" id="confirmNewPassword" placeholder="Bevestig nieuw wachtwoord">
-        <input type="text" id="pincodeVerification" placeholder="Voer je pincode in" maxlength="4">
-        <button class="change-password-btn" onclick="changePassword()">WACHTWOORD WIJZIGEN</button>
-        <button class="back-to-login-btn" onclick="showMainScreen()">← Terug naar Startpagina</button>
-        <div id="changePasswordError" class="error-message"></div>
-        <div id="changePasswordSuccess" class="success-message"></div>
-    </div>
-
-    <!-- Hoofd Content -->
-    <div id="mainScreen" class="main-content">
-        <div class="container">
-            <header>
-                <div>
-                    <h1>Mijn Startpagina</h1>
-                    <p>Welkom, <span id="userDisplay">Gebruiker</span>!</p>
-                </div>
-                <div class="header-buttons">
-                    <button class="change-password-header-btn" onclick="showChangePasswordScreen()">🔑 Wachtwoord Wijzigen</button>
-                    <button class="logout-btn" onclick="logout()">Uitloggen</button>
-                </div>
-            </header>
-
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Zoek op internet...">
-            </div>
-
-            <div id="categoriesContainer" class="categories">
-                <!-- Categories worden hier geladen -->
-            </div>
-
-            <button class="add-category-btn" onclick="openAddCategoryModal()">+ Nieuwe Categorie Toevoegen</button>
             
-            <!-- V1 Footer -->
-            <div class="version-footer">
-                V1
+            <div class="form-group">
+                <label for="password">Wachtwoord</label>
+                <div class="input-with-icon">
+                    <input type="password" id="password" class="form-control" placeholder="Voer uw wachtwoord in" required>
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        👁️
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-login" id="loginBtn">Inloggen</button>
+            <button type="button" class="btn-register" id="registerBtn">Account maken</button>
+        </form>
+        
+        <div class="login-footer">
+            <p>Beveiligde toegang - Firebase Database</p>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div class="menu-container hidden" id="mainMenu">
+        <div class="menu-header">
+            <h1>Hoofdmenu</h1>
+            <div class="user-info" id="userInfo">
+                Ingelogd als: <span id="loggedInUser"></span>
             </div>
         </div>
+        
+        <div class="menu-buttons">
+            <button class="menu-btn" onclick="showSection('profile')">
+                📊 Mijn Profiel
+            </button>
+            <button class="menu-btn" onclick="showSection('settings')">
+                ⚙️ Instellingen
+            </button>
+            <button class="menu-btn" onclick="showSection('messages')">
+                💬 Berichten
+            </button>
+            <button class="menu-btn admin" onclick="showAdminPanel()" id="adminBtn">
+                🔧 Admin Panel
+            </button>
+        </div>
+        
+        <button class="back-btn" onclick="logout()">
+            🔐 Uitloggen
+        </button>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-container hidden" id="adminPanel">
+        <div class="admin-header">
+            <h1>Admin Panel</h1>
+            <div class="admin-subtitle">Beheerdersdashboard</div>
+        </div>
+        
+        <div class="admin-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">Gebruikers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="onlineUsers">0</div>
+                <div class="stat-label">Online</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="adminUsers">0</div>
+                <div class="stat-label">Admins</div>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <h3>Gebruikersbeheer</h3>
+            <div class="user-list" id="userList">
+                <div class="user-item">
+                    <div>Gebruikers laden...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="admin-section">
+            <h3>Systeeminstellingen</h3>
+            <div class="menu-buttons">
+                <button class="menu-btn secondary" onclick="adminAction('backup')">
+                    💾 Backup Maken
+                </button>
+                <button class="menu-btn secondary" onclick="adminAction('logs')">
+                    📋 Logs Bekijken
+                </button>
+                <button class="menu-btn secondary" onclick="adminAction('maintenance')">
+                    🔧 Onderhoud
+                </button>
+            </div>
+        </div>
+        
+        <button class="back-btn" onclick="backToMenu()">
+            ← Terug naar Menu
+        </button>
     </div>
 
     <script>
-        // Firebase Configuratie
+        // Firebase config - VERVANG DIT MET JE EIGEN CONFIG
         const firebaseConfig = {
-            apiKey: "AIzaSyDxzy6QHdh_XqDRpVe_fHKFQwUez-XamQw",
-            authDomain: "mijn-startpagina.firebaseapp.com",
-            databaseURL: "https://mijn-startpagina-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "mijn-startpagina",
-            storageBucket: "mijn-startpagina.firebasestorage.app",
-            messagingSenderId: "44245658637",
-            appId: "1:44245658637:web:b1c544978d52e4f5b57944",
-            measurementId: "G-0WDW1WMZ0X"
+            apiKey: "jouw-api-key",
+            authDomain: "jouw-project.firebaseapp.com",
+            projectId: "jouw-project-id",
+            storageBucket: "jouw-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "jouw-app-id"
         };
 
         // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        const ADMIN_USERNAME = "Bowen";
+        // DOM Elements
+        const loginScreen = document.getElementById('loginScreen');
+        const mainMenu = document.getElementById('mainMenu');
+        const adminPanel = document.getElementById('adminPanel');
+        const loggedInUser = document.getElementById('loggedInUser');
+        const adminBtn = document.getElementById('adminBtn');
+        const userList = document.getElementById('userList');
+        const totalUsers = document.getElementById('totalUsers');
+        const onlineUsers = document.getElementById('onlineUsers');
+        const adminUsers = document.getElementById('adminUsers');
+        const errorMessage = document.getElementById('errorMessage');
+        const loginBtn = document.getElementById('loginBtn');
+
         let currentUser = null;
-        let accountCreationTimer = null;
-        let timerCount = 10;
-        let adminPanelVisible = false;
+        let isAdmin = false;
 
-        // Toetsenbord event voor admin panel
-        document.addEventListener('keydown', function(event) {
-            // Druk op [ toets om admin panel te tonen/verbergen (alleen voor Bowen)
-            if (event.key === '[' && currentUser === ADMIN_USERNAME) {
-                event.preventDefault();
-                toggleAdminPanel();
-            }
-            
-            // Druk op Escape om admin panel te verbergen
-            if (event.key === 'Escape' && adminPanelVisible) {
-                hideAdminPanel();
-            }
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle password visibility
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+            });
+
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleLogin();
+            });
+
+            // Register button
+            document.getElementById('registerBtn').addEventListener('click', function() {
+                handleRegister();
+            });
         });
 
-        function toggleAdminPanel() {
-            const adminPanel = document.getElementById('adminPanel');
-            if (adminPanelVisible) {
-                adminPanel.style.display = 'none';
-                adminPanelVisible = false;
-            } else {
-                adminPanel.style.display = 'block';
-                adminPanelVisible = true;
-                updateAdminPanel();
-            }
-        }
+        // Functions
+        async function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-        function hideAdminPanel() {
-            document.getElementById('adminPanel').style.display = 'none';
-            adminPanelVisible = false;
-        }
-
-        function updateAdminPanel() {
-            const data = getFirebaseData().then(data => {
-                document.getElementById('totalAccounts').textContent = data.users.length;
-                document.getElementById('accountCreationStatus').textContent = data.system.accountCreationEnabled ? 'AAN' : 'UIT';
-                document.getElementById('adminUser').textContent = currentUser;
-            });
-        }
-
-        // ADMIN FUNCTIES
-        async function viewAccounts() {
-            const data = await getFirebaseData();
-            const accountsList = document.getElementById('accountsList');
-            const output = document.getElementById('commandOutput');
-            
-            accountsList.innerHTML = '';
-            output.textContent = `📊 ${data.users.length} accounts gevonden:\n`;
-            
-            data.users.forEach(user => {
-                output.textContent += `- ${user.username} (${user.isAdmin ? 'Admin' : 'Gebruiker'}) - Status: ${user.status}\n`;
-                
-                const accountItem = document.createElement('div');
-                accountItem.className = 'account-item';
-                accountItem.innerHTML = `
-                    <div>
-                        <strong>${user.username}</strong> 
-                        ${user.isAdmin ? '👑' : '👤'} 
-                        - ${user.status}
-                    </div>
-                    <div class="account-actions">
-                        <button class="account-btn ${user.status === 'active' ? 'ban' : 'unban'}" 
-                                onclick="${user.status === 'active' ? 'banUser' : 'unbanUser'}('${user.username}')">
-                            ${user.status === 'active' ? 'BAN' : 'UNBAN'}
-                        </button>
-                        ${user.username !== ADMIN_USERNAME ? 
-                            `<button class="account-btn delete" onclick="deleteUser('${user.username}')">DELETE</button>` : 
-                            ''
-                        }
-                    </div>
-                `;
-                accountsList.appendChild(accountItem);
-            });
-        }
-
-        async function banUser(username) {
-            const data = await getFirebaseData();
-            const user = data.users.find(u => u.username === username);
-            if (user) {
-                user.status = 'banned';
-                await saveFirebaseData(data);
-                viewAccounts();
-                document.getElementById('commandOutput').textContent = `✅ ${username} is gebanned`;
-            }
-        }
-
-        async function unbanUser(username) {
-            const data = await getFirebaseData();
-            const user = data.users.find(u => u.username === username);
-            if (user) {
-                user.status = 'active';
-                await saveFirebaseData(data);
-                viewAccounts();
-                document.getElementById('commandOutput').textContent = `✅ ${username} is geunbanned`;
-            }
-        }
-
-        async function deleteUser(username) {
-            if (username === ADMIN_USERNAME) {
-                document.getElementById('commandOutput').textContent = '❌ Kan admin account niet verwijderen';
+            if (!username || !password) {
+                showError('Vul zowel gebruikersnaam als wachtwoord in!');
                 return;
             }
-            
-            if (confirm(`Weet je zeker dat je ${username} wilt verwijderen?`)) {
-                const data = await getFirebaseData();
-                data.users = data.users.filter(u => u.username !== username);
-                delete data.userData[username];
-                await saveFirebaseData(data);
-                viewAccounts();
-                document.getElementById('commandOutput').textContent = `✅ ${username} is verwijderd`;
-            }
-        }
 
-        async function showPasswords() {
-            const data = await getFirebaseData();
-            const output = document.getElementById('commandOutput');
-            output.textContent = '🔐 Alle wachtwoorden:\n';
-            data.users.forEach(user => {
-                output.textContent += `- ${user.username}: ${user.password}\n`;
-            });
-        }
+            setLoading(true);
 
-        async function showPincodes() {
-            const data = await getFirebaseData();
-            const output = document.getElementById('commandOutput');
-            output.textContent = '🔢 Alle pincodes:\n';
-            data.users.forEach(user => {
-                output.textContent += `- ${user.username}: ${user.pincode}\n`;
-            });
-        }
-
-        async function deactivateAccountCreation() {
-            const data = await getFirebaseData();
-            data.system.accountCreationEnabled = false;
-            await saveFirebaseData(data);
-            updateAdminPanel();
-            document.getElementById('commandOutput').textContent = '✅ Account aanmaken is uitgeschakeld';
-        }
-
-        async function activateAccountCreation() {
-            const data = await getFirebaseData();
-            data.system.accountCreationEnabled = true;
-            await saveFirebaseData(data);
-            updateAdminPanel();
-            document.getElementById('commandOutput').textContent = '✅ Account aanmaken is ingeschakeld';
-        }
-
-        async function resetAllData() {
-            if (confirm('WEET JE ZEKER DAT JE ALLE DATA WILT RESETTEN? Alle accounts behalve Bowen zullen worden verwijderd!')) {
-                await createInitialData();
-                updateAdminPanel();
-                document.getElementById('commandOutput').textContent = '✅ Alle data is gereset, alleen Bowen account blijft';
-            }
-        }
-
-        // Firebase status bijwerken
-        database.ref('.info/connected').on('value', (snapshot) => {
-            const statusElement = document.getElementById('firebaseStatus');
-            if (snapshot.val() === true) {
-                statusElement.textContent = '✅ Online';
-                statusElement.style.background = '#4caf50';
-            } else {
-                statusElement.textContent = '❌ Offline';
-                statusElement.style.background = '#ff6b6b';
-            }
-        });
-
-        // FIREBASE FUNCTIES - BEWAART BESTAANDE DATA
-        async function getFirebaseData() {
             try {
-                const snapshot = await database.ref('startpaginaSystem').once('value');
-                let data = snapshot.val();
-                
-                // Als data niet bestaat, maak dan alleen Bowen account aan
-                if (!data) {
-                    data = await createInitialData();
+                // Check user in Firestore
+                const usersSnapshot = await db.collection('users')
+                    .where('username', '==', username)
+                    .where('password', '==', password)
+                    .get();
+
+                if (usersSnapshot.empty) {
+                    showError('Ongeldige gebruikersnaam of wachtwoord!');
+                    return;
                 }
+
+                const userDoc = usersSnapshot.docs[0];
+                const userData = userDoc.data();
                 
-                console.log('Firebase data geladen:', data);
-                return data;
+                currentUser = {
+                    id: userDoc.id,
+                    username: userData.username,
+                    isAdmin: userData.isAdmin || false
+                };
+                
+                isAdmin = currentUser.isAdmin;
+                
+                // Update last login
+                await db.collection('users').doc(userDoc.id).update({
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                showMainMenu();
+                
             } catch (error) {
-                console.error('Fout bij ophalen data:', error);
-                return await createInitialData();
+                showError('Fout bij inloggen: ' + error.message);
+            } finally {
+                setLoading(false);
             }
         }
 
-        async function saveFirebaseData(data) {
+        async function handleRegister() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                showError('Vul zowel gebruikersnaam als wachtwoord in!');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Wachtwoord moet minimaal 6 tekens lang zijn!');
+                return;
+            }
+
+            setLoading(true);
+
             try {
-                await database.ref('startpaginaSystem').set(data);
-                console.log('✅ Data opgeslagen in Firebase');
-                return true;
-            } catch (error) {
-                console.error('❌ Fout bij opslaan in Firebase:', error);
-                return false;
-            }
-        }
+                // Check if username already exists
+                const existingUser = await db.collection('users')
+                    .where('username', '==', username)
+                    .get();
 
-        async function createInitialData() {
-            console.log('Maak initiële data aan in Firebase...');
-            const initialData = {
-                users: [
-                    {
-                        username: "Bowen",
-                        password: "admin123",
-                        pincode: "0000",
-                        isAdmin: true,
-                        status: 'active',
-                        createdAt: new Date().toISOString()
-                    }
-                ],
-                userData: {
-                    "Bowen": {
-                        categories: [
-                            {
-                                id: '1',
-                                name: 'Zoekmachines',
-                                icon: '🔍',
-                                links: [
-                                    { id: '1', name: 'Google', url: 'https://google.com' },
-                                    { id: '2', name: 'DuckDuckGo', url: 'https://duckduckgo.com' }
-                                ]
-                            },
-                            {
-                                id: '2', 
-                                name: 'Social Media',
-                                icon: '👥',
-                                links: [
-                                    { id: '1', name: 'YouTube', url: 'https://youtube.com' },
-                                    { id: '2', name: 'Reddit', url: 'https://reddit.com' }
-                                ]
-                            }
-                        ],
-                        createdAt: new Date().toISOString(),
-                        lastLogin: null
-                    }
-                },
-                system: {
-                    accountCreationEnabled: true,
-                    lastSync: new Date().toISOString()
+                if (!existingUser.empty) {
+                    showError('Deze gebruikersnaam bestaat al!');
+                    return;
                 }
-            };
-            
-            await saveFirebaseData(initialData);
-            return initialData;
-        }
 
-        // [REST VAN DE CODE BLIJFT HETZELFDE - wachtwoord wijzigen, login, etc.]
-        // WACHTWOORD WIJZIGEN FUNCTIE
-        async function changePassword() {
-            console.log("Wachtwoord wijzigen gestart voor:", currentUser);
-            
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPasswordChange').value;
-            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-            const pincode = document.getElementById('pincodeVerification').value;
-            const errorDiv = document.getElementById('changePasswordError');
-            const successDiv = document.getElementById('changePasswordSuccess');
+                // Check if this is the first user (make them admin)
+                const allUsers = await db.collection('users').get();
+                const isFirstUser = allUsers.empty;
 
-            // Reset messages
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
+                // Create new user
+                const newUser = {
+                    username: username,
+                    password: password,
+                    isAdmin: isFirstUser,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                };
 
-            // Validatie
-            if (!currentPassword || !newPassword || !confirmNewPassword || !pincode) {
-                errorDiv.textContent = 'Vul alle velden in';
-                errorDiv.style.display = 'block';
-                return;
-            }
+                await db.collection('users').add(newUser);
 
-            if (newPassword !== confirmNewPassword) {
-                errorDiv.textContent = 'Nieuwe wachtwoorden komen niet overeen';
-                errorDiv.style.display = 'block';
-                return;
-            }
+                // Auto login after registration
+                currentUser = {
+                    username: username,
+                    isAdmin: isFirstUser
+                };
+                isAdmin = isFirstUser;
 
-            if (newPassword.length < 4) {
-                errorDiv.textContent = 'Nieuw wachtwoord moet minimaal 4 tekens zijn';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            const data = await getFirebaseData();
-            const user = data.users.find(u => u.username === currentUser);
-
-            // Controleer huidig wachtwoord en pincode
-            if (!user || user.password !== currentPassword) {
-                errorDiv.textContent = 'Huidig wachtwoord is incorrect';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            if (user.pincode !== pincode) {
-                errorDiv.textContent = 'Pincode is incorrect';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            // Update wachtwoord
-            user.password = newPassword;
-            data.system.lastSync = new Date().toISOString();
-
-            // Opslaan in Firebase
-            const success = await saveFirebaseData(data);
-
-            if (success) {
-                // Success message
-                successDiv.textContent = '✅ Wachtwoord succesvol gewijzigd!';
-                successDiv.style.display = 'block';
-
-                // Velden leegmaken
-                document.getElementById('currentPassword').value = '';
-                document.getElementById('newPasswordChange').value = '';
-                document.getElementById('confirmNewPassword').value = '';
-                document.getElementById('pincodeVerification').value = '';
-
-                // Terug naar hoofdscherm na 2 seconden
-                setTimeout(() => {
-                    showMainScreen();
-                }, 2000);
-            } else {
-                errorDiv.textContent = 'Fout bij wijzigen wachtwoord. Probeer opnieuw.';
-                errorDiv.style.display = 'block';
-            }
-        }
-
-        // [REST VAN DE FUNCTIES - login, account aanmaken, etc. blijft hetzelfde]
-        // Timer functies voor account aanmaken
-        function startAccountCreation() {
-            console.log("Start account creation timer");
-            const createAccountBtn = document.getElementById('createAccountBtn');
-            const timerElement = document.getElementById('createAccountTimer');
-            
-            createAccountBtn.disabled = true;
-            createAccountBtn.textContent = 'Wacht ' + timerCount + ' seconden';
-            timerElement.style.display = 'block';
-            timerElement.textContent = 'Wacht ' + timerCount + ' seconden...';
-            
-            accountCreationTimer = setInterval(() => {
-                timerCount--;
+                showMainMenu();
                 
-                if (timerCount > 0) {
-                    createAccountBtn.textContent = 'Wacht ' + timerCount + ' seconden';
-                    timerElement.textContent = 'Wacht ' + timerCount + ' seconden...';
+                if (isFirstUser) {
+                    showMessage('Je bent de eerste gebruiker en krijgt admin rechten!');
                 } else {
-                    clearInterval(accountCreationTimer);
-                    createAccountBtn.disabled = false;
-                    createAccountBtn.textContent = 'ACCOUNT AANMAKEN';
-                    timerElement.style.display = 'none';
-                    timerCount = 10;
-                    createAccount();
+                    showMessage('Account succesvol aangemaakt!');
                 }
-            }, 1000);
+
+            } catch (error) {
+                showError('Fout bij registreren: ' + error.message);
+            } finally {
+                setLoading(false);
+            }
         }
 
-        function resetAccountCreationTimer() {
-            if (accountCreationTimer) {
-                clearInterval(accountCreationTimer);
-            }
-            timerCount = 10;
-            const createAccountBtn = document.getElementById('createAccountBtn');
-            const timerElement = document.getElementById('createAccountTimer');
+        function showMainMenu() {
+            loginScreen.classList.add('hidden');
+            mainMenu.classList.remove('hidden');
+            adminPanel.classList.add('hidden');
             
-            createAccountBtn.disabled = false;
-            createAccountBtn.textContent = 'ACCOUNT AANMAKEN';
-            timerElement.style.display = 'none';
+            loggedInUser.textContent = currentUser.username;
+            adminBtn.style.display = isAdmin ? 'block' : 'none';
+            clearError();
         }
 
-        // Account aanmaken functie
-        async function createAccount() {
-            console.log("Account aanmaken gestart");
+        function showLoginScreen() {
+            loginScreen.classList.remove('hidden');
+            mainMenu.classList.add('hidden');
+            adminPanel.classList.add('hidden');
+            currentUser = null;
+            isAdmin = false;
             
-            const username = document.getElementById('newUsername').value.trim();
-            const password = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const pincode = document.getElementById('newPincode').value;
-            const errorDiv = document.getElementById('createAccountError');
-            const successDiv = document.getElementById('createAccountSuccess');
+            // Clear form
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            clearError();
+        }
 
-            // Reset messages
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
-
-            // Validatie
-            if (!username || !password || !pincode) {
-                errorDiv.textContent = 'Vul alle velden in';
-                errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
+        async function showAdminPanel() {
+            if (!isAdmin) {
+                showError('Geen admin rechten!');
                 return;
             }
 
-            if (password !== confirmPassword) {
-                errorDiv.textContent = 'Wachtwoorden komen niet overeen';
-                errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
-                return;
+            mainMenu.classList.add('hidden');
+            adminPanel.classList.remove('hidden');
+            await updateAdminStats();
+        }
+
+        function backToMenu() {
+            adminPanel.classList.add('hidden');
+            mainMenu.classList.remove('hidden');
+        }
+
+        function logout() {
+            showLoginScreen();
+        }
+
+        function showSection(section) {
+            alert(`Opening: ${section}\nDeze functionaliteit kan worden uitgebreid.`);
+        }
+
+        async function updateAdminStats() {
+            try {
+                const usersSnapshot = await db.collection('users').get();
+                const users = [];
+                
+                usersSnapshot.forEach(doc => {
+                    users.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                totalUsers.textContent = users.length;
+                onlineUsers.textContent = users.length; // Simplified
+                adminUsers.textContent = users.filter(u => u.isAdmin).length;
+
+                // Update user list
+                userList.innerHTML = '';
+                users.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.innerHTML = `
+                        <div>
+                            <strong>${user.username}</strong>
+                            ${user.isAdmin ? ' <span style="color: #ff6b6b;">(Admin)</span>' : ''}
+                            <br>
+                            <small>Aangemaakt: ${user.createdAt ? user.createdAt.toDate().toLocaleDateString() : 'Onbekend'}</small>
+                        </div>
+                        <div class="user-actions">
+                            ${!user.isAdmin ? `<button class="btn-edit" onclick="editUser('${user.id}')">Bewerk</button>` : ''}
+                            ${user.username !== currentUser.username ? `<button class="btn-delete" onclick="deleteUser('${user.id}')">Verwijder</button>` : ''}
+                        </div>
+                    `;
+                    userList.appendChild(userItem);
+                });
+
+            } catch (error) {
+                console.error('Error updating admin stats:', error);
+                showError('Fout bij laden van gebruikersgegevens');
             }
+        }
 
-            if (password.length < 4) {
-                errorDiv.textContent = 'Wachtwoord moet minimaal 4 tekens zijn';
-                errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
-                return;
+        async function editUser(userId) {
+            const newPassword = prompt('Nieuw wachtwoord voor deze gebruiker:');
+            if (newPassword && newPassword.length >= 6) {
+                try {
+                    await db.collection('users').doc(userId).update({
+                        password: newPassword
+                    });
+                    await updateAdminStats();
+                    showMessage('Wachtwoord bijgewerkt!');
+                } catch (error) {
+                    showError('Fout bij wijzigen wachtwoord: ' + error.message);
+                }
+            } else if (newPassword) {
+                showError('Wachtwoord moet minimaal 6 tekens zijn');
             }
+        }
 
-            if (!/^\d{4}$/.test(pincode)) {
-                errorDiv.textContent = 'Pincode moet 4 cijfers zijn';
-                errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
-                return;
+        async function deleteUser(userId) {
+            if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
+                try {
+                    await db.collection('users').doc(userId).delete();
+                    await updateAdminStats();
+                    showMessage('Gebruiker verwijderd!');
+                } catch (error) {
+                    showError('Fout bij verwijderen gebruiker: ' + error.message);
+                }
             }
+        }
 
-            const data = await getFirebaseData();
-
-            // Check of account aanmaken enabled is
-            if (!data.system.accountCreationEnabled) {
-                errorDiv.textContent = 'Account aanmaken is tijdelijk uitgeschakeld';
-                errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
-                return;
-            }
-
-            // Check of gebruiker al bestaat
-            if (data.users.find(u => u.username === username)) {
-                errorDiv.textContent = 'Gebruikersnaam bestaat al';
-                errorDiv.style.display = 'block';
-                resetAccountCreationTimer();
-                return;
-            }
-
-            // Nieuwe gebruiker aanmaken
-            const newUser = {
-                username: username,
-                password: password,
-                pincode: pincode,
-                isAdmin: username === ADMIN_USERNAME,
-                status: 'active',
-                createdAt: new Date().toISOString()
+        function adminAction(action) {
+            const actions = {
+                backup: 'Backup wordt gemaakt...',
+                logs: 'Logs worden geladen...',
+                maintenance: 'Onderhoudsmodus wordt geactiveerd...'
             };
+            alert(actions[action] || 'Actie uitgevoerd!');
+        }
 
-            data.users.push(newUser);
-            data.userData[username] = {
-                categories: [
-                    {
-                        id: '1',
-                        name: 'Zoekmachines',
-                        icon: '🔍',
-                        links: [
-                            { id: '1', name: 'Google', url: 'https://google.com' },
-                            { id: '2', name: 'DuckDuckGo', url: 'https://duckduckgo.com' }
-                        ]
-                    },
-                    {
-                        id: '2', 
-                        name: 'Social Media',
-                        icon: '👥',
-                        links: [
-                            { id: '1', name: 'YouTube', url: 'https://youtube.com' },
-                            { id: '2', name: 'Reddit', url: 'https://reddit.com' }
-                        ]
-                    }
-                ],
-                createdAt: new Date().toISOString(),
-                lastLogin: null
-            };
+        // Utility functions
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
 
-            // Update lastSync
-            data.system.lastSync = new Date().toISOString();
+        function clearError() {
+            errorMessage.style.display = 'none';
+        }
 
-            // Opslaan in Firebase
-            const success = await saveFirebaseData(data);
+        function showMessage(message) {
+            alert(message);
+        }
 
-            if (success) {
-                // Success message
-                successDiv.textContent = `ACCOUNT AANGEMAAKT! Account "${username}" succesvol aangemaakt! Je wordt teruggeleid...`;
-                successDiv.style.display = 'block';
-
-                // Velden leegmaken
-                document.getElementById('newUsername').value = '';
-                document.getElementById('newPassword').value = '';
+        function setLoading(loading) {
+            if (loading) {
+                loginBtn.disabled = true;
+                loginBtn.textContent = 'Laden...';
+                loginScreen.classList.add('loading');
+            } else {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Inloggen';
+                loginScreen.classList.remove('loading');
+            }
+        }
+    </script>
+</body>
+</html>
