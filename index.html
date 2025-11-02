@@ -283,6 +283,23 @@
             background: var(--light);
         }
 
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--light);
+        }
+
         /* Main Content */
         .main-content {
             flex: 1;
@@ -299,17 +316,53 @@
             height: calc(100vh - 80px);
         }
 
+        /* Mobile Menu */
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+
         .users-list {
             background: white;
             border-right: 1px solid #e1e1e1;
             display: flex;
             flex-direction: column;
             height: 100%;
+            transition: transform 0.3s ease;
         }
 
         .users-header {
             padding: 20px;
             border-bottom: 1px solid #e1e1e1;
+            background: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-menu {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .close-menu:hover {
             background: var(--light);
         }
 
@@ -329,6 +382,7 @@
             transition: all 0.3s ease;
             margin-bottom: 8px;
             border: 2px solid transparent;
+            position: relative;
         }
 
         .chat-type-item:hover, .chat-type-item.active {
@@ -374,6 +428,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-bottom: 8px;
+            position: relative;
         }
 
         .user-chat-item:hover, .user-chat-item.active {
@@ -425,6 +480,23 @@
         .user-status {
             font-size: 0.8rem;
             color: #666;
+        }
+
+        .unread-badge {
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .chat-window {
@@ -511,6 +583,13 @@
             font-size: 0.8rem;
             margin-bottom: 4px;
             opacity: 0.9;
+        }
+
+        .message-status {
+            font-size: 0.6rem;
+            margin-top: 2px;
+            opacity: 0.7;
+            text-align: right;
         }
 
         .chat-input-container {
@@ -671,6 +750,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            position: relative;
         }
 
         .close-modal {
@@ -678,6 +758,9 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
+            position: absolute;
+            right: 0;
+            top: 0;
         }
 
         /* Loading Spinner */
@@ -694,6 +777,96 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .messages-container {
+                grid-template-columns: 1fr;
+            }
+
+            .users-list {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 280px;
+                height: 100%;
+                z-index: 200;
+                transform: translateX(-100%);
+            }
+
+            .users-list.active {
+                transform: translateX(0);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .close-menu {
+                display: block;
+            }
+
+            .app-header {
+                padding: 1rem;
+            }
+
+            .logo span {
+                font-size: 1.1rem;
+            }
+
+            .user-menu span {
+                display: none;
+            }
+
+            .chat-header {
+                padding: 15px;
+            }
+
+            .chat-messages {
+                padding: 15px;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .chat-input-container {
+                padding: 15px;
+            }
+
+            .admin-panel {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .admin-section {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 20px 15px;
+                margin: 10px auto;
+            }
+
+            .app-container {
+                border-radius: 15px;
+            }
+
+            .message {
+                max-width: 95%;
+            }
+
+            .chat-input {
+                gap: 8px;
+            }
+
+            .send-btn {
+                width: 45px;
+                height: 45px;
+            }
         }
     </style>
 </head>
@@ -786,6 +959,9 @@
         <!-- Header -->
         <header class="app-header">
             <div class="logo">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
                 <i class="fas fa-comments"></i>
                 <span>Bowen Chat</span>
             </div>
@@ -801,10 +977,16 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="messages-container">
+                <!-- Mobile Menu Overlay -->
+                <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
                 <!-- Users List -->
-                <div class="users-list">
+                <div class="users-list" id="usersList">
                     <div class="users-header">
                         <h4><i class="fas fa-users"></i> Chats</h4>
+                        <button class="close-menu" id="closeMenu">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                     <div class="users-content" id="usersChatList">
                         <!-- Global Chat Item -->
@@ -900,6 +1082,8 @@
         let currentChatUser = null;
         let selectedUserForPasswordChange = null;
         let isGlobalChat = true;
+        let unreadMessages = {};
+        let userStatusListeners = {};
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
@@ -943,6 +1127,11 @@
                 }
             });
 
+            // Mobile menu
+            document.getElementById('menuToggle').addEventListener('click', toggleMobileMenu);
+            document.getElementById('closeMenu').addEventListener('click', closeMobileMenu);
+            document.getElementById('mobileMenuOverlay').addEventListener('click', closeMobileMenu);
+
             // Start with global chat
             loadGlobalChat();
         }
@@ -970,6 +1159,17 @@
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('registerScreen').classList.remove('hidden');
             clearMessages();
+        }
+
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            document.getElementById('usersList').classList.toggle('active');
+            document.getElementById('mobileMenuOverlay').classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('usersList').classList.remove('active');
+            document.getElementById('mobileMenuOverlay').classList.remove('active');
         }
 
         // Hash een wachtwoord
@@ -1121,6 +1321,8 @@
             
             // Load chat data
             loadUsersForChat();
+            startGlobalChatListener();
+            startPrivateMessagesListener();
             
             clearMessages();
         }
@@ -1131,6 +1333,13 @@
                 database.ref('users/' + currentUser.id).update({
                     status: "offline",
                     lastSeen: new Date().toISOString()
+                });
+            }
+            
+            // Remove all listeners
+            if (userStatusListeners) {
+                Object.values(userStatusListeners).forEach(listener => {
+                    if (listener) listener();
                 });
             }
             
@@ -1163,6 +1372,9 @@
             
             // Load global messages
             loadGlobalChat();
+            
+            // Close mobile menu on selection
+            closeMobileMenu();
         }
 
         async function loadGlobalChat() {
@@ -1376,6 +1588,7 @@
                                     <div class="user-name">${user.username}</div>
                                     <div class="user-status">${statusText}</div>
                                 </div>
+                                ${unreadMessages[userSnapshot.key] ? `<div class="unread-badge">${unreadMessages[userSnapshot.key]}</div>` : ''}
                             </div>
                         `;
                     }
@@ -1383,9 +1596,48 @@
                 
                 document.getElementById('usersChatList').innerHTML = usersHtml || '<p>Geen andere gebruikers gevonden</p>';
                 
+                // Start listening for user status changes
+                startUserStatusListeners();
+                
             } catch (error) {
                 console.error('Error loading users for chat:', error);
             }
+        }
+
+        function startUserStatusListeners() {
+            // Remove existing listeners
+            if (userStatusListeners) {
+                Object.values(userStatusListeners).forEach(listener => {
+                    if (listener) listener();
+                });
+                userStatusListeners = {};
+            }
+            
+            // Listen for status changes of all users
+            const usersRef = database.ref('users');
+            usersRef.on('child_changed', (snapshot) => {
+                const user = snapshot.val();
+                const userId = snapshot.key;
+                
+                if (user.username !== currentUser.username) {
+                    updateUserStatus(userId, user.status);
+                }
+            });
+        }
+
+        function updateUserStatus(userId, status) {
+            const userItems = document.querySelectorAll('.user-chat-item');
+            userItems.forEach(item => {
+                if (item.getAttribute('data-user-id') === userId) {
+                    const statusIndicator = item.querySelector('.status-indicator');
+                    const statusText = item.querySelector('.user-status');
+                    
+                    if (statusIndicator && statusText) {
+                        statusIndicator.className = 'status-indicator ' + (status === 'online' ? 'status-online' : 'status-offline');
+                        statusText.textContent = status === 'online' ? 'Online' : 'Offline';
+                    }
+                }
+            });
         }
 
         function selectUserForChat(userId, username) {
@@ -1419,6 +1671,15 @@
                 item.classList.remove('active');
             });
             event.target.closest('.user-chat-item').classList.add('active');
+            
+            // Reset unread count for this user
+            if (unreadMessages[userId]) {
+                unreadMessages[userId] = 0;
+                updateUnreadBadge(userId);
+            }
+            
+            // Close mobile menu on selection
+            closeMobileMenu();
         }
 
         async function loadChatMessages(otherUserId) {
@@ -1442,6 +1703,7 @@
                             <div class="message ${messageClass}">
                                 ${message.text}
                                 <div class="message-time">${time}</div>
+                                ${messageClass === 'sent' ? `<div class="message-status">${message.read ? 'Gelezen' : 'Verzonden'}</div>` : ''}
                             </div>
                         `;
                     }
@@ -1453,9 +1715,85 @@
                 const chatMessages = document.getElementById('chatMessages');
                 chatMessages.scrollTop = chatMessages.scrollHeight;
                 
+                // Mark messages as read
+                markMessagesAsRead(otherUserId);
+                
             } catch (error) {
                 console.error('Error loading chat messages:', error);
             }
+        }
+
+        async function markMessagesAsRead(otherUserId) {
+            try {
+                const messagesRef = database.ref('messages');
+                const snapshot = await messagesRef.orderByChild('timestamp').once('value');
+                
+                const updates = {};
+                
+                snapshot.forEach((messageSnapshot) => {
+                    const message = messageSnapshot.val();
+                    
+                    // Mark messages from other user to current user as read
+                    if (message.from === otherUserId && message.to === currentUser.id && !message.read) {
+                        updates[`${messageSnapshot.key}/read`] = true;
+                    }
+                });
+                
+                if (Object.keys(updates).length > 0) {
+                    await messagesRef.update(updates);
+                }
+                
+            } catch (error) {
+                console.error('Error marking messages as read:', error);
+            }
+        }
+
+        function startPrivateMessagesListener() {
+            // Listen for new private messages
+            const messagesRef = database.ref('messages');
+            messagesRef.on('child_added', (snapshot) => {
+                const message = snapshot.val();
+                
+                // If message is for current user and not from current user
+                if (message.to === currentUser.id && message.from !== currentUser.id) {
+                    // If not currently viewing chat with this user, increment unread count
+                    if (!currentChatUser || currentChatUser.id !== message.from) {
+                        if (!unreadMessages[message.from]) {
+                            unreadMessages[message.from] = 0;
+                        }
+                        unreadMessages[message.from]++;
+                        updateUnreadBadge(message.from);
+                    }
+                }
+            });
+        }
+
+        function updateUnreadBadge(userId) {
+            const userItems = document.querySelectorAll('.user-chat-item');
+            userItems.forEach(item => {
+                if (item.getAttribute('data-user-id') === userId) {
+                    let badge = item.querySelector('.unread-badge');
+                    
+                    if (unreadMessages[userId] > 0) {
+                        if (!badge) {
+                            badge = document.createElement('div');
+                            badge.className = 'unread-badge';
+                            item.appendChild(badge);
+                        }
+                        badge.textContent = unreadMessages[userId];
+                    } else if (badge) {
+                        badge.remove();
+                    }
+                }
+            });
+        }
+
+        function startGlobalChatListener() {
+            database.ref('globalMessages').on('child_added', function(snapshot) {
+                if (isGlobalChat) {
+                    loadGlobalChat();
+                }
+            });
         }
 
         // Utility functions
@@ -1499,38 +1837,6 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
-        }
-
-        // Real-time updates for global chat
-        function startGlobalChatListener() {
-            database.ref('globalMessages').on('child_added', function(snapshot) {
-                if (isGlobalChat) {
-                    loadGlobalChat();
-                }
-            });
-        }
-
-        // Start listeners when app loads
-        function showApp() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('registerScreen').classList.add('hidden');
-            document.getElementById('appContainer').classList.remove('hidden');
-            
-            // Update UI
-            document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
-            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
-            
-            // Show admin panel if user is admin
-            if (currentUser.isAdmin) {
-                document.getElementById('adminPanel').classList.remove('hidden');
-                loadUserManagement();
-            }
-            
-            // Load chat data
-            loadUsersForChat();
-            startGlobalChatListener();
-            
-            clearMessages();
         }
     </script>
 </body>
