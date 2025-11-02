@@ -138,7 +138,6 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            width: 100%;
         }
 
         .btn-primary {
@@ -280,6 +279,20 @@
         }
 
         .logout-btn:hover {
+            background: var(--light);
+        }
+
+        .change-password-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .change-password-btn:hover {
             background: var(--light);
         }
 
@@ -658,71 +671,6 @@
             transform: none;
         }
 
-        /* Admin Panel */
-        .admin-panel {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .admin-section {
-            margin-bottom: 25px;
-            padding: 20px;
-            border: 2px solid #e1e1e1;
-            border-radius: 10px;
-        }
-
-        .admin-section h3 {
-            color: var(--dark);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-management {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .user-management-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            border-bottom: 1px solid #e1e1e1;
-        }
-
-        .user-management-item:last-child {
-            border-bottom: none;
-        }
-
-        .user-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .action-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .btn-change-password {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-delete {
-            background: var(--danger);
-            color: white;
-        }
-
         /* Modal */
         .modal {
             position: fixed;
@@ -832,15 +780,6 @@
             }
 
             .chat-input-container {
-                padding: 15px;
-            }
-
-            .admin-panel {
-                margin: 10px;
-                padding: 15px;
-            }
-
-            .admin-section {
                 padding: 15px;
             }
         }
@@ -966,6 +905,9 @@
                 <span>Bowen Chat</span>
             </div>
             <div class="user-menu">
+                <button class="change-password-btn" onclick="openChangePasswordModal()" title="Wachtwoord wijzigen">
+                    <i class="fas fa-key"></i>
+                </button>
                 <div class="user-avatar" id="userAvatar">B</div>
                 <span id="userGreeting">Welkom, Bowen</span>
                 <button class="logout-btn" onclick="logout()" title="Uitloggen">
@@ -1033,16 +975,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Admin Panel -->
-            <div class="admin-panel hidden" id="adminPanel">
-                <div class="admin-section">
-                    <h3><i class="fas fa-users-cog"></i> Gebruikersbeheer</h3>
-                    <div class="user-management" id="userManagementList">
-                        <div class="spinner"></div>
-                    </div>
-                </div>
-            </div>
         </main>
     </div>
 
@@ -1054,6 +986,10 @@
                 <button class="close-modal" onclick="closeModal('changePasswordModal')">&times;</button>
             </div>
             <form id="changePasswordForm">
+                <div class="form-group">
+                    <label for="currentPassword">Huidig Wachtwoord</label>
+                    <input type="password" id="currentPassword" class="form-control" required>
+                </div>
                 <div class="form-group">
                     <label for="newPassword">Nieuw Wachtwoord</label>
                     <input type="password" id="newPassword" class="form-control" required minlength="6">
@@ -1080,7 +1016,6 @@
         // Global variables
         let currentUser = null;
         let currentChatUser = null;
-        let selectedUserForPasswordChange = null;
         let isGlobalChat = true;
         let unreadMessages = {};
         let userStatusListeners = {};
@@ -1095,6 +1030,9 @@
             setupPasswordToggle('togglePassword', 'password');
             setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
             setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
+            setupPasswordToggle('toggleCurrentPassword', 'currentPassword');
+            setupPasswordToggle('toggleNewPassword', 'newPassword');
+            setupPasswordToggle('toggleConfirmNewPassword', 'confirmNewPassword');
 
             // Login form
             document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -1111,7 +1049,7 @@
             // Change password form
             document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                changeUserPassword();
+                changeOwnPassword();
             });
 
             // Form switching
@@ -1313,12 +1251,6 @@
             document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
             document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
             
-            // Show admin panel if user is admin
-            if (currentUser.isAdmin) {
-                document.getElementById('adminPanel').classList.remove('hidden');
-                loadUserManagement();
-            }
-            
             // Load chat data
             loadUsersForChat();
             startGlobalChatListener();
@@ -1348,6 +1280,60 @@
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
+        }
+
+        // Change password functions
+        function openChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmNewPassword').value = '';
+        }
+
+        async function changeOwnPassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+            if (!currentPassword || !newPassword || !confirmNewPassword) {
+                showError('Vul alle velden in!');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showError('Nieuw wachtwoord moet minimaal 6 karakters lang zijn!');
+                return;
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                showError('Nieuwe wachtwoorden komen niet overeen!');
+                return;
+            }
+
+            try {
+                // Verify current password
+                const userRef = database.ref('users/' + currentUser.id);
+                const snapshot = await userRef.once('value');
+                const userData = snapshot.val();
+
+                const currentPasswordHash = hashPassword(currentPassword);
+                if (userData.passwordHash !== currentPasswordHash) {
+                    showError('Huidig wachtwoord is incorrect!');
+                    return;
+                }
+
+                // Update to new password
+                const newPasswordHash = hashPassword(newPassword);
+                await userRef.update({
+                    passwordHash: newPasswordHash
+                });
+
+                closeModal('changePasswordModal');
+                showSuccess('Wachtwoord succesvol gewijzigd!');
+                
+            } catch (error) {
+                showError('Fout bij wijzigen wachtwoord: ' + error.message);
+            }
         }
 
         // Chat functions
@@ -1459,100 +1445,6 @@
                 
             } catch (error) {
                 showError('Fout bij verzenden bericht: ' + error.message);
-            }
-        }
-
-        // User management functions
-        async function loadUserManagement() {
-            try {
-                const usersSnapshot = await database.ref('users').once('value');
-                let usersHtml = '';
-                
-                usersSnapshot.forEach((userSnapshot) => {
-                    const user = userSnapshot.val();
-                    const userId = userSnapshot.key;
-                    
-                    usersHtml += `
-                        <div class="user-management-item">
-                            <div>
-                                <strong>${user.username}</strong>
-                                ${user.isAdmin ? ' <span style="color: var(--primary);">(Admin)</span>' : ''}
-                                <br>
-                                <small>Laatste login: ${new Date(user.lastLogin).toLocaleDateString()}</small>
-                            </div>
-                            <div class="user-actions">
-                                <button class="action-btn btn-change-password" onclick="openChangePasswordModal('${userId}', '${user.username}')">
-                                    <i class="fas fa-key"></i> Wachtwoord
-                                </button>
-                                ${user.username !== currentUser.username ? `
-                                    <button class="action-btn btn-delete" onclick="deleteUser('${userId}')">
-                                        <i class="fas fa-trash"></i> Verwijder
-                                    </button>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                document.getElementById('userManagementList').innerHTML = usersHtml || '<p>Geen gebruikers gevonden</p>';
-                
-            } catch (error) {
-                console.error('Error loading user management:', error);
-            }
-        }
-
-        function openChangePasswordModal(userId, username) {
-            selectedUserForPasswordChange = { id: userId, username: username };
-            document.getElementById('changePasswordModal').classList.remove('hidden');
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmNewPassword').value = '';
-        }
-
-        async function changeUserPassword() {
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-
-            if (!newPassword || !confirmNewPassword) {
-                showError('Vul beide wachtwoord velden in!');
-                return;
-            }
-
-            if (newPassword.length < 6) {
-                showError('Wachtwoord moet minimaal 6 karakters lang zijn!');
-                return;
-            }
-
-            if (newPassword !== confirmNewPassword) {
-                showError('Wachtwoorden komen niet overeen!');
-                return;
-            }
-
-            try {
-                const newPasswordHash = hashPassword(newPassword);
-                console.log('New password hash:', newPasswordHash);
-                
-                await database.ref('users/' + selectedUserForPasswordChange.id).update({
-                    passwordHash: newPasswordHash
-                });
-
-                closeModal('changePasswordModal');
-                showSuccess(`Wachtwoord succesvol gewijzigd voor ${selectedUserForPasswordChange.username}!`);
-                
-            } catch (error) {
-                showError('Fout bij wijzigen wachtwoord: ' + error.message);
-            }
-        }
-
-        async function deleteUser(userId) {
-            if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
-                try {
-                    await database.ref('users/' + userId).remove();
-                    showSuccess('Gebruiker verwijderd!');
-                    loadUserManagement();
-                    loadUsersForChat();
-                } catch (error) {
-                    showError('Fout bij verwijderen gebruiker: ' + error.message);
-                }
             }
         }
 
