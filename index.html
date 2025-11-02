@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
+    <title>Global Chat</title>
     <style>
         .chat-container {
             max-width: 800px;
@@ -120,55 +120,201 @@
         .send-button:hover {
             background: #677bc4;
         }
+
+        .user-setup {
+            padding: 15px;
+            background: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user-input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .settings {
+            padding: 10px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+        }
+
+        .settings-input {
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .settings-button {
+            padding: 6px 12px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
     </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 </head>
 <body>
     <div class="chat-container">
+        <div class="user-setup" id="userSetup">
+            <input type="text" class="user-input" id="usernameInput" placeholder="Kies een gebruikersnaam">
+            <input type="password" class="user-input" id="passwordInput" placeholder="Kies een wachtwoord">
+            <button class="send-button" onclick="registerUser()">Start Chatten</button>
+        </div>
+
+        <div class="settings" id="settingsPanel" style="display: none;">
+            <input type="text" class="settings-input" id="displayNameInput" placeholder="Nieuwe display name">
+            <input type="password" class="settings-input" id="newPasswordInput" placeholder="Nieuw wachtwoord">
+            <button class="settings-button" onclick="updateDisplayName()">Naam Wijzigen</button>
+            <button class="settings-button" onclick="updatePassword()">Wachtwoord Wijzigen</button>
+            <button class="settings-button" onclick="logout()">Uitloggen</button>
+        </div>
+
         <div class="messages-container" id="messagesContainer">
             <!-- Berichten komen hier -->
         </div>
-        <div class="input-container">
+
+        <div class="input-container" id="inputContainer" style="display: none;">
             <input type="text" class="message-input" id="messageInput" placeholder="Typ je bericht...">
             <button class="send-button" onclick="sendMessage()">Verstuur</button>
         </div>
     </div>
 
     <script>
+        // Firebase configuratie
+        const firebaseConfig = {
+            databaseURL: "https://globalmessages-default-rtdb.europe-west1.firebasedatabase.app/"
+        };
+
+        // Firebase initialiseren
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let currentUser = null;
         let lastUser = null;
         let lastTimestamp = null;
-        let currentUser = 'Jij'; // Simpele gebruikersnaam
+
+        // Eenvoudige user authentication
+        function registerUser() {
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+            
+            if (!username || !password) {
+                alert('Voer zowel gebruikersnaam als wachtwoord in');
+                return;
+            }
+
+            // Check of gebruiker bestaat
+            database.ref('users/' + username).once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    // Login
+                    const userData = snapshot.val();
+                    if (userData.password === password) {
+                        loginUser(username, userData.displayName || username);
+                    } else {
+                        alert('Ongeldig wachtwoord');
+                    }
+                } else {
+                    // Nieuwe gebruiker
+                    const userData = {
+                        password: password,
+                        displayName: username,
+                        createdAt: Date.now()
+                    };
+                    database.ref('users/' + username).set(userData);
+                    loginUser(username, username);
+                }
+            });
+        }
+
+        function loginUser(username, displayName) {
+            currentUser = {
+                username: username,
+                displayName: displayName
+            };
+
+            document.getElementById('userSetup').style.display = 'none';
+            document.getElementById('settingsPanel').style.display = 'block';
+            document.getElementById('inputContainer').style.display = 'flex';
+            document.getElementById('displayNameInput').value = displayName;
+
+            loadMessages();
+        }
+
+        function updateDisplayName() {
+            const newDisplayName = document.getElementById('displayNameInput').value.trim();
+            if (newDisplayName && currentUser) {
+                database.ref('users/' + currentUser.username).update({
+                    displayName: newDisplayName
+                });
+                currentUser.displayName = newDisplayName;
+                alert('Display name bijgewerkt!');
+            }
+        }
+
+        function updatePassword() {
+            const newPassword = document.getElementById('newPasswordInput').value.trim();
+            if (newPassword && currentUser) {
+                database.ref('users/' + currentUser.username).update({
+                    password: newPassword
+                });
+                document.getElementById('newPasswordInput').value = '';
+                alert('Wachtwoord bijgewerkt!');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('userSetup').style.display = 'block';
+            document.getElementById('settingsPanel').style.display = 'none';
+            document.getElementById('inputContainer').style.display = 'none';
+            document.getElementById('usernameInput').value = '';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('messagesContainer').innerHTML = '';
+        }
 
         function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
             
-            if (message === '') return;
+            if (message === '' || !currentUser) return;
             
-            addMessage(currentUser, message);
+            const messageData = {
+                user: currentUser.displayName,
+                text: message,
+                timestamp: Date.now(),
+                username: currentUser.username // Voor tracking
+            };
+            
+            database.ref('messages').push(messageData);
             input.value = '';
-            input.focus();
         }
 
-        function addMessage(user, text) {
+        function addMessage(user, text, timestamp) {
             const container = document.getElementById('messagesContainer');
-            const now = new Date();
+            const now = new Date(timestamp);
             const timeDiff = lastTimestamp ? now - lastTimestamp : Infinity;
             
-            // Bepaal of we een nieuwe groep moeten starten
-            const shouldGroup = user === lastUser && timeDiff < 300000; // 5 minuten
+            const shouldGroup = user === lastUser && timeDiff < 300000;
             
             if (!shouldGroup) {
-                // Nieuwe berichtengroep
                 const group = document.createElement('div');
                 group.className = 'message-group';
                 container.appendChild(group);
             }
             
-            // Haal de laatste groep op
             const groups = container.getElementsByClassName('message-group');
             const currentGroup = groups[groups.length - 1];
             
-            // Maak bericht aan
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message';
             
@@ -178,7 +324,7 @@
             });
             
             messageDiv.innerHTML = `
-                <div class="message-avatar">${user.charAt(0)}</div>
+                <div class="message-avatar">${user.charAt(0).toUpperCase()}</div>
                 <div class="message-content">
                     ${!shouldGroup ? 
                         `<div class="message-header">
@@ -193,13 +339,17 @@
             
             currentGroup.appendChild(messageDiv);
             
-            // Update laatste gegevens
             lastUser = user;
             lastTimestamp = now;
             
-            // Scroll naar beneden
             container.scrollTop = container.scrollHeight;
         }
+
+        // Luister naar Firebase berichten
+        database.ref('messages').on('child_added', (snapshot) => {
+            const message = snapshot.val();
+            addMessage(message.user, message.text, message.timestamp);
+        });
 
         // Enter-toets ondersteuning
         document.getElementById('messageInput').addEventListener('keypress', function(e) {
@@ -208,16 +358,11 @@
             }
         });
 
-        // Voorbeeld berichten
-        setTimeout(() => {
-            addMessage('Bot', 'Hallo! Welkom in de chat');
-            setTimeout(() => {
-                addMessage('Bot', 'Hoe gaat het?');
-                setTimeout(() => {
-                    addMessage('Bot', 'Alles goed?');
-                }, 1000);
-            }, 1500);
-        }, 1000);
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                registerUser();
+            }
+        });
     </script>
 </body>
 </html>
