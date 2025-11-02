@@ -26,7 +26,9 @@
         :root {
             --primary: #667eea;
             --secondary: #764ba2;
+            --success: #4ecdc4;
             --danger: #ff6b6b;
+            --warning: #ffd166;
             --dark: #2d3748;
             --light: #f8f9fa;
         }
@@ -35,6 +37,7 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             min-height: 100vh;
             transition: all 0.3s ease;
+            padding: 10px;
         }
 
         .hidden {
@@ -51,43 +54,48 @@
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            padding: 40px;
+            padding: 30px 25px;
             width: 100%;
             max-width: 400px;
             backdrop-filter: blur(10px);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            margin: 20px auto;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 25px 20px;
+                margin: 10px auto;
+            }
         }
 
         .login-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .login-header h1 {
             color: var(--dark);
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 600;
+            margin-bottom: 8px;
         }
 
         .login-header p {
             color: #666;
-            margin-top: 10px;
             font-size: 0.9rem;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             position: relative;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--dark);
             font-weight: 500;
+            font-size: 0.9rem;
         }
 
         .input-with-icon {
@@ -96,9 +104,9 @@
 
         .form-control {
             width: 100%;
-            padding: 12px 45px 12px 15px;
+            padding: 14px 45px 14px 15px;
             border: 2px solid #e1e1e1;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 1rem;
             transition: all 0.3s ease;
             background: #fff;
@@ -119,13 +127,14 @@
             border: none;
             cursor: pointer;
             color: #666;
-            padding: 5px;
+            padding: 8px;
+            font-size: 1rem;
         }
 
         .btn {
-            padding: 12px 20px;
+            padding: 14px 20px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
@@ -133,6 +142,7 @@
             text-align: center;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             width: 100%;
         }
@@ -147,6 +157,22 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
@@ -156,11 +182,77 @@
         .error-message {
             background: var(--danger);
             color: white;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 12px;
+            border-radius: 8px;
             margin-bottom: 15px;
             text-align: center;
             display: none;
+            font-size: 0.9rem;
+        }
+
+        .success-message {
+            background: var(--success);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .info-message {
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e1e1;
+        }
+
+        .switch-form a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        .verified-badge {
+            background: var(--success);
+            color: white;
+            border-radius: 10px;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .admin-badge {
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
         }
 
         /* Main App */
@@ -168,17 +260,28 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         /* Header */
         .app-header {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        @media (max-width: 768px) {
+            .app-header {
+                padding: 1rem;
+            }
         }
 
         .logo {
@@ -186,14 +289,18 @@
             align-items: center;
             gap: 10px;
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: var(--dark);
+        }
+
+        .logo i {
+            font-size: 1.5rem;
         }
 
         .user-menu {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .user-avatar {
@@ -206,90 +313,520 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .user-badge {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+        }
+
+        .badge-verified {
+            background: var(--success);
+        }
+
+        .badge-admin {
+            background: var(--primary);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .username {
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status {
+            font-size: 0.8rem;
+            color: var(--success);
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--light);
         }
 
         /* Main Content */
         .main-content {
             flex: 1;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Mobile Toggle */
+        .mobile-toggle {
+            display: none;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            align-self: flex-start;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
         }
 
         /* Messages System */
         .messages-container {
             display: grid;
             grid-template-columns: 300px 1fr;
-            gap: 20px;
-            height: calc(100vh - 200px);
+            gap: 0;
+            height: calc(100vh - 80px);
+        }
+
+        @media (max-width: 768px) {
+            .messages-container {
+                grid-template-columns: 1fr;
+                height: calc(100vh - 70px);
+            }
+            
+            .users-list {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100% - 70px);
+                z-index: 100;
+                transition: left 0.3s ease;
+                border-radius: 0;
+            }
+            
+            .users-list.active {
+                left: 0;
+            }
+            
+            .chat-window {
+                width: 100%;
+            }
         }
 
         .users-list {
             background: white;
-            border-radius: 10px;
+            border-right: 1px solid #e1e1e1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .users-header {
             padding: 20px;
+            border-bottom: 1px solid #e1e1e1;
+            background: var(--light);
+        }
+
+        .users-header h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .users-content {
+            flex: 1;
             overflow-y: auto;
+            padding: 10px;
         }
 
         .user-chat-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border-radius: 5px;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-bottom: 8px;
         }
 
         .user-chat-item:hover, .user-chat-item.active {
             background: var(--light);
         }
 
+        .user-avatar-small {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .status-indicator {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .status-online {
+            background: var(--success);
+        }
+
+        .status-offline {
+            background: #ccc;
+        }
+
+        .user-info-small {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .user-status {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
         .chat-window {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
             display: flex;
             flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid #e1e1e1;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--primary);
+            padding: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                display: block;
+            }
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #e1e1e1;
-            border-radius: 5px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .chat-messages {
+                padding: 15px;
+            }
         }
 
         .message {
-            margin-bottom: 10px;
-            padding: 8px 12px;
-            border-radius: 10px;
-            max-width: 70%;
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 85%;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 480px) {
+            .message {
+                max-width: 90%;
+                padding: 10px 14px;
+            }
         }
 
         .message.sent {
             background: var(--primary);
             color: white;
             margin-left: auto;
+            border-bottom-right-radius: 6px;
         }
 
         .message.received {
-            background: var(--light);
+            background: white;
             color: var(--dark);
-        }
-
-        .chat-input {
-            display: flex;
-            gap: 10px;
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .message-time {
             font-size: 0.7rem;
             opacity: 0.7;
-            margin-top: 2px;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .message.received .message-time {
+            text-align: left;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid #e1e1e1;
+            background: white;
+        }
+
+        @media (max-width: 768px) {
+            .chat-input-container {
+                padding: 15px;
+            }
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 2px solid #e1e1e1;
+            border-radius: 25px;
+            font-size: 1rem;
+            resize: none;
+            max-height: 120px;
+            min-height: 50px;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: var(--secondary);
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* No Chat Selected */
+        .no-chat-selected {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-chat-icon {
+            font-size: 4rem;
+            color: #e1e1e1;
+            margin-bottom: 20px;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+        }
+
+        .admin-section h3 {
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--success);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .user-management {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .user-management-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .user-management-item:last-child {
+            border-bottom: none;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .btn-verify {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-unverify {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -298,21 +835,22 @@
     <div class="login-container" id="loginScreen">
         <div class="login-header">
             <h1>Bowen Chat</h1>
-            <p>Alleen bestaande gebruikers kunnen inloggen</p>
+            <p id="loginSubtitle">Log in op je account</p>
         </div>
         
         <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
         
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Gebruikersnaam</label>
-                <input type="text" id="username" class="form-control" placeholder="Voer gebruikersnaam in">
+                <input type="text" id="username" class="form-control" placeholder="Voer gebruikersnaam in" required>
             </div>
             
             <div class="form-group">
                 <label for="password">Wachtwoord</label>
                 <div class="input-with-icon">
-                    <input type="password" id="password" class="form-control" placeholder="Voer wachtwoord in">
+                    <input type="password" id="password" class="form-control" placeholder="Voer wachtwoord in" required>
                     <button type="button" class="password-toggle" id="togglePassword">
                         <i class="fas fa-eye"></i>
                     </button>
@@ -324,8 +862,58 @@
             </button>
         </form>
 
-        <div style="text-align: center; margin-top: 20px; color: #666; font-size: 0.9rem;">
-            <p>Account aanmaken is uitgeschakeld</p>
+        <div class="switch-form">
+            <p>Nog geen account? <a id="switchToRegister">Account aanmaken</a></p>
+        </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div class="login-container hidden" id="registerScreen">
+        <div class="login-header">
+            <h1>Account Aanmaken</h1>
+            <p>Maak een nieuw account aan</p>
+        </div>
+        
+        <div class="error-message" id="registerErrorMessage"></div>
+        <div class="success-message" id="registerSuccessMessage"></div>
+        <div class="info-message hidden" id="registrationDisabledMessage">
+            <i class="fas fa-info-circle"></i> Account aanmaken is momenteel uitgeschakeld
+        </div>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="registerUsername">Gebruikersnaam</label>
+                <input type="text" id="registerUsername" class="form-control" placeholder="Kies een gebruikersnaam" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="registerPassword">Wachtwoord</label>
+                <div class="input-with-icon">
+                    <input type="password" id="registerPassword" class="form-control" placeholder="Kies een wachtwoord" required minlength="6">
+                    <button type="button" class="password-toggle" id="toggleRegisterPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <small style="color: #666; font-size: 0.8rem;">Minimaal 6 karakters</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Bevestig Wachtwoord</label>
+                <div class="input-with-icon">
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="Herhaal wachtwoord" required>
+                    <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-success" id="registerBtn">
+                <i class="fas fa-user-plus"></i>Account Aanmaken
+            </button>
+        </form>
+
+        <div class="switch-form">
+            <p>Al een account? <a id="switchToLogin">Inloggen</a></p>
         </div>
     </div>
 
@@ -338,35 +926,103 @@
                 <span>Bowen Chat</span>
             </div>
             <div class="user-menu">
-                <div class="user-avatar" id="userAvatar">B</div>
-                <span id="userGreeting">Welkom, Bowen</span>
-                <button class="btn btn-primary" onclick="logout()" style="width: auto;">
-                    <i class="fas fa-sign-out-alt"></i>Uitloggen
+                <div class="user-info">
+                    <span class="username" id="userGreeting">
+                        Bowen
+                        <span class="verified-badge hidden" id="userVerifiedBadge">
+                            <i class="fas fa-check"></i>Verified
+                        </span>
+                        <span class="admin-badge hidden" id="userAdminBadge">
+                            <i class="fas fa-crown"></i>Admin
+                        </span>
+                    </span>
+                    <span class="status" id="userStatus">Online</span>
+                </div>
+                <div class="user-avatar" id="userAvatar">
+                    B
+                    <div class="user-badge hidden" id="userBadge"></div>
+                </div>
+                <button class="logout-btn" onclick="logout()" title="Uitloggen">
+                    <i class="fas fa-sign-out-alt"></i>
                 </button>
             </div>
         </header>
 
         <!-- Main Content -->
         <main class="main-content">
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-users"></i>
+            </button>
+
             <div class="messages-container">
-                <div class="users-list">
-                    <h4><i class="fas fa-users"></i> Gebruikers Online</h4>
-                    <div id="usersChatList">
-                        <p>Laden gebruikers...</p>
+                <!-- Users List -->
+                <div class="users-list" id="usersList">
+                    <div class="users-header">
+                        <h4><i class="fas fa-users"></i> Online Gebruikers</h4>
+                    </div>
+                    <div class="users-content" id="usersChatList">
+                        <div class="spinner"></div>
                     </div>
                 </div>
+
+                <!-- Chat Window -->
                 <div class="chat-window">
-                    <div id="selectedUserInfo">
-                        <p>Selecteer een gebruiker om te chatten</p>
+                    <div class="chat-header">
+                        <button class="back-button" id="backButton">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div id="selectedUserInfo">
+                            <h4>Selecteer een chat</h4>
+                        </div>
                     </div>
-                    <div class="chat-messages" id="chatMessages">
+
+                    <div class="no-chat-selected" id="noChatSelected">
+                        <div class="no-chat-icon">
+                            <i class="fas fa-comment-dots"></i>
+                        </div>
+                        <h3>Selecteer een gesprek</h3>
+                        <p>Kies een gebruiker uit de lijst om te beginnen met chatten</p>
+                    </div>
+
+                    <div class="chat-messages hidden" id="chatMessages">
                         <!-- Messages will appear here -->
                     </div>
-                    <div class="chat-input">
-                        <input type="text" id="messageInput" class="form-control" placeholder="Typ je bericht..." disabled>
-                        <button class="btn btn-primary" id="sendMessageBtn" disabled style="width: auto;">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
+
+                    <div class="chat-input-container hidden" id="chatInputContainer">
+                        <div class="chat-input">
+                            <textarea class="message-input" id="messageInput" placeholder="Typ je bericht..." rows="1" disabled></textarea>
+                            <button class="send-btn" id="sendMessageBtn" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div class="admin-panel hidden" id="adminPanel">
+                <div class="admin-section">
+                    <h3><i class="fas fa-cog"></i> Systeem Instellingen</h3>
+                    <div class="toggle-label">
+                        <span>Account aanmaken toestaan:</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="allowRegistrationToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-label">
+                        <span>Alleen verified gebruikers kunnen chatten:</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="verifiedChatOnlyToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="admin-section">
+                    <h3><i class="fas fa-users-cog"></i> Gebruikersbeheer</h3>
+                    <div class="user-management" id="userManagementList">
+                        <div class="spinner"></div>
                     </div>
                 </div>
             </div>
@@ -383,53 +1039,170 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Encryptie sleutel - verborgen in gehashte vorm
-        const ENCRYPTION_KEY = "bowen_secret_key_2024";
-        const HASHED_KEY = CryptoJS.SHA256(ENCRYPTION_KEY).toString();
+        // Encryptie sleutel
+        const ENCRYPTION_KEY = "bowen_chat_secret_2024";
 
         // Global variables
         let currentUser = null;
         let currentChatUser = null;
-
-        // Pre-defined users met GEHASHDE wachtwoorden
-        const VALID_USERS = {
-            "Bowen": {
-                // Wachtwoord: "admin123" - gehasht
-                passwordHash: "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
-                isAdmin: true
-            }
-            // Voeg hier andere gebruikers toe als nodig
-            // "gebruiker2": { passwordHash: "hash_van_wachtwoord", isAdmin: false }
+        let isMobile = window.innerWidth <= 768;
+        let systemSettings = {
+            allowRegistration: true,
+            verifiedChatOnly: false
         };
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
+            setupMobileEvents();
         });
 
-        async function initializeApp() {
-            // Password toggle
-            document.getElementById('togglePassword').addEventListener('click', function() {
-                const passwordInput = document.getElementById('password');
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        // Mobile event handlers
+        function setupMobileEvents() {
+            const mobileToggle = document.getElementById('mobileToggle');
+            const backButton = document.getElementById('backButton');
+            const usersList = document.getElementById('usersList');
+
+            mobileToggle.addEventListener('click', function() {
+                usersList.classList.add('active');
             });
 
-            // Login form
+            backButton.addEventListener('click', function() {
+                usersList.classList.remove('active');
+            });
+
+            window.addEventListener('resize', function() {
+                isMobile = window.innerWidth <= 768;
+                if (!isMobile) {
+                    usersList.classList.remove('active');
+                }
+            });
+        }
+
+        async function initializeApp() {
+            // Password toggles
+            setupPasswordToggle('togglePassword', 'password');
+            setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
+            setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
+
+            // Form submissions
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 handleLogin();
             });
 
-            // Message sending
-            document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
-            document.getElementById('messageInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') sendMessage();
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleRegister();
             });
 
-            // Zorg dat Bowen account bestaat in Firebase
+            // Form switching
+            document.getElementById('switchToRegister').addEventListener('click', showRegisterForm);
+            document.getElementById('switchToLogin').addEventListener('click', showLoginForm);
+
+            // Message sending
+            document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
+            document.getElementById('messageInput').addEventListener('input', autoResizeTextarea);
+            document.getElementById('messageInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Admin toggles
+            document.getElementById('allowRegistrationToggle').addEventListener('change', function() {
+                updateSystemSettings('allowRegistration', this.checked);
+            });
+
+            document.getElementById('verifiedChatOnlyToggle').addEventListener('change', function() {
+                updateSystemSettings('verifiedChatOnly', this.checked);
+            });
+
+            // Load system settings
+            await loadSystemSettings();
             await ensureBowenAccount();
+        }
+
+        async function loadSystemSettings() {
+            try {
+                const settingsRef = database.ref('systemSettings');
+                const snapshot = await settingsRef.once('value');
+                
+                if (snapshot.exists()) {
+                    systemSettings = { ...systemSettings, ...snapshot.val() };
+                } else {
+                    // Create default settings
+                    await settingsRef.set(systemSettings);
+                }
+
+                // Update UI
+                updateSettingsUI();
+                
+            } catch (error) {
+                console.error('Error loading system settings:', error);
+            }
+        }
+
+        function updateSettingsUI() {
+            document.getElementById('allowRegistrationToggle').checked = systemSettings.allowRegistration;
+            document.getElementById('verifiedChatOnlyToggle').checked = systemSettings.verifiedChatOnly;
+            
+            // Show/hide registration based on settings
+            const registerLink = document.getElementById('switchToRegister');
+            if (registerLink) {
+                registerLink.style.display = systemSettings.allowRegistration ? 'inline' : 'none';
+            }
+        }
+
+        async function updateSystemSettings(key, value) {
+            try {
+                systemSettings[key] = value;
+                await database.ref('systemSettings').update({
+                    [key]: value
+                });
+                
+                showSuccess(`Instelling bijgewerkt: ${key} = ${value}`, 'login');
+            } catch (error) {
+                console.error('Error updating system settings:', error);
+                showError('Fout bij bijwerken instellingen', 'login');
+            }
+        }
+
+        function setupPasswordToggle(toggleId, inputId) {
+            const toggle = document.getElementById(toggleId);
+            const input = document.getElementById(inputId);
+            
+            if (toggle && input) {
+                toggle.addEventListener('click', function() {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+        }
+
+        function autoResizeTextarea() {
+            const textarea = this;
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+        }
+
+        function showLoginForm() {
+            document.getElementById('registerScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            clearMessages();
+        }
+
+        function showRegisterForm() {
+            if (!systemSettings.allowRegistration) {
+                showError('Account aanmaken is momenteel uitgeschakeld', 'login');
+                return;
+            }
+            
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('registerScreen').classList.remove('hidden');
+            clearMessages();
         }
 
         // Hash een wachtwoord
@@ -468,9 +1241,9 @@
                 if (!bowenExists) {
                     const bowenUser = {
                         username: "Bowen",
-                        // Alleen hash opslaan, nooit plain text wachtwoord!
-                        passwordHash: VALID_USERS["Bowen"].passwordHash,
+                        passwordHash: hashPassword("admin123"),
                         isAdmin: true,
+                        isVerified: true,
                         status: "online",
                         lastLogin: new Date().toISOString(),
                         createdAt: new Date().toISOString()
@@ -490,83 +1263,261 @@
             const password = document.getElementById('password').value;
 
             if (!username || !password) {
-                showError('Vul zowel gebruikersnaam als wachtwoord in!');
+                showError('Vul zowel gebruikersnaam als wachtwoord in!', 'login');
                 return;
             }
 
-            setLoading(true);
+            setLoading(true, 'login');
 
             try {
-                // Controleer tegen pre-defined users (veiliger dan database lookup)
-                if (VALID_USERS[username]) {
-                    const userData = VALID_USERS[username];
-                    const inputPasswordHash = hashPassword(password);
-                    
-                    // Vergelijk hashes - nooit plain text!
-                    if (inputPasswordHash === userData.passwordHash) {
-                        // Login succesvol - haal user data op uit Firebase
-                        const usersRef = database.ref('users');
-                        const snapshot = await usersRef.once('value');
-                        
-                        let userFound = false;
-                        let userId = null;
+                const usersRef = database.ref('users');
+                const snapshot = await usersRef.once('value');
+                
+                let userFound = false;
+                let userData = null;
+                let userId = null;
 
-                        snapshot.forEach((childSnapshot) => {
-                            const user = childSnapshot.val();
-                            if (user.username === username) {
-                                userFound = true;
-                                userId = childSnapshot.key;
-                            }
-                        });
-
-                        if (userFound) {
-                            currentUser = {
-                                id: userId,
-                                username: username,
-                                isAdmin: userData.isAdmin
-                            };
-
-                            // Update last login
-                            await database.ref('users/' + userId).update({
-                                lastLogin: new Date().toISOString(),
-                                status: "online"
-                            });
-
-                            showApp();
-                        } else {
-                            showError('Gebruiker niet gevonden in database!');
+                snapshot.forEach((childSnapshot) => {
+                    const user = childSnapshot.val();
+                    if (user.username === username) {
+                        const inputPasswordHash = hashPassword(password);
+                        if (user.passwordHash === inputPasswordHash) {
+                            userFound = true;
+                            userData = user;
+                            userId = childSnapshot.key;
                         }
-                    } else {
-                        showError('Ongeldige gebruikersnaam of wachtwoord!');
                     }
-                } else {
-                    showError('Gebruiker niet gevonden!');
+                });
+
+                if (!userFound) {
+                    showError('Ongeldige gebruikersnaam of wachtwoord!', 'login');
+                    return;
                 }
+
+                currentUser = {
+                    id: userId,
+                    username: userData.username,
+                    isAdmin: userData.isAdmin || false,
+                    isVerified: userData.isVerified || false
+                };
+
+                // Update user status
+                await database.ref('users/' + userId).update({
+                    lastLogin: new Date().toISOString(),
+                    status: "online"
+                });
+
+                showApp();
                 
             } catch (error) {
-                showError('Fout bij inloggen: ' + error.message);
+                showError('Fout bij inloggen: ' + error.message, 'login');
             } finally {
-                setLoading(false);
+                setLoading(false, 'login');
+            }
+        }
+
+        async function handleRegister() {
+            if (!systemSettings.allowRegistration) {
+                showError('Account aanmaken is momenteel uitgeschakeld', 'register');
+                return;
+            }
+
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!username || !password || !confirmPassword) {
+                showError('Vul alle velden in!', 'register');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Wachtwoord moet minimaal 6 karakters lang zijn!', 'register');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('Wachtwoorden komen niet overeen!', 'register');
+                return;
+            }
+
+            setLoading(true, 'register');
+
+            try {
+                const usersRef = database.ref('users');
+                const snapshot = await usersRef.once('value');
+                
+                // Check if username already exists
+                let usernameExists = false;
+                snapshot.forEach((childSnapshot) => {
+                    const user = childSnapshot.val();
+                    if (user.username === username) {
+                        usernameExists = true;
+                    }
+                });
+
+                if (usernameExists) {
+                    showError('Deze gebruikersnaam bestaat al!', 'register');
+                    return;
+                }
+
+                // Create new user (not verified by default)
+                const newUser = {
+                    username: username,
+                    passwordHash: hashPassword(password),
+                    isAdmin: false,
+                    isVerified: false, // New users are not verified by default
+                    status: "online",
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                };
+
+                await usersRef.push(newUser);
+                showSuccess('Account succesvol aangemaakt! Je kunt nu inloggen.', 'register');
+                
+                // Switch back to login form after 2 seconds
+                setTimeout(() => {
+                    showLoginForm();
+                    document.getElementById('username').value = username;
+                }, 2000);
+
+            } catch (error) {
+                showError('Fout bij registreren: ' + error.message, 'register');
+            } finally {
+                setLoading(false, 'register');
             }
         }
 
         function showApp() {
             document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('registerScreen').classList.add('hidden');
             document.getElementById('appContainer').classList.remove('hidden');
             
             // Update UI
-            document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
+            document.getElementById('userGreeting').textContent = currentUser.username;
             document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+            
+            // Show badges
+            updateUserBadges();
+            
+            // Show admin panel if user is admin
+            if (currentUser.isAdmin) {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                loadUserManagement();
+            }
             
             // Load chat data
             loadUsersForChat();
             
-            clearError();
+            clearMessages();
+        }
+
+        function updateUserBadges() {
+            const verifiedBadge = document.getElementById('userVerifiedBadge');
+            const adminBadge = document.getElementById('userAdminBadge');
+            const userBadge = document.getElementById('userBadge');
+
+            if (currentUser.isVerified) {
+                verifiedBadge.classList.remove('hidden');
+                userBadge.classList.add('badge-verified');
+                userBadge.classList.remove('hidden');
+                userBadge.innerHTML = '<i class="fas fa-check"></i>';
+            }
+
+            if (currentUser.isAdmin) {
+                adminBadge.classList.remove('hidden');
+                userBadge.classList.add('badge-admin');
+                userBadge.classList.remove('hidden');
+                userBadge.innerHTML = '<i class="fas fa-crown"></i>';
+            }
+        }
+
+        async function loadUserManagement() {
+            try {
+                const usersSnapshot = await database.ref('users').once('value');
+                let usersHtml = '';
+                
+                usersSnapshot.forEach((userSnapshot) => {
+                    const user = userSnapshot.val();
+                    const userId = userSnapshot.key;
+                    
+                    if (user.username !== currentUser.username) { // Don't show current user
+                        usersHtml += `
+                            <div class="user-management-item">
+                                <div>
+                                    <strong>${user.username}</strong>
+                                    ${user.isVerified ? '<span class="verified-badge"><i class="fas fa-check"></i>Verified</span>' : ''}
+                                    ${user.isAdmin ? '<span class="admin-badge"><i class="fas fa-crown"></i>Admin</span>' : ''}
+                                    <br>
+                                    <small>Gemaakt: ${new Date(user.createdAt).toLocaleDateString()}</small>
+                                </div>
+                                <div class="user-actions">
+                                    ${!user.isVerified ? `
+                                        <button class="action-btn btn-verify" onclick="verifyUser('${userId}')">
+                                            <i class="fas fa-check"></i>Verify
+                                        </button>
+                                    ` : `
+                                        <button class="action-btn btn-unverify" onclick="unverifyUser('${userId}')">
+                                            <i class="fas fa-times"></i>Unverify
+                                        </button>
+                                    `}
+                                    <button class="action-btn btn-delete" onclick="deleteUser('${userId}')">
+                                        <i class="fas fa-trash"></i>Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                document.getElementById('userManagementList').innerHTML = usersHtml || '<p>Geen andere gebruikers</p>';
+                
+            } catch (error) {
+                console.error('Error loading user management:', error);
+            }
+        }
+
+        async function verifyUser(userId) {
+            try {
+                await database.ref('users/' + userId).update({
+                    isVerified: true
+                });
+                showSuccess('Gebruiker geverifieerd!', 'login');
+                loadUserManagement();
+                loadUsersForChat();
+            } catch (error) {
+                showError('Fout bij verifiëren gebruiker', 'login');
+            }
+        }
+
+        async function unverifyUser(userId) {
+            try {
+                await database.ref('users/' + userId).update({
+                    isVerified: false
+                });
+                showSuccess('Verificatie verwijderd!', 'login');
+                loadUserManagement();
+                loadUsersForChat();
+            } catch (error) {
+                showError('Fout bij verwijderen verificatie', 'login');
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
+                try {
+                    await database.ref('users/' + userId).remove();
+                    showSuccess('Gebruiker verwijderd!', 'login');
+                    loadUserManagement();
+                    loadUsersForChat();
+                } catch (error) {
+                    showError('Fout bij verwijderen gebruiker', 'login');
+                }
+            }
         }
 
         function logout() {
             if (currentUser) {
-                // Update status naar offline
                 database.ref('users/' + currentUser.id).update({
                     status: "offline",
                     lastSeen: new Date().toISOString()
@@ -589,17 +1540,24 @@
                 usersSnapshot.forEach((userSnapshot) => {
                     const user = userSnapshot.val();
                     if (user.username !== currentUser.username) {
-                        const statusColor = user.status === "online" ? "#4ecdc4" : "#666";
+                        // Check if user can chat based on settings
+                        const canChat = !systemSettings.verifiedChatOnly || user.isVerified;
+                        const statusClass = user.status === "online" ? "status-online" : "status-offline";
+                        const statusText = user.status === "online" ? "Online" : "Offline";
+                        
                         usersHtml += `
-                            <div class="user-chat-item" onclick="selectUserForChat('${userSnapshot.key}', '${user.username}')">
-                                <div class="user-avatar" style="width: 30px; height: 30px; font-size: 0.8rem; background: ${statusColor};">
+                            <div class="user-chat-item" onclick="selectUserForChat('${userSnapshot.key}', '${user.username}')" style="${!canChat ? 'opacity: 0.6;' : ''}">
+                                <div class="user-avatar-small">
                                     ${user.username.charAt(0).toUpperCase()}
+                                    <div class="status-indicator ${statusClass}"></div>
                                 </div>
-                                <div>
-                                    <div>${user.username}</div>
-                                    <small style="color: ${statusColor};">
-                                        ${user.status === "online" ? "Online" : "Offline"}
-                                    </small>
+                                <div class="user-info-small">
+                                    <div class="user-name">
+                                        ${user.username}
+                                        ${user.isVerified ? '<span class="verified-badge"><i class="fas fa-check"></i></span>' : ''}
+                                        ${user.isAdmin ? '<span class="admin-badge"><i class="fas fa-crown"></i></span>' : ''}
+                                    </div>
+                                    <div class="user-status">${statusText} ${!canChat ? ' (Niet geverifieerd)' : ''}</div>
                                 </div>
                             </div>
                         `;
@@ -610,16 +1568,48 @@
                 
             } catch (error) {
                 console.error('Error loading users for chat:', error);
+                document.getElementById('usersChatList').innerHTML = '<p>Fout bij laden gebruikers</p>';
             }
         }
 
         function selectUserForChat(userId, username) {
+            const userItem = event.target.closest('.user-chat-item');
+            
+            // Check if user can chat (verified if required by settings)
+            if (systemSettings.verifiedChatOnly) {
+                const usersRef = database.ref('users/' + userId);
+                usersRef.once('value').then(snapshot => {
+                    const user = snapshot.val();
+                    if (!user.isVerified) {
+                        showError('Alleen geverifieerde gebruikers kunnen chatten', 'login');
+                        return;
+                    }
+                    proceedWithChatSelection(userId, username, userItem);
+                });
+            } else {
+                proceedWithChatSelection(userId, username, userItem);
+            }
+        }
+
+        function proceedWithChatSelection(userId, username, userItem) {
             currentChatUser = { id: userId, username: username };
             
             // Update UI
             document.getElementById('selectedUserInfo').innerHTML = `
-                <h4><i class="fas fa-comment"></i> Chat met ${username}</h4>
+                <div class="user-avatar-small">
+                    ${username.charAt(0).toUpperCase()}
+                    <div class="status-indicator status-online"></div>
+                </div>
+                <div>
+                    <div class="user-name">${username}</div>
+                    <div class="user-status">Online</div>
+                </div>
             `;
+            
+            // Show chat interface
+            document.getElementById('noChatSelected').classList.add('hidden');
+            document.getElementById('chatMessages').classList.remove('hidden');
+            document.getElementById('chatInputContainer').classList.remove('hidden');
             
             // Enable message input
             document.getElementById('messageInput').disabled = false;
@@ -633,7 +1623,12 @@
             document.querySelectorAll('.user-chat-item').forEach(item => {
                 item.classList.remove('active');
             });
-            event.target.closest('.user-chat-item').classList.add('active');
+            userItem.classList.add('active');
+            
+            // On mobile, close user list after selection
+            if (isMobile) {
+                document.getElementById('usersList').classList.remove('active');
+            }
         }
 
         async function loadChatMessages(otherUserId) {
@@ -675,6 +1670,12 @@
         }
 
         async function sendMessage() {
+            // Check if current user can chat (verified if required)
+            if (systemSettings.verifiedChatOnly && !currentUser.isVerified) {
+                showError('Je moet geverifieerd zijn om te kunnen chatten', 'login');
+                return;
+            }
+
             const messageInput = document.getElementById('messageInput');
             const text = messageInput.value.trim();
             
@@ -694,51 +1695,54 @@
                 
                 await database.ref('messages').push(newMessage);
                 messageInput.value = '';
+                messageInput.style.height = 'auto';
                 
                 // Reload messages to show the new one
                 loadChatMessages(currentChatUser.id);
                 
             } catch (error) {
-                showError('Fout bij verzenden bericht: ' + error.message);
+                showError('Fout bij verzenden bericht: ' + error.message, 'login');
             }
         }
 
         // Utility functions
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
+        function showError(message, formType = 'login') {
+            const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
+            
+            const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
+            successDiv.style.display = 'none';
         }
 
-        function clearError() {
+        function showSuccess(message, formType = 'login') {
+            const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
+            errorDiv.style.display = 'none';
+        }
+
+        function clearMessages() {
             document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('registerErrorMessage').style.display = 'none';
+            document.getElementById('registerSuccessMessage').style.display = 'none';
         }
 
-        function setLoading(loading) {
-            const loginBtn = document.getElementById('loginBtn');
+        function setLoading(loading, formType = 'login') {
+            const btn = document.getElementById(formType === 'register' ? 'registerBtn' : 'loginBtn');
             if (loading) {
-                loginBtn.disabled = true;
-                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Laden...';
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Laden...';
             } else {
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i>Inloggen';
+                btn.disabled = false;
+                btn.innerHTML = formType === 'register' 
+                    ? '<i class="fas fa-user-plus"></i>Account Aanmaken'
+                    : '<i class="fas fa-sign-in-alt"></i>Inloggen';
             }
         }
-
-        // Voorkom right-click inspect
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        // Voorkom F12, Ctrl+Shift+I, etc.
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F12' || 
-                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-                (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-                (e.ctrlKey && e.key === 'u')) {
-                e.preventDefault();
-            }
-        });
     </script>
 </body>
 </html>
