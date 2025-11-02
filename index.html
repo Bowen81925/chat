@@ -635,6 +635,57 @@
                 <i class="fas fa-sign-in-alt"></i>Inloggen
             </button>
         </form>
+
+        <div class="switch-form">
+            <p>Nog geen account? <a id="switchToRegister">Account aanmaken</a></p>
+        </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div class="login-container hidden" id="registerScreen">
+        <div class="login-header">
+            <h1>Account Aanmaken</h1>
+            <p>Maak een nieuw account aan</p>
+        </div>
+        
+        <div class="error-message" id="registerErrorMessage"></div>
+        <div class="success-message" id="registerSuccessMessage"></div>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="registerUsername">Gebruikersnaam</label>
+                <input type="text" id="registerUsername" class="form-control" placeholder="Kies een gebruikersnaam" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="registerPassword">Wachtwoord</label>
+                <div class="input-with-icon">
+                    <input type="password" id="registerPassword" class="form-control" placeholder="Kies een wachtwoord" required minlength="6">
+                    <button type="button" class="password-toggle" id="toggleRegisterPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <small style="color: #666; font-size: 0.8rem;">Minimaal 6 karakters</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Bevestig Wachtwoord</label>
+                <div class="input-with-icon">
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="Herhaal wachtwoord" required>
+                    <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-success" id="registerBtn">
+                <i class="fas fa-user-plus"></i>Account Aanmaken
+            </button>
+        </form>
+
+        <div class="switch-form">
+            <p>Al een account? <a id="switchToLogin">Inloggen</a></p>
+        </div>
     </div>
 
     <!-- Main App -->
@@ -748,13 +799,10 @@
         });
 
         async function initializeApp() {
-            // Password toggle
-            document.getElementById('togglePassword').addEventListener('click', function() {
-                const passwordInput = document.getElementById('password');
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-            });
+            // Password toggles
+            setupPasswordToggle('togglePassword', 'password');
+            setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
+            setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
 
             // Login form
             document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -762,11 +810,21 @@
                 handleLogin();
             });
 
+            // Register form
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleRegister();
+            });
+
             // Change password form
             document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 changeUserPassword();
             });
+
+            // Form switching
+            document.getElementById('switchToRegister').addEventListener('click', showRegisterForm);
+            document.getElementById('switchToLogin').addEventListener('click', showLoginForm);
 
             // Message sending
             document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
@@ -776,6 +834,31 @@
                     sendMessage();
                 }
             });
+        }
+
+        function setupPasswordToggle(toggleId, inputId) {
+            const toggle = document.getElementById(toggleId);
+            const input = document.getElementById(inputId);
+            
+            if (toggle && input) {
+                toggle.addEventListener('click', function() {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+        }
+
+        function showLoginForm() {
+            document.getElementById('registerScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            clearMessages();
+        }
+
+        function showRegisterForm() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('registerScreen').classList.remove('hidden');
+            clearMessages();
         }
 
         // Hash een wachtwoord
@@ -793,7 +876,7 @@
                 return;
             }
 
-            setLoading(true);
+            setLoading(true, 'login');
 
             try {
                 const usersRef = database.ref('users');
@@ -840,12 +923,79 @@
             } catch (error) {
                 showError('Fout bij inloggen: ' + error.message);
             } finally {
-                setLoading(false);
+                setLoading(false, 'login');
+            }
+        }
+
+        async function handleRegister() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!username || !password || !confirmPassword) {
+                showError('Vul alle velden in!', 'register');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Wachtwoord moet minimaal 6 karakters lang zijn!', 'register');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('Wachtwoorden komen niet overeen!', 'register');
+                return;
+            }
+
+            setLoading(true, 'register');
+
+            try {
+                const usersRef = database.ref('users');
+                const snapshot = await usersRef.once('value');
+                
+                // Check if username already exists
+                let usernameExists = false;
+                snapshot.forEach((childSnapshot) => {
+                    const user = childSnapshot.val();
+                    if (user.username === username) {
+                        usernameExists = true;
+                    }
+                });
+
+                if (usernameExists) {
+                    showError('Deze gebruikersnaam bestaat al!', 'register');
+                    return;
+                }
+
+                // Create new user
+                const newUser = {
+                    username: username,
+                    passwordHash: hashPassword(password),
+                    isAdmin: false,
+                    status: "online",
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                };
+
+                await usersRef.push(newUser);
+                showSuccess('Account succesvol aangemaakt! Je kunt nu inloggen.', 'register');
+                
+                // Switch back to login form after 2 seconds
+                setTimeout(() => {
+                    showLoginForm();
+                    document.getElementById('username').value = username;
+                }, 2000);
+
+            } catch (error) {
+                showError('Fout bij registreren: ' + error.message, 'register');
+            } finally {
+                setLoading(false, 'register');
             }
         }
 
         function showApp() {
             document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('registerScreen').classList.add('hidden');
             document.getElementById('appContainer').classList.remove('hidden');
             
             // Update UI
@@ -1102,33 +1252,41 @@
         }
 
         // Utility functions
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
+        function showError(message, formType = 'login') {
+            const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
-            document.getElementById('successMessage').style.display = 'none';
+            
+            const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
+            successDiv.style.display = 'none';
         }
 
-        function showSuccess(message) {
-            const successDiv = document.getElementById('successMessage');
+        function showSuccess(message, formType = 'login') {
+            const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
             successDiv.textContent = message;
             successDiv.style.display = 'block';
-            document.getElementById('errorMessage').style.display = 'none';
+            
+            const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
+            errorDiv.style.display = 'none';
         }
 
         function clearMessages() {
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('registerErrorMessage').style.display = 'none';
+            document.getElementById('registerSuccessMessage').style.display = 'none';
         }
 
-        function setLoading(loading) {
-            const loginBtn = document.getElementById('loginBtn');
+        function setLoading(loading, formType = 'login') {
+            const btn = document.getElementById(formType === 'register' ? 'registerBtn' : 'loginBtn');
             if (loading) {
-                loginBtn.disabled = true;
-                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Laden...';
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Laden...';
             } else {
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i>Inloggen';
+                btn.disabled = false;
+                btn.innerHTML = formType === 'register' 
+                    ? '<i class="fas fa-user-plus"></i>Account Aanmaken'
+                    : '<i class="fas fa-sign-in-alt"></i>Inloggen';
             }
         }
 
