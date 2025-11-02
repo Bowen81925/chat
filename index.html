@@ -23,7 +23,7 @@
             padding: 20px;
         }
 
-        .login-container, .create-account-container {
+        .login-container, .create-account-container, .change-password-container {
             max-width: 400px;
             margin: 50px auto;
             background: white;
@@ -33,12 +33,12 @@
             text-align: center;
         }
 
-        .login-container h2, .create-account-container h2 {
+        .login-container h2, .create-account-container h2, .change-password-container h2 {
             margin-bottom: 30px;
             color: #333;
         }
 
-        .login-container input, .create-account-container input {
+        .login-container input, .create-account-container input, .change-password-container input {
             width: 100%;
             padding: 15px;
             margin: 10px 0;
@@ -48,12 +48,12 @@
             transition: border-color 0.3s ease;
         }
 
-        .login-container input:focus, .create-account-container input:focus {
+        .login-container input:focus, .create-account-container input:focus, .change-password-container input:focus {
             border-color: #667eea;
             outline: none;
         }
 
-        .login-btn, .create-account-btn, .back-to-login-btn {
+        .login-btn, .create-account-btn, .back-to-login-btn, .change-password-btn {
             width: 100%;
             padding: 15px;
             background: #667eea;
@@ -77,6 +77,14 @@
         .create-account-btn:disabled {
             background: #cccccc;
             cursor: not-allowed;
+        }
+
+        .change-password-btn {
+            background: #ff9800;
+        }
+
+        .change-password-btn:hover {
+            background: #f57c00;
         }
 
         .back-to-login-btn {
@@ -142,7 +150,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .logout-btn {
+        .logout-btn, .change-password-header-btn {
             background: rgba(255,255,255,0.2);
             color: white;
             border: 2px solid white;
@@ -151,9 +159,10 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 16px;
+            margin-left: 10px;
         }
 
-        .logout-btn:hover {
+        .logout-btn:hover, .change-password-header-btn:hover {
             background: white;
             color: #667eea;
         }
@@ -261,6 +270,11 @@
             background: #4caf50;
             color: white;
         }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -293,6 +307,19 @@
         <div id="createAccountSuccess" class="success-message"></div>
     </div>
 
+    <!-- Wachtwoord Wijzigen Scherm -->
+    <div id="changePasswordScreen" class="change-password-container" style="display: none;">
+        <h2>🔑 Wachtwoord Wijzigen</h2>
+        <input type="password" id="currentPassword" placeholder="Huidig wachtwoord">
+        <input type="password" id="newPasswordChange" placeholder="Nieuw wachtwoord">
+        <input type="password" id="confirmNewPassword" placeholder="Bevestig nieuw wachtwoord">
+        <input type="text" id="pincodeVerification" placeholder="Voer je pincode in" maxlength="4">
+        <button class="change-password-btn" onclick="changePassword()">WACHTWOORD WIJZIGEN</button>
+        <button class="back-to-login-btn" onclick="showMainScreen()">← Terug naar Startpagina</button>
+        <div id="changePasswordError" class="error-message"></div>
+        <div id="changePasswordSuccess" class="success-message"></div>
+    </div>
+
     <!-- Hoofd Content -->
     <div id="mainScreen" class="main-content">
         <div class="container">
@@ -301,7 +328,10 @@
                     <h1>Mijn Startpagina</h1>
                     <p>Welkom, <span id="userDisplay">Gebruiker</span>!</p>
                 </div>
-                <button class="logout-btn" onclick="logout()">Uitloggen</button>
+                <div class="header-buttons">
+                    <button class="change-password-header-btn" onclick="showChangePasswordScreen()">🔑 Wachtwoord Wijzigen</button>
+                    <button class="logout-btn" onclick="logout()">Uitloggen</button>
+                </div>
             </header>
 
             <div class="search-bar">
@@ -427,6 +457,84 @@
             
             await saveFirebaseData(initialData);
             return initialData;
+        }
+
+        // WACHTWOORD WIJZIGEN FUNCTIE
+        async function changePassword() {
+            console.log("Wachtwoord wijzigen gestart voor:", currentUser);
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPasswordChange').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            const pincode = document.getElementById('pincodeVerification').value;
+            const errorDiv = document.getElementById('changePasswordError');
+            const successDiv = document.getElementById('changePasswordSuccess');
+
+            // Reset messages
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+
+            // Validatie
+            if (!currentPassword || !newPassword || !confirmNewPassword || !pincode) {
+                errorDiv.textContent = 'Vul alle velden in';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                errorDiv.textContent = 'Nieuwe wachtwoorden komen niet overeen';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (newPassword.length < 4) {
+                errorDiv.textContent = 'Nieuw wachtwoord moet minimaal 4 tekens zijn';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const data = await getFirebaseData();
+            const user = data.users.find(u => u.username === currentUser);
+
+            // Controleer huidig wachtwoord en pincode
+            if (!user || user.password !== currentPassword) {
+                errorDiv.textContent = 'Huidig wachtwoord is incorrect';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (user.pincode !== pincode) {
+                errorDiv.textContent = 'Pincode is incorrect';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // Update wachtwoord
+            user.password = newPassword;
+            data.system.lastSync = new Date().toISOString();
+
+            // Opslaan in Firebase
+            const success = await saveFirebaseData(data);
+
+            if (success) {
+                // Success message
+                successDiv.textContent = '✅ Wachtwoord succesvol gewijzigd!';
+                successDiv.style.display = 'block';
+
+                // Velden leegmaken
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPasswordChange').value = '';
+                document.getElementById('confirmNewPassword').value = '';
+                document.getElementById('pincodeVerification').value = '';
+
+                // Terug naar hoofdscherm na 2 seconden
+                setTimeout(() => {
+                    showMainScreen();
+                }, 2000);
+            } else {
+                errorDiv.textContent = 'Fout bij wijzigen wachtwoord. Probeer opnieuw.';
+                errorDiv.style.display = 'block';
+            }
         }
 
         // Timer functies voor account aanmaken
@@ -635,14 +743,32 @@
         // Scherm navigatie
         function showLoginScreen() {
             document.getElementById('createAccountScreen').style.display = 'none';
+            document.getElementById('changePasswordScreen').style.display = 'none';
+            document.getElementById('mainScreen').style.display = 'none';
             document.getElementById('loginScreen').style.display = 'block';
             resetAccountCreationTimer();
         }
 
         function showCreateAccountScreen() {
             document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('changePasswordScreen').style.display = 'none';
+            document.getElementById('mainScreen').style.display = 'none';
             document.getElementById('createAccountScreen').style.display = 'block';
             resetAccountCreationTimer();
+        }
+
+        function showChangePasswordScreen() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('createAccountScreen').style.display = 'none';
+            document.getElementById('mainScreen').style.display = 'none';
+            document.getElementById('changePasswordScreen').style.display = 'block';
+        }
+
+        function showMainScreen() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('createAccountScreen').style.display = 'none';
+            document.getElementById('changePasswordScreen').style.display = 'none';
+            document.getElementById('mainScreen').style.display = 'block';
         }
 
         function logout() {
