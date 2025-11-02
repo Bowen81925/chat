@@ -61,13 +61,6 @@
             margin: 20px auto;
         }
 
-        @media (max-width: 480px) {
-            .login-container {
-                padding: 25px 20px;
-                margin: 10px auto;
-            }
-        }
-
         .login-header {
             text-align: center;
             margin-bottom: 25px;
@@ -201,16 +194,6 @@
             font-size: 0.9rem;
         }
 
-        .info-message {
-            background: var(--primary);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
         .switch-form {
             text-align: center;
             margin-top: 20px;
@@ -227,32 +210,6 @@
 
         .switch-form a:hover {
             text-decoration: underline;
-        }
-
-        .verified-badge {
-            background: var(--success);
-            color: white;
-            border-radius: 10px;
-            padding: 4px 8px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: 8px;
-        }
-
-        .admin-badge {
-            background: var(--primary);
-            color: white;
-            border-radius: 10px;
-            padding: 4px 8px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-left: 8px;
         }
 
         /* Main App */
@@ -278,12 +235,6 @@
             border-bottom: 1px solid #e1e1e1;
         }
 
-        @media (max-width: 768px) {
-            .app-header {
-                padding: 1rem;
-            }
-        }
-
         .logo {
             display: flex;
             align-items: center;
@@ -291,10 +242,6 @@
             font-weight: 700;
             font-size: 1.3rem;
             color: var(--dark);
-        }
-
-        .logo i {
-            font-size: 1.5rem;
         }
 
         .user-menu {
@@ -314,48 +261,6 @@
             justify-content: center;
             font-weight: bold;
             font-size: 1.1rem;
-            position: relative;
-        }
-
-        .user-badge {
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 2px solid white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-        }
-
-        .badge-verified {
-            background: var(--success);
-        }
-
-        .badge-admin {
-            background: var(--primary);
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-
-        .username {
-            font-weight: 600;
-            color: var(--dark);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .status {
-            font-size: 0.8rem;
-            color: var(--success);
         }
 
         .logout-btn {
@@ -380,57 +285,12 @@
             flex-direction: column;
         }
 
-        /* Mobile Toggle */
-        .mobile-toggle {
-            display: none;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            margin: 10px;
-            align-self: flex-start;
-        }
-
-        @media (max-width: 768px) {
-            .mobile-toggle {
-                display: block;
-            }
-        }
-
         /* Messages System */
         .messages-container {
             display: grid;
             grid-template-columns: 300px 1fr;
             gap: 0;
             height: calc(100vh - 80px);
-        }
-
-        @media (max-width: 768px) {
-            .messages-container {
-                grid-template-columns: 1fr;
-                height: calc(100vh - 70px);
-            }
-            
-            .users-list {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 100%;
-                height: calc(100% - 70px);
-                z-index: 100;
-                transition: left 0.3s ease;
-                border-radius: 0;
-            }
-            
-            .users-list.active {
-                left: 0;
-            }
-            
-            .chat-window {
-                width: 100%;
-            }
         }
 
         .users-list {
@@ -445,14 +305,6 @@
             padding: 20px;
             border-bottom: 1px solid #e1e1e1;
             background: var(--light);
-        }
-
-        .users-header h4 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--dark);
-            margin: 0;
         }
 
         .users-content {
@@ -516,9 +368,6 @@
             font-weight: 600;
             color: var(--dark);
             margin-bottom: 2px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
         .user-status {
@@ -542,33 +391,11 @@
             gap: 12px;
         }
 
-        .back-button {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: var(--primary);
-            padding: 5px;
-        }
-
-        @media (max-width: 768px) {
-            .back-button {
-                display: block;
-            }
-        }
-
         .chat-messages {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
             background: #f8f9fa;
-        }
-
-        @media (max-width: 768px) {
-            .chat-messages {
-                padding: 15px;
-            }
         }
 
         .message {
@@ -578,13 +405,6 @@
             max-width: 85%;
             position: relative;
             word-wrap: break-word;
-        }
-
-        @media (max-width: 480px) {
-            .message {
-                max-width: 90%;
-                padding: 10px 14px;
-            }
         }
 
         .message.sent {
@@ -616,12 +436,6 @@
             padding: 20px;
             border-top: 1px solid #e1e1e1;
             background: white;
-        }
-
-        @media (max-width: 768px) {
-            .chat-input-container {
-                padding: 15px;
-            }
         }
 
         .chat-input {
@@ -672,24 +486,6 @@
             transform: none;
         }
 
-        /* No Chat Selected */
-        .no-chat-selected {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .no-chat-icon {
-            font-size: 4rem;
-            color: #e1e1e1;
-            margin-bottom: 20px;
-        }
-
         /* Admin Panel */
         .admin-panel {
             background: white;
@@ -712,59 +508,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--success);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-
-        .toggle-label {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            font-weight: 500;
         }
 
         .user-management {
@@ -798,19 +541,50 @@
             font-weight: 500;
         }
 
-        .btn-verify {
-            background: var(--success);
+        .btn-change-password {
+            background: var(--primary);
             color: white;
-        }
-
-        .btn-unverify {
-            background: var(--warning);
-            color: var(--dark);
         }
 
         .btn-delete {
             background: var(--danger);
             color: white;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         /* Loading Spinner */
@@ -835,7 +609,7 @@
     <div class="login-container" id="loginScreen">
         <div class="login-header">
             <h1>Bowen Chat</h1>
-            <p id="loginSubtitle">Log in op je account</p>
+            <p>Log in op je account</p>
         </div>
         
         <div class="error-message" id="errorMessage"></div>
@@ -861,60 +635,6 @@
                 <i class="fas fa-sign-in-alt"></i>Inloggen
             </button>
         </form>
-
-        <div class="switch-form">
-            <p>Nog geen account? <a id="switchToRegister">Account aanmaken</a></p>
-        </div>
-    </div>
-
-    <!-- Register Screen -->
-    <div class="login-container hidden" id="registerScreen">
-        <div class="login-header">
-            <h1>Account Aanmaken</h1>
-            <p>Maak een nieuw account aan</p>
-        </div>
-        
-        <div class="error-message" id="registerErrorMessage"></div>
-        <div class="success-message" id="registerSuccessMessage"></div>
-        <div class="info-message hidden" id="registrationDisabledMessage">
-            <i class="fas fa-info-circle"></i> Account aanmaken is momenteel uitgeschakeld
-        </div>
-        
-        <form id="registerForm">
-            <div class="form-group">
-                <label for="registerUsername">Gebruikersnaam</label>
-                <input type="text" id="registerUsername" class="form-control" placeholder="Kies een gebruikersnaam" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="registerPassword">Wachtwoord</label>
-                <div class="input-with-icon">
-                    <input type="password" id="registerPassword" class="form-control" placeholder="Kies een wachtwoord" required minlength="6">
-                    <button type="button" class="password-toggle" id="toggleRegisterPassword">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                <small style="color: #666; font-size: 0.8rem;">Minimaal 6 karakters</small>
-            </div>
-            
-            <div class="form-group">
-                <label for="confirmPassword">Bevestig Wachtwoord</label>
-                <div class="input-with-icon">
-                    <input type="password" id="confirmPassword" class="form-control" placeholder="Herhaal wachtwoord" required>
-                    <button type="button" class="password-toggle" id="toggleConfirmPassword">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <button type="submit" class="btn btn-success" id="registerBtn">
-                <i class="fas fa-user-plus"></i>Account Aanmaken
-            </button>
-        </form>
-
-        <div class="switch-form">
-            <p>Al een account? <a id="switchToLogin">Inloggen</a></p>
-        </div>
     </div>
 
     <!-- Main App -->
@@ -926,22 +646,8 @@
                 <span>Bowen Chat</span>
             </div>
             <div class="user-menu">
-                <div class="user-info">
-                    <span class="username" id="userGreeting">
-                        Bowen
-                        <span class="verified-badge hidden" id="userVerifiedBadge">
-                            <i class="fas fa-check"></i>Verified
-                        </span>
-                        <span class="admin-badge hidden" id="userAdminBadge">
-                            <i class="fas fa-crown"></i>Admin
-                        </span>
-                    </span>
-                    <span class="status" id="userStatus">Online</span>
-                </div>
-                <div class="user-avatar" id="userAvatar">
-                    B
-                    <div class="user-badge hidden" id="userBadge"></div>
-                </div>
+                <div class="user-avatar" id="userAvatar">B</div>
+                <span id="userGreeting">Welkom, Bowen</span>
                 <button class="logout-btn" onclick="logout()" title="Uitloggen">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
@@ -950,13 +656,9 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <button class="mobile-toggle" id="mobileToggle">
-                <i class="fas fa-users"></i>
-            </button>
-
             <div class="messages-container">
                 <!-- Users List -->
-                <div class="users-list" id="usersList">
+                <div class="users-list">
                     <div class="users-header">
                         <h4><i class="fas fa-users"></i> Online Gebruikers</h4>
                     </div>
@@ -968,27 +670,20 @@
                 <!-- Chat Window -->
                 <div class="chat-window">
                     <div class="chat-header">
-                        <button class="back-button" id="backButton">
-                            <i class="fas fa-arrow-left"></i>
-                        </button>
                         <div id="selectedUserInfo">
                             <h4>Selecteer een chat</h4>
                         </div>
                     </div>
 
-                    <div class="no-chat-selected" id="noChatSelected">
-                        <div class="no-chat-icon">
-                            <i class="fas fa-comment-dots"></i>
+                    <div class="chat-messages" id="chatMessages">
+                        <div style="text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-comment-dots" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <h3>Selecteer een gesprek</h3>
+                            <p>Kies een gebruiker uit de lijst om te beginnen met chatten</p>
                         </div>
-                        <h3>Selecteer een gesprek</h3>
-                        <p>Kies een gebruiker uit de lijst om te beginnen met chatten</p>
                     </div>
 
-                    <div class="chat-messages hidden" id="chatMessages">
-                        <!-- Messages will appear here -->
-                    </div>
-
-                    <div class="chat-input-container hidden" id="chatInputContainer">
+                    <div class="chat-input-container">
                         <div class="chat-input">
                             <textarea class="message-input" id="messageInput" placeholder="Typ je bericht..." rows="1" disabled></textarea>
                             <button class="send-btn" id="sendMessageBtn" disabled>
@@ -1002,24 +697,6 @@
             <!-- Admin Panel -->
             <div class="admin-panel hidden" id="adminPanel">
                 <div class="admin-section">
-                    <h3><i class="fas fa-cog"></i> Systeem Instellingen</h3>
-                    <div class="toggle-label">
-                        <span>Account aanmaken toestaan:</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="allowRegistrationToggle">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="toggle-label">
-                        <span>Alleen verified gebruikers kunnen chatten:</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="verifiedChatOnlyToggle">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="admin-section">
                     <h3><i class="fas fa-users-cog"></i> Gebruikersbeheer</h3>
                     <div class="user-management" id="userManagementList">
                         <div class="spinner"></div>
@@ -1027,6 +704,27 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal hidden" id="changePasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Wachtwoord Wijzigen</h3>
+                <button class="close-modal" onclick="closeModal('changePasswordModal')">&times;</button>
+            </div>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label for="newPassword">Nieuw Wachtwoord</label>
+                    <input type="password" id="newPassword" class="form-control" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword">Bevestig Nieuw Wachtwoord</label>
+                    <input type="password" id="confirmNewPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Wachtwoord Wijzigen</button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -1039,222 +737,50 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Encryptie sleutel
-        const ENCRYPTION_KEY = "bowen_chat_secret_2024";
-
         // Global variables
         let currentUser = null;
         let currentChatUser = null;
-        let isMobile = window.innerWidth <= 768;
-        let systemSettings = {
-            allowRegistration: true,
-            verifiedChatOnly: false
-        };
+        let selectedUserForPasswordChange = null;
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
-            setupMobileEvents();
         });
 
-        // Mobile event handlers
-        function setupMobileEvents() {
-            const mobileToggle = document.getElementById('mobileToggle');
-            const backButton = document.getElementById('backButton');
-            const usersList = document.getElementById('usersList');
-
-            mobileToggle.addEventListener('click', function() {
-                usersList.classList.add('active');
-            });
-
-            backButton.addEventListener('click', function() {
-                usersList.classList.remove('active');
-            });
-
-            window.addEventListener('resize', function() {
-                isMobile = window.innerWidth <= 768;
-                if (!isMobile) {
-                    usersList.classList.remove('active');
-                }
-            });
-        }
-
         async function initializeApp() {
-            // Password toggles
-            setupPasswordToggle('togglePassword', 'password');
-            setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
-            setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
+            // Password toggle
+            document.getElementById('togglePassword').addEventListener('click', function() {
+                const passwordInput = document.getElementById('password');
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
 
-            // Form submissions
+            // Login form
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 handleLogin();
             });
 
-            document.getElementById('registerForm').addEventListener('submit', function(e) {
+            // Change password form
+            document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                handleRegister();
+                changeUserPassword();
             });
-
-            // Form switching
-            document.getElementById('switchToRegister').addEventListener('click', showRegisterForm);
-            document.getElementById('switchToLogin').addEventListener('click', showLoginForm);
 
             // Message sending
             document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
-            document.getElementById('messageInput').addEventListener('input', autoResizeTextarea);
             document.getElementById('messageInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();
                 }
             });
-
-            // Admin toggles
-            document.getElementById('allowRegistrationToggle').addEventListener('change', function() {
-                updateSystemSettings('allowRegistration', this.checked);
-            });
-
-            document.getElementById('verifiedChatOnlyToggle').addEventListener('change', function() {
-                updateSystemSettings('verifiedChatOnly', this.checked);
-            });
-
-            // Load system settings
-            await loadSystemSettings();
-            await ensureBowenAccount();
-        }
-
-        async function loadSystemSettings() {
-            try {
-                const settingsRef = database.ref('systemSettings');
-                const snapshot = await settingsRef.once('value');
-                
-                if (snapshot.exists()) {
-                    systemSettings = { ...systemSettings, ...snapshot.val() };
-                } else {
-                    // Create default settings
-                    await settingsRef.set(systemSettings);
-                }
-
-                // Update UI
-                updateSettingsUI();
-                
-            } catch (error) {
-                console.error('Error loading system settings:', error);
-            }
-        }
-
-        function updateSettingsUI() {
-            document.getElementById('allowRegistrationToggle').checked = systemSettings.allowRegistration;
-            document.getElementById('verifiedChatOnlyToggle').checked = systemSettings.verifiedChatOnly;
-            
-            // Show/hide registration based on settings
-            const registerLink = document.getElementById('switchToRegister');
-            if (registerLink) {
-                registerLink.style.display = systemSettings.allowRegistration ? 'inline' : 'none';
-            }
-        }
-
-        async function updateSystemSettings(key, value) {
-            try {
-                systemSettings[key] = value;
-                await database.ref('systemSettings').update({
-                    [key]: value
-                });
-                
-                showSuccess(`Instelling bijgewerkt: ${key} = ${value}`, 'login');
-            } catch (error) {
-                console.error('Error updating system settings:', error);
-                showError('Fout bij bijwerken instellingen', 'login');
-            }
-        }
-
-        function setupPasswordToggle(toggleId, inputId) {
-            const toggle = document.getElementById(toggleId);
-            const input = document.getElementById(inputId);
-            
-            if (toggle && input) {
-                toggle.addEventListener('click', function() {
-                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                    input.setAttribute('type', type);
-                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-                });
-            }
-        }
-
-        function autoResizeTextarea() {
-            const textarea = this;
-            textarea.style.height = 'auto';
-            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
-        }
-
-        function showLoginForm() {
-            document.getElementById('registerScreen').classList.add('hidden');
-            document.getElementById('loginScreen').classList.remove('hidden');
-            clearMessages();
-        }
-
-        function showRegisterForm() {
-            if (!systemSettings.allowRegistration) {
-                showError('Account aanmaken is momenteel uitgeschakeld', 'login');
-                return;
-            }
-            
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('registerScreen').classList.remove('hidden');
-            clearMessages();
         }
 
         // Hash een wachtwoord
         function hashPassword(password) {
             return CryptoJS.SHA256(password).toString();
-        }
-
-        // Encrypt bericht
-        function encryptMessage(text) {
-            return CryptoJS.AES.encrypt(text, ENCRYPTION_KEY).toString();
-        }
-
-        // Decrypt bericht
-        function decryptMessage(encryptedText) {
-            try {
-                const bytes = CryptoJS.AES.decrypt(encryptedText, ENCRYPTION_KEY);
-                return bytes.toString(CryptoJS.enc.Utf8);
-            } catch (e) {
-                return "[Encrypted Message]";
-            }
-        }
-
-        async function ensureBowenAccount() {
-            try {
-                const usersRef = database.ref('users');
-                const snapshot = await usersRef.once('value');
-                
-                let bowenExists = false;
-                snapshot.forEach((childSnapshot) => {
-                    const user = childSnapshot.val();
-                    if (user.username === "Bowen") {
-                        bowenExists = true;
-                    }
-                });
-
-                if (!bowenExists) {
-                    const bowenUser = {
-                        username: "Bowen",
-                        passwordHash: hashPassword("admin123"),
-                        isAdmin: true,
-                        isVerified: true,
-                        status: "online",
-                        lastLogin: new Date().toISOString(),
-                        createdAt: new Date().toISOString()
-                    };
-                    
-                    await usersRef.push(bowenUser);
-                    console.log('Bowen account geïnitialiseerd');
-                }
-            } catch (error) {
-                console.error('Fout bij initialiseren Bowen account:', error);
-            }
         }
 
         // Authentication functions
@@ -1263,11 +789,11 @@
             const password = document.getElementById('password').value;
 
             if (!username || !password) {
-                showError('Vul zowel gebruikersnaam als wachtwoord in!', 'login');
+                showError('Vul zowel gebruikersnaam als wachtwoord in!');
                 return;
             }
 
-            setLoading(true, 'login');
+            setLoading(true);
 
             try {
                 const usersRef = database.ref('users');
@@ -1281,6 +807,9 @@
                     const user = childSnapshot.val();
                     if (user.username === username) {
                         const inputPasswordHash = hashPassword(password);
+                        console.log('Input hash:', inputPasswordHash);
+                        console.log('Stored hash:', user.passwordHash);
+                        
                         if (user.passwordHash === inputPasswordHash) {
                             userFound = true;
                             userData = user;
@@ -1290,15 +819,14 @@
                 });
 
                 if (!userFound) {
-                    showError('Ongeldige gebruikersnaam of wachtwoord!', 'login');
+                    showError('Ongeldige gebruikersnaam of wachtwoord!');
                     return;
                 }
 
                 currentUser = {
                     id: userId,
                     username: userData.username,
-                    isAdmin: userData.isAdmin || false,
-                    isVerified: userData.isVerified || false
+                    isAdmin: userData.isAdmin || false
                 };
 
                 // Update user status
@@ -1310,95 +838,19 @@
                 showApp();
                 
             } catch (error) {
-                showError('Fout bij inloggen: ' + error.message, 'login');
+                showError('Fout bij inloggen: ' + error.message);
             } finally {
-                setLoading(false, 'login');
-            }
-        }
-
-        async function handleRegister() {
-            if (!systemSettings.allowRegistration) {
-                showError('Account aanmaken is momenteel uitgeschakeld', 'register');
-                return;
-            }
-
-            const username = document.getElementById('registerUsername').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (!username || !password || !confirmPassword) {
-                showError('Vul alle velden in!', 'register');
-                return;
-            }
-
-            if (password.length < 6) {
-                showError('Wachtwoord moet minimaal 6 karakters lang zijn!', 'register');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showError('Wachtwoorden komen niet overeen!', 'register');
-                return;
-            }
-
-            setLoading(true, 'register');
-
-            try {
-                const usersRef = database.ref('users');
-                const snapshot = await usersRef.once('value');
-                
-                // Check if username already exists
-                let usernameExists = false;
-                snapshot.forEach((childSnapshot) => {
-                    const user = childSnapshot.val();
-                    if (user.username === username) {
-                        usernameExists = true;
-                    }
-                });
-
-                if (usernameExists) {
-                    showError('Deze gebruikersnaam bestaat al!', 'register');
-                    return;
-                }
-
-                // Create new user (not verified by default)
-                const newUser = {
-                    username: username,
-                    passwordHash: hashPassword(password),
-                    isAdmin: false,
-                    isVerified: false, // New users are not verified by default
-                    status: "online",
-                    createdAt: new Date().toISOString(),
-                    lastLogin: new Date().toISOString()
-                };
-
-                await usersRef.push(newUser);
-                showSuccess('Account succesvol aangemaakt! Je kunt nu inloggen.', 'register');
-                
-                // Switch back to login form after 2 seconds
-                setTimeout(() => {
-                    showLoginForm();
-                    document.getElementById('username').value = username;
-                }, 2000);
-
-            } catch (error) {
-                showError('Fout bij registreren: ' + error.message, 'register');
-            } finally {
-                setLoading(false, 'register');
+                setLoading(false);
             }
         }
 
         function showApp() {
             document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('registerScreen').classList.add('hidden');
             document.getElementById('appContainer').classList.remove('hidden');
             
             // Update UI
-            document.getElementById('userGreeting').textContent = currentUser.username;
+            document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
             document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
-            
-            // Show badges
-            updateUserBadges();
             
             // Show admin panel if user is admin
             if (currentUser.isAdmin) {
@@ -1412,112 +864,9 @@
             clearMessages();
         }
 
-        function updateUserBadges() {
-            const verifiedBadge = document.getElementById('userVerifiedBadge');
-            const adminBadge = document.getElementById('userAdminBadge');
-            const userBadge = document.getElementById('userBadge');
-
-            if (currentUser.isVerified) {
-                verifiedBadge.classList.remove('hidden');
-                userBadge.classList.add('badge-verified');
-                userBadge.classList.remove('hidden');
-                userBadge.innerHTML = '<i class="fas fa-check"></i>';
-            }
-
-            if (currentUser.isAdmin) {
-                adminBadge.classList.remove('hidden');
-                userBadge.classList.add('badge-admin');
-                userBadge.classList.remove('hidden');
-                userBadge.innerHTML = '<i class="fas fa-crown"></i>';
-            }
-        }
-
-        async function loadUserManagement() {
-            try {
-                const usersSnapshot = await database.ref('users').once('value');
-                let usersHtml = '';
-                
-                usersSnapshot.forEach((userSnapshot) => {
-                    const user = userSnapshot.val();
-                    const userId = userSnapshot.key;
-                    
-                    if (user.username !== currentUser.username) { // Don't show current user
-                        usersHtml += `
-                            <div class="user-management-item">
-                                <div>
-                                    <strong>${user.username}</strong>
-                                    ${user.isVerified ? '<span class="verified-badge"><i class="fas fa-check"></i>Verified</span>' : ''}
-                                    ${user.isAdmin ? '<span class="admin-badge"><i class="fas fa-crown"></i>Admin</span>' : ''}
-                                    <br>
-                                    <small>Gemaakt: ${new Date(user.createdAt).toLocaleDateString()}</small>
-                                </div>
-                                <div class="user-actions">
-                                    ${!user.isVerified ? `
-                                        <button class="action-btn btn-verify" onclick="verifyUser('${userId}')">
-                                            <i class="fas fa-check"></i>Verify
-                                        </button>
-                                    ` : `
-                                        <button class="action-btn btn-unverify" onclick="unverifyUser('${userId}')">
-                                            <i class="fas fa-times"></i>Unverify
-                                        </button>
-                                    `}
-                                    <button class="action-btn btn-delete" onclick="deleteUser('${userId}')">
-                                        <i class="fas fa-trash"></i>Delete
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-                
-                document.getElementById('userManagementList').innerHTML = usersHtml || '<p>Geen andere gebruikers</p>';
-                
-            } catch (error) {
-                console.error('Error loading user management:', error);
-            }
-        }
-
-        async function verifyUser(userId) {
-            try {
-                await database.ref('users/' + userId).update({
-                    isVerified: true
-                });
-                showSuccess('Gebruiker geverifieerd!', 'login');
-                loadUserManagement();
-                loadUsersForChat();
-            } catch (error) {
-                showError('Fout bij verifiëren gebruiker', 'login');
-            }
-        }
-
-        async function unverifyUser(userId) {
-            try {
-                await database.ref('users/' + userId).update({
-                    isVerified: false
-                });
-                showSuccess('Verificatie verwijderd!', 'login');
-                loadUserManagement();
-                loadUsersForChat();
-            } catch (error) {
-                showError('Fout bij verwijderen verificatie', 'login');
-            }
-        }
-
-        async function deleteUser(userId) {
-            if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
-                try {
-                    await database.ref('users/' + userId).remove();
-                    showSuccess('Gebruiker verwijderd!', 'login');
-                    loadUserManagement();
-                    loadUsersForChat();
-                } catch (error) {
-                    showError('Fout bij verwijderen gebruiker', 'login');
-                }
-            }
-        }
-
         function logout() {
             if (currentUser) {
+                // Update status naar offline
                 database.ref('users/' + currentUser.id).update({
                     status: "offline",
                     lastSeen: new Date().toISOString()
@@ -1531,6 +880,100 @@
             document.getElementById('password').value = '';
         }
 
+        // User management functions
+        async function loadUserManagement() {
+            try {
+                const usersSnapshot = await database.ref('users').once('value');
+                let usersHtml = '';
+                
+                usersSnapshot.forEach((userSnapshot) => {
+                    const user = userSnapshot.val();
+                    const userId = userSnapshot.key;
+                    
+                    usersHtml += `
+                        <div class="user-management-item">
+                            <div>
+                                <strong>${user.username}</strong>
+                                ${user.isAdmin ? ' <span style="color: var(--primary);">(Admin)</span>' : ''}
+                                <br>
+                                <small>Laatste login: ${new Date(user.lastLogin).toLocaleDateString()}</small>
+                            </div>
+                            <div class="user-actions">
+                                <button class="action-btn btn-change-password" onclick="openChangePasswordModal('${userId}', '${user.username}')">
+                                    <i class="fas fa-key"></i> Wachtwoord
+                                </button>
+                                ${user.username !== currentUser.username ? `
+                                    <button class="action-btn btn-delete" onclick="deleteUser('${userId}')">
+                                        <i class="fas fa-trash"></i> Verwijder
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('userManagementList').innerHTML = usersHtml || '<p>Geen gebruikers gevonden</p>';
+                
+            } catch (error) {
+                console.error('Error loading user management:', error);
+            }
+        }
+
+        function openChangePasswordModal(userId, username) {
+            selectedUserForPasswordChange = { id: userId, username: username };
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmNewPassword').value = '';
+        }
+
+        async function changeUserPassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+            if (!newPassword || !confirmNewPassword) {
+                showError('Vul beide wachtwoord velden in!');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showError('Wachtwoord moet minimaal 6 karakters lang zijn!');
+                return;
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                showError('Wachtwoorden komen niet overeen!');
+                return;
+            }
+
+            try {
+                const newPasswordHash = hashPassword(newPassword);
+                console.log('New password hash:', newPasswordHash);
+                
+                await database.ref('users/' + selectedUserForPasswordChange.id).update({
+                    passwordHash: newPasswordHash
+                });
+
+                closeModal('changePasswordModal');
+                showSuccess(`Wachtwoord succesvol gewijzigd voor ${selectedUserForPasswordChange.username}!`);
+                
+            } catch (error) {
+                showError('Fout bij wijzigen wachtwoord: ' + error.message);
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
+                try {
+                    await database.ref('users/' + userId).remove();
+                    showSuccess('Gebruiker verwijderd!');
+                    loadUserManagement();
+                    loadUsersForChat();
+                } catch (error) {
+                    showError('Fout bij verwijderen gebruiker: ' + error.message);
+                }
+            }
+        }
+
         // Messages system functions
         async function loadUsersForChat() {
             try {
@@ -1540,24 +983,18 @@
                 usersSnapshot.forEach((userSnapshot) => {
                     const user = userSnapshot.val();
                     if (user.username !== currentUser.username) {
-                        // Check if user can chat based on settings
-                        const canChat = !systemSettings.verifiedChatOnly || user.isVerified;
                         const statusClass = user.status === "online" ? "status-online" : "status-offline";
                         const statusText = user.status === "online" ? "Online" : "Offline";
                         
                         usersHtml += `
-                            <div class="user-chat-item" onclick="selectUserForChat('${userSnapshot.key}', '${user.username}')" style="${!canChat ? 'opacity: 0.6;' : ''}">
+                            <div class="user-chat-item" onclick="selectUserForChat('${userSnapshot.key}', '${user.username}')">
                                 <div class="user-avatar-small">
                                     ${user.username.charAt(0).toUpperCase()}
                                     <div class="status-indicator ${statusClass}"></div>
                                 </div>
                                 <div class="user-info-small">
-                                    <div class="user-name">
-                                        ${user.username}
-                                        ${user.isVerified ? '<span class="verified-badge"><i class="fas fa-check"></i></span>' : ''}
-                                        ${user.isAdmin ? '<span class="admin-badge"><i class="fas fa-crown"></i></span>' : ''}
-                                    </div>
-                                    <div class="user-status">${statusText} ${!canChat ? ' (Niet geverifieerd)' : ''}</div>
+                                    <div class="user-name">${user.username}</div>
+                                    <div class="user-status">${statusText}</div>
                                 </div>
                             </div>
                         `;
@@ -1568,30 +1005,10 @@
                 
             } catch (error) {
                 console.error('Error loading users for chat:', error);
-                document.getElementById('usersChatList').innerHTML = '<p>Fout bij laden gebruikers</p>';
             }
         }
 
         function selectUserForChat(userId, username) {
-            const userItem = event.target.closest('.user-chat-item');
-            
-            // Check if user can chat (verified if required by settings)
-            if (systemSettings.verifiedChatOnly) {
-                const usersRef = database.ref('users/' + userId);
-                usersRef.once('value').then(snapshot => {
-                    const user = snapshot.val();
-                    if (!user.isVerified) {
-                        showError('Alleen geverifieerde gebruikers kunnen chatten', 'login');
-                        return;
-                    }
-                    proceedWithChatSelection(userId, username, userItem);
-                });
-            } else {
-                proceedWithChatSelection(userId, username, userItem);
-            }
-        }
-
-        function proceedWithChatSelection(userId, username, userItem) {
             currentChatUser = { id: userId, username: username };
             
             // Update UI
@@ -1606,11 +1023,6 @@
                 </div>
             `;
             
-            // Show chat interface
-            document.getElementById('noChatSelected').classList.add('hidden');
-            document.getElementById('chatMessages').classList.remove('hidden');
-            document.getElementById('chatInputContainer').classList.remove('hidden');
-            
             // Enable message input
             document.getElementById('messageInput').disabled = false;
             document.getElementById('sendMessageBtn').disabled = false;
@@ -1623,12 +1035,7 @@
             document.querySelectorAll('.user-chat-item').forEach(item => {
                 item.classList.remove('active');
             });
-            userItem.classList.add('active');
-            
-            // On mobile, close user list after selection
-            if (isMobile) {
-                document.getElementById('usersList').classList.remove('active');
-            }
+            event.target.closest('.user-chat-item').classList.add('active');
         }
 
         async function loadChatMessages(otherUserId) {
@@ -1646,12 +1053,11 @@
                         (message.from === otherUserId && message.to === currentUser.id)) {
                         
                         const messageClass = message.from === currentUser.id ? 'sent' : 'received';
-                        const decryptedText = decryptMessage(message.encryptedText);
                         const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                         
                         messagesHtml += `
                             <div class="message ${messageClass}">
-                                ${decryptedText}
+                                ${message.text}
                                 <div class="message-time">${time}</div>
                             </div>
                         `;
@@ -1670,78 +1076,64 @@
         }
 
         async function sendMessage() {
-            // Check if current user can chat (verified if required)
-            if (systemSettings.verifiedChatOnly && !currentUser.isVerified) {
-                showError('Je moet geverifieerd zijn om te kunnen chatten', 'login');
-                return;
-            }
-
             const messageInput = document.getElementById('messageInput');
             const text = messageInput.value.trim();
             
             if (!text || !currentChatUser) return;
             
             try {
-                // Encrypt het bericht voordat het wordt opgeslagen
-                const encryptedText = encryptMessage(text);
-                
                 const newMessage = {
                     from: currentUser.id,
                     to: currentChatUser.id,
-                    encryptedText: encryptedText,
+                    text: text,
                     timestamp: Date.now(),
                     read: false
                 };
                 
                 await database.ref('messages').push(newMessage);
                 messageInput.value = '';
-                messageInput.style.height = 'auto';
                 
                 // Reload messages to show the new one
                 loadChatMessages(currentChatUser.id);
                 
             } catch (error) {
-                showError('Fout bij verzenden bericht: ' + error.message, 'login');
+                showError('Fout bij verzenden bericht: ' + error.message);
             }
         }
 
         // Utility functions
-        function showError(message, formType = 'login') {
-            const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
-            
-            const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
-            successDiv.style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
         }
 
-        function showSuccess(message, formType = 'login') {
-            const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
             successDiv.textContent = message;
             successDiv.style.display = 'block';
-            
-            const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
-            errorDiv.style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
         }
 
         function clearMessages() {
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
-            document.getElementById('registerErrorMessage').style.display = 'none';
-            document.getElementById('registerSuccessMessage').style.display = 'none';
         }
 
-        function setLoading(loading, formType = 'login') {
-            const btn = document.getElementById(formType === 'register' ? 'registerBtn' : 'loginBtn');
+        function setLoading(loading) {
+            const loginBtn = document.getElementById('loginBtn');
             if (loading) {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Laden...';
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Laden...';
             } else {
-                btn.disabled = false;
-                btn.innerHTML = formType === 'register' 
-                    ? '<i class="fas fa-user-plus"></i>Account Aanmaken'
-                    : '<i class="fas fa-sign-in-alt"></i>Inloggen';
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i>Inloggen';
             }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
         }
     </script>
 </body>
