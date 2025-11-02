@@ -249,14 +249,31 @@
             font-size: 14px;
             opacity: 0.8;
         }
+
+        .firebase-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 1001;
+            background: #4caf50;
+            color: white;
+        }
     </style>
 </head>
 <body>
+    <!-- Firebase Status -->
+    <div id="firebaseStatus" class="firebase-status">
+        🔄 Verbinden...
+    </div>
+
     <!-- Login Scherm -->
     <div id="loginScreen" class="login-container">
         <h2>🔒 Mijn Startpagina</h2>
-        <input type="text" id="username" placeholder="Gebruikersnaam" value="test">
-        <input type="password" id="password" placeholder="Wachtwoord" value="test123">
+        <input type="text" id="username" placeholder="Gebruikersnaam">
+        <input type="password" id="password" placeholder="Wachtwoord">
         <button class="login-btn" onclick="login()">Inloggen</button>
         <button class="create-account-btn" onclick="showCreateAccountScreen()">ACCOUNT AANMAKEN</button>
         <div id="loginError" class="error-message"></div>
@@ -269,7 +286,6 @@
         <input type="password" id="newPassword" placeholder="Kies een wachtwoord">
         <input type="password" id="confirmPassword" placeholder="Bevestig wachtwoord">
         <input type="text" id="newPincode" placeholder="Kies een pincode (4 cijfers)" maxlength="4">
-        <input type="date" id="birthdate" placeholder="Geboortedatum">
         <button class="create-account-btn" id="createAccountBtn" onclick="startAccountCreation()">ACCOUNT AANMAKEN</button>
         <div id="createAccountTimer" class="timer-message"></div>
         <button class="back-to-login-btn" onclick="showLoginScreen()">← Terug naar Inloggen</button>
@@ -306,7 +322,7 @@
     </div>
 
     <script>
-        // SIMPELE FIREBASE CONFIG
+        // Firebase Configuratie
         const firebaseConfig = {
             apiKey: "AIzaSyDxzy6QHdh_XqDRpVe_fHKFQwUez-XamQw",
             authDomain: "mijn-startpagina.firebaseapp.com",
@@ -322,30 +338,63 @@
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
+        const ADMIN_USERNAME = "Bowen";
         let currentUser = null;
         let accountCreationTimer = null;
         let timerCount = 10;
 
-        // INITIELE DATA - ZORG DAT ER ALTIJD EEN TEST ACCOUNT IS
-        function initializeData() {
-            let data = localStorage.getItem('startpaginaData');
+        // Firebase status bijwerken
+        database.ref('.info/connected').on('value', (snapshot) => {
+            const statusElement = document.getElementById('firebaseStatus');
+            if (snapshot.val() === true) {
+                statusElement.textContent = '✅ Online';
+                statusElement.style.background = '#4caf50';
+            } else {
+                statusElement.textContent = '❌ Offline';
+                statusElement.style.background = '#ff6b6b';
+            }
+        });
+
+        // ALLEEN FIREBASE - GEEN LOCALSTORAGE
+        async function getFirebaseData() {
+            try {
+                const snapshot = await database.ref('startpaginaSystem').once('value');
+                return snapshot.val();
+            } catch (error) {
+                console.error('Fout bij ophalen data:', error);
+                return null;
+            }
+        }
+
+        async function saveFirebaseData(data) {
+            try {
+                await database.ref('startpaginaSystem').set(data);
+                console.log('✅ Data opgeslagen in Firebase');
+                return true;
+            } catch (error) {
+                console.error('❌ Fout bij opslaan in Firebase:', error);
+                return false;
+            }
+        }
+
+        async function initializeFirebaseData() {
+            let data = await getFirebaseData();
             
             if (!data) {
-                // Maak standaard data aan met test account
-                const defaultData = {
+                // Eerste keer: maak Bowen admin account aan
+                data = {
                     users: [
                         {
-                            username: "test",
-                            password: "test123",
-                            pincode: "1234",
-                            birthdate: "2000-01-01",
-                            isAdmin: false,
+                            username: "Bowen",
+                            password: "admin123",
+                            pincode: "0000",
+                            isAdmin: true,
                             status: 'active',
                             createdAt: new Date().toISOString()
                         }
                     ],
                     userData: {
-                        "test": {
+                        "Bowen": {
                             categories: [
                                 {
                                     id: '1',
@@ -369,55 +418,23 @@
                             createdAt: new Date().toISOString(),
                             lastLogin: null
                         }
+                    },
+                    system: {
+                        accountCreationEnabled: true,
+                        lastSync: new Date().toISOString()
                     }
                 };
                 
-                localStorage.setItem('startpaginaData', JSON.stringify(defaultData));
-                console.log("Standaard data aangemaakt met test account");
-                return defaultData;
+                await saveFirebaseData(data);
+                console.log("Bowen admin account aangemaakt in Firebase");
             }
             
-            return JSON.parse(data);
+            return data;
         }
 
-        // LOGIN FUNCTIE - SIMPEL EN WERKEND
-        function login() {
-            console.log("Login functie gestart");
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('loginError');
-
-            const data = initializeData();
-            const user = data.users.find(u => u.username === username && u.password === password);
-
-            if (user) {
-                console.log("Login succesvol voor:", username);
-                currentUser = username;
-                
-                // Update last login
-                if (data.userData[username]) {
-                    data.userData[username].lastLogin = new Date().toISOString();
-                    localStorage.setItem('startpaginaData', JSON.stringify(data));
-                }
-                
-                // Toon hoofdscherm
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainScreen').style.display = 'block';
-                document.getElementById('userDisplay').textContent = username;
-                
-                // Laad gebruikersdata
-                loadUserData();
-            } else {
-                console.log("Login mislukt");
-                errorDiv.textContent = 'Ongeldige gebruikersnaam of wachtwoord';
-                errorDiv.style.display = 'block';
-            }
-        }
-
-        // ACCOUNT AANMAKEN FUNCTIE
+        // Timer functies voor account aanmaken
         function startAccountCreation() {
-            console.log("Start account creation");
+            console.log("Start account creation timer");
             const createAccountBtn = document.getElementById('createAccountBtn');
             const timerElement = document.getElementById('createAccountTimer');
             
@@ -443,14 +460,27 @@
             }, 1000);
         }
 
-        function createAccount() {
+        function resetAccountCreationTimer() {
+            if (accountCreationTimer) {
+                clearInterval(accountCreationTimer);
+            }
+            timerCount = 10;
+            const createAccountBtn = document.getElementById('createAccountBtn');
+            const timerElement = document.getElementById('createAccountTimer');
+            
+            createAccountBtn.disabled = false;
+            createAccountBtn.textContent = 'ACCOUNT AANMAKEN';
+            timerElement.style.display = 'none';
+        }
+
+        // Account aanmaken functie
+        async function createAccount() {
             console.log("Account aanmaken gestart");
             
             const username = document.getElementById('newUsername').value.trim();
             const password = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             const pincode = document.getElementById('newPincode').value;
-            const birthdate = document.getElementById('birthdate').value;
             const errorDiv = document.getElementById('createAccountError');
             const successDiv = document.getElementById('createAccountSuccess');
 
@@ -459,24 +489,49 @@
             successDiv.style.display = 'none';
 
             // Validatie
-            if (!username || !password || !pincode || !birthdate) {
+            if (!username || !password || !pincode) {
                 errorDiv.textContent = 'Vul alle velden in';
                 errorDiv.style.display = 'block';
+                resetAccountCreationTimer();
                 return;
             }
 
             if (password !== confirmPassword) {
                 errorDiv.textContent = 'Wachtwoorden komen niet overeen';
                 errorDiv.style.display = 'block';
+                resetAccountCreationTimer();
                 return;
             }
 
-            const data = initializeData();
+            if (password.length < 4) {
+                errorDiv.textContent = 'Wachtwoord moet minimaal 4 tekens zijn';
+                errorDiv.style.display = 'block';
+                resetAccountCreationTimer();
+                return;
+            }
+
+            if (!/^\d{4}$/.test(pincode)) {
+                errorDiv.textContent = 'Pincode moet 4 cijfers zijn';
+                errorDiv.style.display = 'block';
+                resetAccountCreationTimer();
+                return;
+            }
+
+            const data = await initializeFirebaseData();
+
+            // Check of account aanmaken enabled is
+            if (!data.system.accountCreationEnabled) {
+                errorDiv.textContent = 'Account aanmaken is tijdelijk uitgeschakeld';
+                errorDiv.style.display = 'block';
+                resetAccountCreationTimer();
+                return;
+            }
 
             // Check of gebruiker al bestaat
             if (data.users.find(u => u.username === username)) {
                 errorDiv.textContent = 'Gebruikersnaam bestaat al';
                 errorDiv.style.display = 'block';
+                resetAccountCreationTimer();
                 return;
             }
 
@@ -485,8 +540,7 @@
                 username: username,
                 password: password,
                 pincode: pincode,
-                birthdate: birthdate,
-                isAdmin: false,
+                isAdmin: username === ADMIN_USERNAME,
                 status: 'active',
                 createdAt: new Date().toISOString()
             };
@@ -517,30 +571,77 @@
                 lastLogin: null
             };
 
-            // Opslaan
-            localStorage.setItem('startpaginaData', JSON.stringify(data));
-            
-            // Toon succes
-            successDiv.textContent = `ACCOUNT AANGEMAAKT! Account "${username}" succesvol aangemaakt!`;
-            successDiv.style.display = 'block';
+            // Opslaan in Firebase
+            const success = await saveFirebaseData(data);
 
-            console.log("Account aangemaakt:", username);
+            if (success) {
+                // Success message
+                successDiv.textContent = `ACCOUNT AANGEMAAKT! Account "${username}" succesvol aangemaakt! Je wordt teruggeleid...`;
+                successDiv.style.display = 'block';
 
-            // Terug naar login na 2 seconden
-            setTimeout(() => {
-                showLoginScreen();
-            }, 2000);
+                // Velden leegmaken
+                document.getElementById('newUsername').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                document.getElementById('newPincode').value = '';
+
+                // Terug naar login na 2 seconden
+                setTimeout(() => {
+                    showLoginScreen();
+                    resetAccountCreationTimer();
+                }, 2000);
+            } else {
+                errorDiv.textContent = 'Fout bij aanmaken account. Probeer opnieuw.';
+                errorDiv.style.display = 'block';
+                resetAccountCreationTimer();
+            }
         }
 
-        // SCHEM NAVIGATIE
+        // Login functie
+        async function login() {
+            console.log("Login functie gestart");
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            const data = await initializeFirebaseData();
+            const user = data.users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                console.log("Login succesvol voor:", username);
+                currentUser = username;
+                
+                // Update last login
+                if (data.userData[username]) {
+                    data.userData[username].lastLogin = new Date().toISOString();
+                    await saveFirebaseData(data);
+                }
+                
+                // Scherm wisselen
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainScreen').style.display = 'block';
+                document.getElementById('userDisplay').textContent = username;
+                
+                loadUserData();
+            } else {
+                console.log("Login mislukt");
+                errorDiv.textContent = 'Ongeldige gebruikersnaam of wachtwoord';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Scherm navigatie
         function showLoginScreen() {
             document.getElementById('createAccountScreen').style.display = 'none';
             document.getElementById('loginScreen').style.display = 'block';
+            resetAccountCreationTimer();
         }
 
         function showCreateAccountScreen() {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('createAccountScreen').style.display = 'block';
+            resetAccountCreationTimer();
         }
 
         function logout() {
@@ -549,9 +650,9 @@
             document.getElementById('loginScreen').style.display = 'block';
         }
 
-        // LAAD GEBRUIKERSDATA
-        function loadUserData() {
-            const data = initializeData();
+        // Load user data
+        async function loadUserData() {
+            const data = await initializeFirebaseData();
             const userData = data.userData[currentUser];
             
             if (userData && userData.categories) {
@@ -582,7 +683,7 @@
             });
         }
 
-        // ZOEKFUNCTIE
+        // Search functie
         document.getElementById('searchInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const query = this.value.trim();
@@ -593,16 +694,16 @@
             }
         });
 
-        // INITIELE INSTELLINGEN
+        // Modal functie
         function openAddCategoryModal() {
             alert('Deze functie komt in de volgende versie!');
         }
 
-        // BIJ LADEN PAGINA
-        window.onload = function() {
-            console.log("Pagina geladen - test account is beschikbaar");
-            console.log("Gebruikersnaam: test, Wachtwoord: test123");
-            initializeData(); // Zorg dat data bestaat
+        // Bij het laden van de pagina
+        window.onload = async function() {
+            console.log("Pagina geladen - initialiseer Firebase data");
+            await initializeFirebaseData();
+            console.log("Bowen admin account is beschikbaar: gebruikersnaam='Bowen', wachtwoord='admin123'");
         };
     </script>
 </body>
