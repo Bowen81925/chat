@@ -29,6 +29,7 @@
             --success: #4ecdc4;
             --danger: #ff6b6b;
             --warning: #ffd166;
+            --info: #118ab2;
             --dark: #2d3748;
             --light: #f8f9fa;
         }
@@ -163,6 +164,11 @@
 
         .btn-success {
             background: var(--success);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--info);
             color: white;
         }
 
@@ -313,6 +319,52 @@
             padding: 10px;
         }
 
+        .chat-type-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+            border: 2px solid transparent;
+        }
+
+        .chat-type-item:hover, .chat-type-item.active {
+            background: var(--light);
+        }
+
+        .chat-type-item.global-chat {
+            border-color: var(--info);
+            background: rgba(17, 138, 178, 0.1);
+        }
+
+        .chat-type-item.global-chat.active {
+            background: var(--info);
+            color: white;
+        }
+
+        .chat-type-item.global-chat.active .chat-type-icon {
+            color: white;
+        }
+
+        .chat-type-icon {
+            font-size: 1.2rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .global-chat .chat-type-icon {
+            background: var(--info);
+        }
+
         .user-chat-item {
             display: flex;
             align-items: center;
@@ -391,6 +443,16 @@
             gap: 12px;
         }
 
+        .global-chat-header {
+            background: var(--info);
+            color: white;
+        }
+
+        .global-chat-header .chat-type-icon {
+            background: white;
+            color: var(--info);
+        }
+
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -421,6 +483,14 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .message.global {
+            background: var(--info);
+            color: white;
+            max-width: 90%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
         .message-time {
             font-size: 0.7rem;
             opacity: 0.7;
@@ -430,6 +500,17 @@
 
         .message.received .message-time {
             text-align: left;
+        }
+
+        .message.global .message-time {
+            text-align: left;
+        }
+
+        .message-sender {
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            opacity: 0.9;
         }
 
         .chat-input-container {
@@ -460,6 +541,10 @@
             border-color: var(--primary);
         }
 
+        .global-chat .message-input:focus {
+            border-color: var(--info);
+        }
+
         .send-btn {
             background: var(--primary);
             color: white;
@@ -475,9 +560,17 @@
             flex-shrink: 0;
         }
 
+        .global-chat .send-btn {
+            background: var(--info);
+        }
+
         .send-btn:hover:not(:disabled) {
             background: var(--secondary);
             transform: scale(1.05);
+        }
+
+        .global-chat .send-btn:hover:not(:disabled) {
+            background: #0a7a9c;
         }
 
         .send-btn:disabled {
@@ -711,33 +804,47 @@
                 <!-- Users List -->
                 <div class="users-list">
                     <div class="users-header">
-                        <h4><i class="fas fa-users"></i> Online Gebruikers</h4>
+                        <h4><i class="fas fa-users"></i> Chats</h4>
                     </div>
                     <div class="users-content" id="usersChatList">
+                        <!-- Global Chat Item -->
+                        <div class="chat-type-item global-chat active" onclick="selectGlobalChat()">
+                            <div class="chat-type-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="user-info-small">
+                                <div class="user-name">Global Chat</div>
+                                <div class="user-status">Iedereen kan chatten</div>
+                            </div>
+                        </div>
                         <div class="spinner"></div>
                     </div>
                 </div>
 
                 <!-- Chat Window -->
                 <div class="chat-window">
-                    <div class="chat-header">
+                    <div class="chat-header global-chat-header" id="chatHeader">
+                        <div class="chat-type-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
                         <div id="selectedUserInfo">
-                            <h4>Selecteer een chat</h4>
+                            <h4>Global Chat</h4>
+                            <small>Chat met iedereen</small>
                         </div>
                     </div>
 
                     <div class="chat-messages" id="chatMessages">
                         <div style="text-align: center; padding: 40px; color: #666;">
-                            <i class="fas fa-comment-dots" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                            <h3>Selecteer een gesprek</h3>
-                            <p>Kies een gebruiker uit de lijst om te beginnen met chatten</p>
+                            <i class="fas fa-globe" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <h3>Welkom in Global Chat!</h3>
+                            <p>Dit is een openbare chat waar iedereen kan berichten sturen</p>
                         </div>
                     </div>
 
                     <div class="chat-input-container">
-                        <div class="chat-input">
-                            <textarea class="message-input" id="messageInput" placeholder="Typ je bericht..." rows="1" disabled></textarea>
-                            <button class="send-btn" id="sendMessageBtn" disabled>
+                        <div class="chat-input global-chat">
+                            <textarea class="message-input" id="messageInput" placeholder="Typ je bericht voor iedereen..." rows="1"></textarea>
+                            <button class="send-btn" id="sendMessageBtn">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
@@ -792,6 +899,7 @@
         let currentUser = null;
         let currentChatUser = null;
         let selectedUserForPasswordChange = null;
+        let isGlobalChat = true;
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
@@ -834,6 +942,9 @@
                     sendMessage();
                 }
             });
+
+            // Start with global chat
+            loadGlobalChat();
         }
 
         function setupPasswordToggle(toggleId, inputId) {
@@ -1030,6 +1141,115 @@
             document.getElementById('password').value = '';
         }
 
+        // Chat functions
+        function selectGlobalChat() {
+            isGlobalChat = true;
+            currentChatUser = null;
+            
+            // Update UI
+            document.getElementById('selectedUserInfo').innerHTML = `
+                <h4>Global Chat</h4>
+                <small>Chat met iedereen</small>
+            `;
+            
+            // Set active state
+            document.querySelectorAll('.chat-type-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.user-chat-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.chat-type-item').classList.add('active');
+            
+            // Load global messages
+            loadGlobalChat();
+        }
+
+        async function loadGlobalChat() {
+            try {
+                const globalMessagesRef = database.ref('globalMessages');
+                const snapshot = await globalMessagesRef.orderByChild('timestamp').once('value');
+                
+                let messagesHtml = '';
+                
+                snapshot.forEach((messageSnapshot) => {
+                    const message = messageSnapshot.val();
+                    const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const date = new Date(message.timestamp).toLocaleDateString();
+                    
+                    const isCurrentUser = message.userId === currentUser.id;
+                    const messageClass = isCurrentUser ? 'sent' : 'global';
+                    
+                    messagesHtml += `
+                        <div class="message ${messageClass}">
+                            ${!isCurrentUser ? `<div class="message-sender">${message.username}</div>` : ''}
+                            ${message.text}
+                            <div class="message-time">${time} • ${date}</div>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('chatMessages').innerHTML = messagesHtml || `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <i class="fas fa-globe" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3>Welkom in Global Chat!</h3>
+                        <p>Dit is een openbare chat waar iedereen kan berichten sturen</p>
+                    </div>
+                `;
+                
+                // Scroll to bottom
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+            } catch (error) {
+                console.error('Error loading global chat:', error);
+            }
+        }
+
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const text = messageInput.value.trim();
+            
+            if (!text) return;
+            
+            try {
+                if (isGlobalChat) {
+                    // Send to global chat
+                    const newMessage = {
+                        userId: currentUser.id,
+                        username: currentUser.username,
+                        text: text,
+                        timestamp: Date.now()
+                    };
+                    
+                    await database.ref('globalMessages').push(newMessage);
+                } else if (currentChatUser) {
+                    // Send to private chat
+                    const newMessage = {
+                        from: currentUser.id,
+                        to: currentChatUser.id,
+                        text: text,
+                        timestamp: Date.now(),
+                        read: false
+                    };
+                    
+                    await database.ref('messages').push(newMessage);
+                }
+                
+                messageInput.value = '';
+                
+                // Reload messages
+                if (isGlobalChat) {
+                    loadGlobalChat();
+                } else if (currentChatUser) {
+                    loadChatMessages(currentChatUser.id);
+                }
+                
+            } catch (error) {
+                showError('Fout bij verzenden bericht: ' + error.message);
+            }
+        }
+
         // User management functions
         async function loadUserManagement() {
             try {
@@ -1128,7 +1348,17 @@
         async function loadUsersForChat() {
             try {
                 const usersSnapshot = await database.ref('users').once('value');
-                let usersHtml = '';
+                let usersHtml = `
+                    <div class="chat-type-item global-chat active" onclick="selectGlobalChat()">
+                        <div class="chat-type-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="user-info-small">
+                            <div class="user-name">Global Chat</div>
+                            <div class="user-status">Iedereen kan chatten</div>
+                        </div>
+                    </div>
+                `;
                 
                 usersSnapshot.forEach((userSnapshot) => {
                     const user = userSnapshot.val();
@@ -1159,6 +1389,7 @@
         }
 
         function selectUserForChat(userId, username) {
+            isGlobalChat = false;
             currentChatUser = { id: userId, username: username };
             
             // Update UI
@@ -1173,15 +1404,17 @@
                 </div>
             `;
             
-            // Enable message input
-            document.getElementById('messageInput').disabled = false;
-            document.getElementById('sendMessageBtn').disabled = false;
-            document.getElementById('messageInput').focus();
+            // Remove global chat styling
+            document.getElementById('chatHeader').classList.remove('global-chat-header');
+            document.querySelector('.chat-input').classList.remove('global-chat');
             
             // Load messages
             loadChatMessages(userId);
             
             // Set active state
+            document.querySelectorAll('.chat-type-item').forEach(item => {
+                item.classList.remove('active');
+            });
             document.querySelectorAll('.user-chat-item').forEach(item => {
                 item.classList.remove('active');
             });
@@ -1222,32 +1455,6 @@
                 
             } catch (error) {
                 console.error('Error loading chat messages:', error);
-            }
-        }
-
-        async function sendMessage() {
-            const messageInput = document.getElementById('messageInput');
-            const text = messageInput.value.trim();
-            
-            if (!text || !currentChatUser) return;
-            
-            try {
-                const newMessage = {
-                    from: currentUser.id,
-                    to: currentChatUser.id,
-                    text: text,
-                    timestamp: Date.now(),
-                    read: false
-                };
-                
-                await database.ref('messages').push(newMessage);
-                messageInput.value = '';
-                
-                // Reload messages to show the new one
-                loadChatMessages(currentChatUser.id);
-                
-            } catch (error) {
-                showError('Fout bij verzenden bericht: ' + error.message);
             }
         }
 
@@ -1292,6 +1499,38 @@
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Real-time updates for global chat
+        function startGlobalChatListener() {
+            database.ref('globalMessages').on('child_added', function(snapshot) {
+                if (isGlobalChat) {
+                    loadGlobalChat();
+                }
+            });
+        }
+
+        // Start listeners when app loads
+        function showApp() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('registerScreen').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+            
+            // Update UI
+            document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
+            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+            
+            // Show admin panel if user is admin
+            if (currentUser.isAdmin) {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                loadUserManagement();
+            }
+            
+            // Load chat data
+            loadUsersForChat();
+            startGlobalChatListener();
+            
+            clearMessages();
         }
     </script>
 </body>
