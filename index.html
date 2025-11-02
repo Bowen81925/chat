@@ -7,7 +7,7 @@
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
     <style>
         * {
@@ -160,6 +160,16 @@
 
         .error-message {
             background: #ff6b6b;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            background: #4ecdc4;
             color: white;
             padding: 10px;
             border-radius: 5px;
@@ -389,17 +399,18 @@
         </div>
         
         <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
         
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Gebruikersnaam</label>
-                <input type="text" id="username" class="form-control" placeholder="Voer uw gebruikersnaam in" required>
+                <input type="text" id="username" class="form-control" placeholder="Voer uw gebruikersnaam in">
             </div>
             
             <div class="form-group">
                 <label for="password">Wachtwoord</label>
                 <div class="input-with-icon">
-                    <input type="password" id="password" class="form-control" placeholder="Voer uw wachtwoord in" required>
+                    <input type="password" id="password" class="form-control" placeholder="Voer uw wachtwoord in">
                     <button type="button" class="password-toggle" id="togglePassword">
                         👁️
                     </button>
@@ -411,7 +422,7 @@
         </form>
         
         <div class="login-footer">
-            <p>Beveiligde toegang - Firebase Database</p>
+            <p>Beveiligde toegang - Firebase Realtime Database</p>
         </div>
     </div>
 
@@ -496,19 +507,14 @@
     </div>
 
     <script>
-        // Firebase config - VERVANG DIT MET JE EIGEN CONFIG
+        // Firebase config voor JOUW database
         const firebaseConfig = {
-            apiKey: "jouw-api-key",
-            authDomain: "jouw-project.firebaseapp.com",
-            projectId: "jouw-project-id",
-            storageBucket: "jouw-project.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "jouw-app-id"
+            databaseURL: "https://mijn-startpagina-default-rtdb.europe-west1.firebasedatabase.app/"
         };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const database = firebase.database();
 
         // DOM Elements
         const loginScreen = document.getElementById('loginScreen');
@@ -521,6 +527,7 @@
         const onlineUsers = document.getElementById('onlineUsers');
         const adminUsers = document.getElementById('adminUsers');
         const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
         const loginBtn = document.getElementById('loginBtn');
 
         let currentUser = null;
@@ -547,7 +554,36 @@
             document.getElementById('registerBtn').addEventListener('click', function() {
                 handleRegister();
             });
+
+            // Check if Bowen account exists, if not create it
+            checkAndCreateDefaultAccount();
         });
+
+        // Controleer en maak standaard account aan
+        async function checkAndCreateDefaultAccount() {
+            try {
+                const usersRef = database.ref('users');
+                const snapshot = await usersRef.once('value');
+                
+                if (!snapshot.exists()) {
+                    // Maak Bowen account aan
+                    const defaultUser = {
+                        username: "Bowen",
+                        password: "admin123",
+                        pincode: "0000",
+                        isAdmin: true,
+                        status: "active",
+                        createdAt: new Date().toISOString(),
+                        lastLogin: new Date().toISOString()
+                    };
+                    
+                    await usersRef.push(defaultUser);
+                    showSuccess('Standaard admin account aangemaakt: Bowen / admin123');
+                }
+            } catch (error) {
+                console.error('Fout bij aanmaken standaard account:', error);
+            }
+        }
 
         // Functions
         async function handleLogin() {
@@ -562,22 +598,34 @@
             setLoading(true);
 
             try {
-                // Check user in Firestore
-                const usersSnapshot = await db.collection('users')
-                    .where('username', '==', username)
-                    .where('password', '==', password)
-                    .get();
+                const usersRef = database.ref('users');
+                const snapshot = await usersRef.once('value');
+                
+                if (!snapshot.exists()) {
+                    showError('Geen gebruikers gevonden in database!');
+                    return;
+                }
 
-                if (usersSnapshot.empty) {
+                let userFound = false;
+                let userData = null;
+                let userId = null;
+
+                snapshot.forEach((childSnapshot) => {
+                    const user = childSnapshot.val();
+                    if (user.username === username && user.password === password) {
+                        userFound = true;
+                        userData = user;
+                        userId = childSnapshot.key;
+                    }
+                });
+
+                if (!userFound) {
                     showError('Ongeldige gebruikersnaam of wachtwoord!');
                     return;
                 }
 
-                const userDoc = usersSnapshot.docs[0];
-                const userData = userDoc.data();
-                
                 currentUser = {
-                    id: userDoc.id,
+                    id: userId,
                     username: userData.username,
                     isAdmin: userData.isAdmin || false
                 };
@@ -585,8 +633,8 @@
                 isAdmin = currentUser.isAdmin;
                 
                 // Update last login
-                await db.collection('users').doc(userDoc.id).update({
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                await database.ref('users/' + userId).update({
+                    lastLogin: new Date().toISOString()
                 });
 
                 showMainMenu();
@@ -615,44 +663,53 @@
             setLoading(true);
 
             try {
+                const usersRef = database.ref('users');
+                const snapshot = await usersRef.once('value');
+                
                 // Check if username already exists
-                const existingUser = await db.collection('users')
-                    .where('username', '==', username)
-                    .get();
+                let usernameExists = false;
+                snapshot.forEach((childSnapshot) => {
+                    const user = childSnapshot.val();
+                    if (user.username === username) {
+                        usernameExists = true;
+                    }
+                });
 
-                if (!existingUser.empty) {
+                if (usernameExists) {
                     showError('Deze gebruikersnaam bestaat al!');
                     return;
                 }
 
-                // Check if this is the first user (make them admin)
-                const allUsers = await db.collection('users').get();
-                const isFirstUser = allUsers.empty;
+                // Check if this is the first user after Bowen (make them admin if no other users)
+                const userCount = snapshot.numChildren();
+                const isFirstNewUser = userCount === 1; // Alleen Bowen bestaat
 
                 // Create new user
                 const newUser = {
                     username: username,
                     password: password,
-                    isAdmin: isFirstUser,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                    pincode: "0000",
+                    isAdmin: isFirstNewUser,
+                    status: "active",
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
                 };
 
-                await db.collection('users').add(newUser);
+                await usersRef.push(newUser);
 
                 // Auto login after registration
                 currentUser = {
                     username: username,
-                    isAdmin: isFirstUser
+                    isAdmin: isFirstNewUser
                 };
-                isAdmin = isFirstUser;
+                isAdmin = isFirstNewUser;
 
                 showMainMenu();
                 
-                if (isFirstUser) {
-                    showMessage('Je bent de eerste gebruiker en krijgt admin rechten!');
+                if (isFirstNewUser) {
+                    showSuccess('Account aangemaakt! Je krijgt admin rechten omdat je de eerste nieuwe gebruiker bent!');
                 } else {
-                    showMessage('Account succesvol aangemaakt!');
+                    showSuccess('Account succesvol aangemaakt!');
                 }
 
             } catch (error) {
@@ -669,7 +726,7 @@
             
             loggedInUser.textContent = currentUser.username;
             adminBtn.style.display = isAdmin ? 'block' : 'none';
-            clearError();
+            clearMessages();
         }
 
         function showLoginScreen() {
@@ -682,7 +739,7 @@
             // Clear form
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-            clearError();
+            clearMessages();
         }
 
         async function showAdminPanel() {
@@ -711,13 +768,14 @@
 
         async function updateAdminStats() {
             try {
-                const usersSnapshot = await db.collection('users').get();
-                const users = [];
+                const usersRef = database.ref('users');
+                const snapshot = await usersRef.once('value');
                 
-                usersSnapshot.forEach(doc => {
+                const users = [];
+                snapshot.forEach((childSnapshot) => {
                     users.push({
-                        id: doc.id,
-                        ...doc.data()
+                        id: childSnapshot.key,
+                        ...childSnapshot.val()
                     });
                 });
 
@@ -735,7 +793,7 @@
                             <strong>${user.username}</strong>
                             ${user.isAdmin ? ' <span style="color: #ff6b6b;">(Admin)</span>' : ''}
                             <br>
-                            <small>Aangemaakt: ${user.createdAt ? user.createdAt.toDate().toLocaleDateString() : 'Onbekend'}</small>
+                            <small>Aangemaakt: ${new Date(user.createdAt).toLocaleDateString()}</small>
                         </div>
                         <div class="user-actions">
                             ${!user.isAdmin ? `<button class="btn-edit" onclick="editUser('${user.id}')">Bewerk</button>` : ''}
@@ -755,11 +813,11 @@
             const newPassword = prompt('Nieuw wachtwoord voor deze gebruiker:');
             if (newPassword && newPassword.length >= 6) {
                 try {
-                    await db.collection('users').doc(userId).update({
+                    await database.ref('users/' + userId).update({
                         password: newPassword
                     });
                     await updateAdminStats();
-                    showMessage('Wachtwoord bijgewerkt!');
+                    showSuccess('Wachtwoord bijgewerkt!');
                 } catch (error) {
                     showError('Fout bij wijzigen wachtwoord: ' + error.message);
                 }
@@ -771,9 +829,9 @@
         async function deleteUser(userId) {
             if (confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?')) {
                 try {
-                    await db.collection('users').doc(userId).delete();
+                    await database.ref('users/' + userId).remove();
                     await updateAdminStats();
-                    showMessage('Gebruiker verwijderd!');
+                    showSuccess('Gebruiker verwijderd!');
                 } catch (error) {
                     showError('Fout bij verwijderen gebruiker: ' + error.message);
                 }
@@ -793,14 +851,18 @@
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
         }
 
-        function clearError() {
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
             errorMessage.style.display = 'none';
         }
 
-        function showMessage(message) {
-            alert(message);
+        function clearMessages() {
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
         }
 
         function setLoading(loading) {
