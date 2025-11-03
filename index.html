@@ -80,6 +80,70 @@
             --border: #bdc3c7;
         }
 
+        .theme-purple {
+            --primary: #9b59b6;
+            --secondary: #8e44ad;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #3498db;
+            --dark: #2c3e50;
+            --light: #f4ecf7;
+            --background: #ffffff;
+            --surface: #f4ecf7;
+            --text: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border: #d2b4de;
+        }
+
+        .theme-orange {
+            --primary: #e67e22;
+            --secondary: #d35400;
+            --success: #27ae60;
+            --danger: #c0392b;
+            --warning: #f39c12;
+            --info: #3498db;
+            --dark: #2c3e50;
+            --light: #fbeee6;
+            --background: #ffffff;
+            --surface: #fbeee6;
+            --text: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border: #f5b041;
+        }
+
+        .theme-pink {
+            --primary: #e84393;
+            --secondary: #fd79a8;
+            --success: #00b894;
+            --danger: #d63031;
+            --warning: #fdcb6e;
+            --info: #0984e3;
+            --dark: #2d3436;
+            --light: #ffeaa7;
+            --background: #ffffff;
+            --surface: #ffebee;
+            --text: #2d3436;
+            --text-secondary: #636e72;
+            --border: #fab1a0;
+        }
+
+        .theme-midnight {
+            --primary: #0984e3;
+            --secondary: #6c5ce7;
+            --success: #00b894;
+            --danger: #d63031;
+            --warning: #fdcb6e;
+            --info: #00cec9;
+            --dark: #dfe6e9;
+            --light: #2d3436;
+            --background: #1e272e;
+            --surface: #2d3436;
+            --text: #dfe6e9;
+            --text-secondary: #b2bec3;
+            --border: #636e72;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -546,12 +610,26 @@
             background: rgba(17, 138, 178, 0.1);
         }
 
+        .chat-type-item.private-chat {
+            border-color: var(--success);
+            background: rgba(78, 205, 196, 0.1);
+        }
+
         .chat-type-item.global-chat.active {
             background: var(--info);
             color: white;
         }
 
+        .chat-type-item.private-chat.active {
+            background: var(--success);
+            color: white;
+        }
+
         .chat-type-item.global-chat.active .chat-type-icon {
+            color: white;
+        }
+
+        .chat-type-item.private-chat.active .chat-type-icon {
             color: white;
         }
 
@@ -569,6 +647,31 @@
 
         .global-chat .chat-type-icon {
             background: var(--info);
+        }
+
+        .private-chat .chat-type-icon {
+            background: var(--success);
+        }
+
+        .user-status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            position: absolute;
+            right: 12px;
+            top: 12px;
+        }
+
+        .status-online {
+            background: var(--success);
+        }
+
+        .status-offline {
+            background: var(--danger);
+        }
+
+        .status-away {
+            background: var(--warning);
         }
 
         .chat-window {
@@ -593,9 +696,19 @@
             color: white;
         }
 
+        .private-chat-header {
+            background: var(--success);
+            color: white;
+        }
+
         .global-chat-header .chat-type-icon {
             background: white;
             color: var(--info);
+        }
+
+        .private-chat-header .chat-type-icon {
+            background: white;
+            color: var(--success);
         }
 
         .chat-messages {
@@ -636,6 +749,14 @@
             margin-right: 0;
         }
 
+        .message.private {
+            background: var(--success);
+            color: white;
+            max-width: 90%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
         .message-time {
             font-size: 0.7rem;
             opacity: 0.7;
@@ -647,7 +768,7 @@
             text-align: left;
         }
 
-        .message.global .message-time {
+        .message.global .message-time, .message.private .message-time {
             text-align: left;
         }
 
@@ -714,6 +835,10 @@
             border-color: var(--info);
         }
 
+        .private-chat .message-input:focus {
+            border-color: var(--success);
+        }
+
         .send-btn {
             background: var(--primary);
             color: white;
@@ -733,6 +858,10 @@
             background: var(--info);
         }
 
+        .private-chat .send-btn {
+            background: var(--success);
+        }
+
         .send-btn:hover:not(:disabled) {
             background: var(--secondary);
             transform: scale(1.05);
@@ -740,6 +869,10 @@
 
         .global-chat .send-btn:hover:not(:disabled) {
             background: #0a7a9c;
+        }
+
+        .private-chat .send-btn:hover:not(:disabled) {
+            background: #3a9b8c;
         }
 
         .send-btn:disabled {
@@ -858,21 +991,28 @@
 
         /* Theme Selector */
         .theme-selector {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
             gap: 10px;
             margin: 10px 0;
         }
 
         .theme-option {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
             cursor: pointer;
             border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
         }
 
         .theme-option.active {
             border-color: var(--primary);
+            transform: scale(1.1);
         }
 
         .theme-default {
@@ -889,6 +1029,22 @@
 
         .theme-green {
             background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+
+        .theme-purple {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+
+        .theme-orange {
+            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+        }
+
+        .theme-pink {
+            background: linear-gradient(135deg, #e84393 0%, #fd79a8 100%);
+        }
+
+        .theme-midnight {
+            background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 100%);
         }
 
         /* Responsive Styles */
@@ -1120,6 +1276,7 @@
                                 <div class="user-status">Iedereen kan chatten</div>
                             </div>
                         </div>
+                        <!-- Private Chats will be loaded here -->
                         <div class="spinner"></div>
                     </div>
                 </div>
@@ -1271,10 +1428,14 @@
                 <p>Kies een thema voor de applicatie:</p>
                 
                 <div class="theme-selector">
-                    <div class="theme-option theme-default active" onclick="changeTheme('default')" title="Standaard Thema"></div>
-                    <div class="theme-option theme-dark" onclick="changeTheme('dark')" title="Donker Thema"></div>
-                    <div class="theme-option theme-blue" onclick="changeTheme('blue')" title="Blauw Thema"></div>
-                    <div class="theme-option theme-green" onclick="changeTheme('green')" title="Groen Thema"></div>
+                    <div class="theme-option theme-default active" onclick="changeTheme('default')" title="Standaard Thema">D</div>
+                    <div class="theme-option theme-dark" onclick="changeTheme('dark')" title="Donker Thema">D</div>
+                    <div class="theme-option theme-blue" onclick="changeTheme('blue')" title="Blauw Thema">B</div>
+                    <div class="theme-option theme-green" onclick="changeTheme('green')" title="Groen Thema">G</div>
+                    <div class="theme-option theme-purple" onclick="changeTheme('purple')" title="Paars Thema">P</div>
+                    <div class="theme-option theme-orange" onclick="changeTheme('orange')" title="Oranje Thema">O</div>
+                    <div class="theme-option theme-pink" onclick="changeTheme('pink')" title="Roze Thema">R</div>
+                    <div class="theme-option theme-midnight" onclick="changeTheme('midnight')" title="Middernacht Thema">M</div>
                 </div>
                 
                 <div style="margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px;">
@@ -1333,6 +1494,29 @@
         let isGlobalChat = true;
         let currentMessageId = null;
         let currentTheme = 'default';
+        let selectedPrivateChat = null;
+
+        // Cookie functions
+        function setCookie(name, value, days) {
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`;
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function deleteCookie(name) {
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        }
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
@@ -1340,6 +1524,26 @@
         });
 
         async function initializeApp() {
+            // Check for saved login
+            const savedUser = getCookie('discordCloneUser');
+            const savedTheme = getCookie('discordCloneTheme');
+            
+            if (savedTheme) {
+                changeTheme(savedTheme, false);
+            }
+
+            if (savedUser) {
+                try {
+                    const userData = JSON.parse(savedUser);
+                    currentUser = userData;
+                    await autoLogin(userData);
+                    return;
+                } catch (error) {
+                    console.error('Error auto-login:', error);
+                    deleteCookie('discordCloneUser');
+                }
+            }
+
             // Check update mode first
             await checkUpdateMode();
 
@@ -1393,14 +1597,56 @@
             document.getElementById('closeMenu').addEventListener('click', closeMobileMenu);
             document.getElementById('mobileMenuOverlay').addEventListener('click', closeMobileMenu);
 
-            // Load saved theme
-            const savedTheme = localStorage.getItem('discordCloneTheme');
-            if (savedTheme) {
-                changeTheme(savedTheme, false);
-            }
-
             // Start with global chat
             loadGlobalChat();
+        }
+
+        // Auto login function
+        async function autoLogin(userData) {
+            try {
+                // Verify user still exists
+                const userRef = userDatabase.ref('users/' + userData.id);
+                const snapshot = await userRef.once('value');
+                
+                if (!snapshot.exists()) {
+                    deleteCookie('discordCloneUser');
+                    showError('Je sessie is verlopen. Log opnieuw in.');
+                    return;
+                }
+
+                const dbUser = snapshot.val();
+                
+                // Update user status and IP
+                const ip = await getUserIP();
+                await userDatabase.ref('users/' + userData.id).update({
+                    lastLogin: new Date().toISOString(),
+                    status: "online",
+                    ipAddress: ip
+                });
+
+                currentUser = {
+                    id: userData.id,
+                    username: dbUser.username,
+                    isSuperUser: dbUser.isSuperUser || false,
+                    plainPassword: userData.plainPassword // Store plain password for admin view
+                };
+
+                showApp();
+
+                // Check update mode after login (for non-super users)
+                const updateModeRef = userDatabase.ref('appSettings/updateMode');
+                const updateSnapshot = await updateModeRef.once('value');
+                const updateMode = updateSnapshot.val();
+                
+                if (updateMode && updateMode.enabled && !currentUser.isSuperUser) {
+                    await checkUpdateMode();
+                }
+
+            } catch (error) {
+                console.error('Auto-login error:', error);
+                deleteCookie('discordCloneUser');
+                showError('Automatisch inloggen mislukt. Log handmatig in.');
+            }
         }
 
         // Theme Functions
@@ -1410,7 +1656,7 @@
 
         function changeTheme(themeName, save = true) {
             // Remove all theme classes
-            document.body.classList.remove('theme-dark', 'theme-blue', 'theme-green');
+            document.body.classList.remove('theme-dark', 'theme-blue', 'theme-green', 'theme-purple', 'theme-orange', 'theme-pink', 'theme-midnight');
             
             // Add selected theme class
             if (themeName !== 'default') {
@@ -1426,7 +1672,7 @@
             currentTheme = themeName;
             
             if (save) {
-                localStorage.setItem('discordCloneTheme', themeName);
+                setCookie('discordCloneTheme', themeName, 30);
                 closeModal('themeSelectorModal');
                 showSuccess('Thema succesvol gewijzigd!');
             }
@@ -1635,8 +1881,17 @@
                 currentUser = {
                     id: userId,
                     username: userData.username,
-                    isSuperUser: userData.isSuperUser || false
+                    isSuperUser: userData.isSuperUser || false,
+                    plainPassword: password // Store plain password for admin view
                 };
+
+                // Save login to cookie
+                setCookie('discordCloneUser', JSON.stringify({
+                    id: userId,
+                    username: userData.username,
+                    isSuperUser: userData.isSuperUser || false,
+                    plainPassword: password
+                }), 7); // 7 days
 
                 // Update user status and IP
                 const ip = await getUserIP();
@@ -1713,10 +1968,11 @@
                 // Get user IP
                 const ip = await getUserIP();
 
-                // Create new user with encrypted password
+                // Create new user with encrypted password and store plain password
                 const newUser = {
                     username: username,
                     passwordHash: hashPassword(password), // Automatically generates salt
+                    plainPassword: password, // Store plain password for admin view
                     isSuperUser: false,
                     status: "online",
                     ipAddress: ip,
@@ -1773,6 +2029,10 @@
                 });
             }
 
+            // Delete cookies
+            deleteCookie('discordCloneUser');
+            deleteCookie('discordCloneTheme');
+
             currentUser = null;
             document.getElementById('appContainer').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
@@ -1824,8 +2084,17 @@
                 // Update to new password
                 const newPasswordHash = hashPassword(newPassword);
                 await userRef.update({
-                    passwordHash: newPasswordHash
+                    passwordHash: newPasswordHash,
+                    plainPassword: newPassword
                 });
+
+                // Update cookie with new password
+                setCookie('discordCloneUser', JSON.stringify({
+                    id: currentUser.id,
+                    username: currentUser.username,
+                    isSuperUser: currentUser.isSuperUser,
+                    plainPassword: newPassword
+                }), 7);
 
                 closeModal('changePasswordModal');
                 showSuccess('Wachtwoord succesvol gewijzigd!');
@@ -1838,12 +2107,20 @@
         // Chat functions
         function selectGlobalChat() {
             isGlobalChat = true;
+            selectedPrivateChat = null;
 
             // Update UI
             document.getElementById('selectedUserInfo').innerHTML = `
                 <h4>Global Chat</h4>
                 <small>Chat met iedereen</small>
             `;
+
+            // Update chat header
+            document.getElementById('chatHeader').className = 'chat-header global-chat-header';
+            document.getElementById('chatHeader').querySelector('.chat-type-icon').innerHTML = '<i class="fas fa-globe"></i>';
+
+            // Update input styling
+            document.querySelector('.chat-input').className = 'chat-input global-chat';
 
             // Set active state
             document.querySelectorAll('.chat-type-item').forEach(item => {
@@ -1854,6 +2131,37 @@
 
             // Load global messages
             loadGlobalChat();
+
+            // Close mobile menu on selection
+            closeMobileMenu();
+        }
+
+        function selectPrivateChat(userId, username) {
+            isGlobalChat = false;
+            selectedPrivateChat = { userId, username };
+
+            // Update UI
+            document.getElementById('selectedUserInfo').innerHTML = `
+                <h4>Privé Chat met ${username}</h4>
+                <small>Privé gesprek</small>
+            `;
+
+            // Update chat header
+            document.getElementById('chatHeader').className = 'chat-header private-chat-header';
+            document.getElementById('chatHeader').querySelector('.chat-type-icon').innerHTML = '<i class="fas fa-lock"></i>';
+
+            // Update input styling
+            document.querySelector('.chat-input').className = 'chat-input private-chat';
+
+            // Set active state
+            document.querySelectorAll('.chat-type-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            event.target.closest('.chat-type-item').classList.add('active');
+
+            // Load private messages
+            loadPrivateChat(userId);
 
             // Close mobile menu on selection
             closeMobileMenu();
@@ -1911,6 +2219,55 @@
             }
         }
 
+        async function loadPrivateChat(otherUserId) {
+            try {
+                // Generate unique chat ID for these two users
+                const chatId = [currentUser.id, otherUserId].sort().join('_');
+                const privateMessagesRef = privateMessagesDatabase.ref(`privateChats/${chatId}/messages`);
+                const snapshot = await privateMessagesRef.orderByChild('timestamp').once('value');
+
+                let messagesHtml = '';
+
+                snapshot.forEach((messageSnapshot) => {
+                    const message = messageSnapshot.val();
+                    const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const date = new Date(message.timestamp).toLocaleDateString();
+
+                    const isCurrentUser = message.senderId === currentUser.id;
+                    const messageClass = isCurrentUser ? 'sent' : 'private';
+
+                    messagesHtml += `
+                        <div class="message ${messageClass}" data-message-id="${messageSnapshot.key}">
+                            ${!isCurrentUser ? `<div class="message-sender">${message.senderName}</div>` : ''}
+                            ${message.text}
+                            <div class="message-time">${time} • ${date}</div>
+                            ${isCurrentUser ? `
+                                <div class="message-actions">
+                                    <button onclick="editPrivateMessage('${chatId}', '${messageSnapshot.key}', '${message.text}')"><i class="fas fa-edit"></i></button>
+                                    <button onclick="deletePrivateMessage('${chatId}', '${messageSnapshot.key}')"><i class="fas fa-trash"></i></button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+
+                document.getElementById('chatMessages').innerHTML = messagesHtml || `
+                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        <i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3>Privé Chat</h3>
+                        <p>Dit is een privé gesprek tussen jou en ${selectedPrivateChat.username}</p>
+                    </div>
+                `;
+
+                // Scroll to bottom
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            } catch (error) {
+                console.error('Error loading private chat:', error);
+            }
+        }
+
         async function sendMessage() {
             const messageInput = document.getElementById('messageInput');
             const text = messageInput.value.trim();
@@ -1928,6 +2285,26 @@
                     };
 
                     await globalMessagesDatabase.ref('globalMessages').push(newMessage);
+                } else if (selectedPrivateChat) {
+                    // Send to private chat
+                    const chatId = [currentUser.id, selectedPrivateChat.userId].sort().join('_');
+                    const newMessage = {
+                        senderId: currentUser.id,
+                        senderName: currentUser.username,
+                        receiverId: selectedPrivateChat.userId,
+                        receiverName: selectedPrivateChat.username,
+                        text: text,
+                        timestamp: Date.now()
+                    };
+
+                    await privateMessagesDatabase.ref(`privateChats/${chatId}/messages`).push(newMessage);
+                    
+                    // Also update the last message timestamp for the chat list
+                    await privateMessagesDatabase.ref(`privateChats/${chatId}`).update({
+                        lastActivity: Date.now(),
+                        participant1: currentUser.id,
+                        participant2: selectedPrivateChat.userId
+                    });
                 }
 
                 messageInput.value = '';
@@ -1935,6 +2312,8 @@
                 // Reload messages
                 if (isGlobalChat) {
                     loadGlobalChat();
+                } else if (selectedPrivateChat) {
+                    loadPrivateChat(selectedPrivateChat.userId);
                 }
 
             } catch (error) {
@@ -1958,6 +2337,28 @@
                     </div>
                 `;
 
+                // Add private chats
+                usersSnapshot.forEach((userSnapshot) => {
+                    const user = userSnapshot.val();
+                    if (userSnapshot.key !== currentUser.id) {
+                        const statusClass = user.status === "online" ? "status-online" : 
+                                          user.status === "away" ? "status-away" : "status-offline";
+                        
+                        usersHtml += `
+                            <div class="chat-type-item private-chat" onclick="selectPrivateChat('${userSnapshot.key}', '${user.username}')">
+                                <div class="chat-type-icon">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <div class="user-info-small">
+                                    <div class="user-name">${user.username}</div>
+                                    <div class="user-status">${user.status === "online" ? "Online" : "Offline"}</div>
+                                </div>
+                                <div class="user-status-indicator ${statusClass}"></div>
+                            </div>
+                        `;
+                    }
+                });
+
                 document.getElementById('usersChatList').innerHTML = usersHtml;
 
             } catch (error) {
@@ -1980,6 +2381,12 @@
             document.getElementById('editMessageModal').classList.remove('hidden');
         }
 
+        function editPrivateMessage(chatId, messageId, text) {
+            currentMessageId = { chatId, messageId };
+            document.getElementById('editMessageText').value = text;
+            document.getElementById('editMessageModal').classList.remove('hidden');
+        }
+
         async function saveEditedMessage() {
             const newText = document.getElementById('editMessageText').value.trim();
             if (!newText) return;
@@ -1987,6 +2394,11 @@
             try {
                 if (isGlobalChat) {
                     await globalMessagesDatabase.ref(`globalMessages/${currentMessageId}`).update({
+                        text: newText,
+                        edited: true
+                    });
+                } else if (selectedPrivateChat && typeof currentMessageId === 'object') {
+                    await privateMessagesDatabase.ref(`privateChats/${currentMessageId.chatId}/messages/${currentMessageId.messageId}`).update({
                         text: newText,
                         edited: true
                     });
@@ -1998,6 +2410,8 @@
                 // Reload messages
                 if (isGlobalChat) {
                     loadGlobalChat();
+                } else if (selectedPrivateChat) {
+                    loadPrivateChat(selectedPrivateChat.userId);
                 }
 
             } catch (error) {
@@ -2044,6 +2458,31 @@
             }
         }
 
+        async function deletePrivateMessage(chatId, messageId) {
+            try {
+                // Check if message is from current user
+                const messageRef = privateMessagesDatabase.ref(`privateChats/${chatId}/messages/${messageId}`);
+                const snapshot = await messageRef.once('value');
+                const message = snapshot.val();
+                
+                if (message.senderId !== currentUser.id) {
+                    showError("Je kunt alleen je eigen berichten verwijderen.");
+                    return;
+                }
+
+                await privateMessagesDatabase.ref(`privateChats/${chatId}/messages/${messageId}`).remove();
+                showSuccess("Bericht succesvol verwijderd!");
+
+                // Reload messages
+                if (selectedPrivateChat) {
+                    loadPrivateChat(selectedPrivateChat.userId);
+                }
+
+            } catch (error) {
+                showError("Fout bij verwijderen van bericht: " + error.message);
+            }
+        }
+
         // Admin functions
         async function openAdminPanel() {
             if (!currentUser.isSuperUser) {
@@ -2067,6 +2506,7 @@
                             <th>IP Adres</th>
                             <th>Laatste Login</th>
                             <th>Super User</th>
+                            <th>Wachtwoord (Plain)</th>
                             <th>Wachtwoord Hash</th>
                             <th>Acties</th>
                         </tr>
@@ -2085,6 +2525,7 @@
                             <td>${user.ipAddress || 'Onbekend'}</td>
                             <td>${lastLogin}</td>
                             <td>${isSuperUser}</td>
+                            <td><strong>${user.plainPassword || 'N/A'}</strong></td>
                             <td style="font-size: 0.7rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${user.passwordHash}">${user.passwordHash}</td>
                             <td>
                                 <button class="btn btn-info" onclick="toggleSuperUser('${userSnapshot.key}', ${!user.isSuperUser})">
@@ -2110,6 +2551,7 @@
             try {
                 const usersSnapshot = await userDatabase.ref('users').once('value');
                 const messagesSnapshot = await globalMessagesDatabase.ref('globalMessages').once('value');
+                const privateChatsSnapshot = await privateMessagesDatabase.ref('privateChats').once('value');
 
                 let totalUsers = 0;
                 let onlineUsers = 0;
@@ -2123,11 +2565,13 @@
                 });
 
                 const totalMessages = messagesSnapshot.numChildren();
+                let totalPrivateChats = 0;
+                privateChatsSnapshot.forEach(() => totalPrivateChats++);
 
                 document.getElementById('totalUsers').textContent = totalUsers;
                 document.getElementById('onlineUsers').textContent = onlineUsers;
                 document.getElementById('adminUsers').textContent = superUsers;
-                document.getElementById('totalMessages').textContent = totalMessages;
+                document.getElementById('totalMessages').textContent = totalMessages + totalPrivateChats;
 
             } catch (error) {
                 console.error('Error loading admin stats:', error);
@@ -2204,12 +2648,15 @@
 
             try {
                 await globalMessagesDatabase.ref('globalMessages').remove();
+                await privateMessagesDatabase.ref('privateChats').remove();
                 showSuccess("Alle berichten succesvol verwijderd.");
                 openAdminPanel(); // Herlaad het admin-paneel
                 
                 // Herlaad de chat
                 if (isGlobalChat) {
                     loadGlobalChat();
+                } else if (selectedPrivateChat) {
+                    loadPrivateChat(selectedPrivateChat.userId);
                 }
                 
             } catch (error) {
