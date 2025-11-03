@@ -1,1735 +1,326 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bowen Chat</title>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- CryptoJS voor encryptie -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
-            --success: #4ecdc4;
-            --danger: #ff6b6b;
-            --warning: #ffd166;
-            --info: #118ab2;
-            --dark: #2d3748;
-            --light: #f8f9fa;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            min-height: 100vh;
-            transition: all 0.3s ease;
-            padding: 10px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
-        }
-
-        /* Login Container */
-        .login-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            padding: 30px 25px;
-            width: 100%;
-            max-width: 400px;
-            backdrop-filter: blur(10px);
-            margin: 20px auto;
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .login-header h1 {
-            color: var(--dark);
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .login-header p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--dark);
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .input-with-icon {
-            position: relative;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 14px 45px 14px 15px;
-            border: 2px solid #e1e1e1;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #fff;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #666;
-            padding: 8px;
-            font-size: 1rem;
-        }
-
-        .btn {
-            padding: 14px 20px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-info {
-            background: var(--info);
-            color: white;
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .error-message {
-            background: var(--danger);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: center;
-            display: none;
-            font-size: 0.9rem;
-        }
-
-        .success-message {
-            background: var(--success);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: center;
-            display: none;
-            font-size: 0.9rem;
-        }
-
-        .switch-form {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e1e1e1;
-        }
-
-        .switch-form a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .switch-form a:hover {
-            text-decoration: underline;
-        }
-
-        /* Main App */
-        .app-container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Header */
-        .app-header {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            padding: 1rem 1.5rem;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e1e1e1;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 1.3rem;
-            color: var(--dark);
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .logout-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: var(--light);
-        }
-
-        .change-password-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .change-password-btn:hover {
-            background: var(--light);
-        }
-
-        /* Mobile Menu Button */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--dark);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .menu-toggle:hover {
-            background: var(--light);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Messages System */
-        .messages-container {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 0;
-            height: calc(100vh - 80px);
-        }
-
-        /* Mobile Menu */
-        .mobile-menu-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 100;
-        }
-
-        .mobile-menu-overlay.active {
-            display: block;
-        }
-
-        .users-list {
-            background: white;
-            border-right: 1px solid #e1e1e1;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            transition: transform 0.3s ease;
-        }
-
-        .users-header {
-            padding: 20px;
-            border-bottom: 1px solid #e1e1e1;
-            background: var(--light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .close-menu {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--dark);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .close-menu:hover {
-            background: var(--light);
-        }
-
-        .users-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-        }
-
-        .chat-type-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 8px;
-            border: 2px solid transparent;
-            position: relative;
-        }
-
-        .chat-type-item:hover, .chat-type-item.active {
-            background: var(--light);
-        }
-
-        .chat-type-item.global-chat {
-            border-color: var(--info);
-            background: rgba(17, 138, 178, 0.1);
-        }
-
-        .chat-type-item.global-chat.active {
-            background: var(--info);
-            color: white;
-        }
-
-        .chat-type-item.global-chat.active .chat-type-icon {
-            color: white;
-        }
-
-        .chat-type-icon {
-            font-size: 1.2rem;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .global-chat .chat-type-icon {
-            background: var(--info);
-        }
-
-        .user-chat-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 8px;
-            position: relative;
-        }
-
-        .user-chat-item:hover, .user-chat-item.active {
-            background: var(--light);
-        }
-
-        .user-avatar-small {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1rem;
-            position: relative;
-        }
-
-        .status-indicator {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
-
-        .status-online {
-            background: var(--success);
-        }
-
-        .status-offline {
-            background: #ccc;
-        }
-
-        .user-info-small {
-            flex: 1;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 2px;
-        }
-
-        .user-status {
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        .unread-badge {
-            background: var(--danger);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: bold;
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .chat-window {
-            background: white;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .chat-header {
-            padding: 20px;
-            border-bottom: 1px solid #e1e1e1;
-            background: var(--light);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .global-chat-header {
-            background: var(--info);
-            color: white;
-        }
-
-        .global-chat-header .chat-type-icon {
-            background: white;
-            color: var(--info);
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background: #f8f9fa;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            padding: 12px 16px;
-            border-radius: 18px;
-            max-width: 85%;
-            position: relative;
-            word-wrap: break-word;
-        }
-
-        .message.sent {
-            background: var(--primary);
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 6px;
-        }
-
-        .message.received {
-            background: white;
-            color: var(--dark);
-            border-bottom-left-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .message.global {
-            background: var(--info);
-            color: white;
-            max-width: 90%;
-            margin-left: 0;
-            margin-right: 0;
-        }
-
-        .message-time {
-            font-size: 0.7rem;
-            opacity: 0.7;
-            margin-top: 4px;
-            text-align: right;
-        }
-
-        .message.received .message-time {
-            text-align: left;
-        }
-
-        .message.global .message-time {
-            text-align: left;
-        }
-
-        .message-sender {
-            font-weight: 600;
-            font-size: 0.8rem;
-            margin-bottom: 4px;
-            opacity: 0.9;
-        }
-
-        .message-status {
-            font-size: 0.6rem;
-            margin-top: 2px;
-            opacity: 0.7;
-            text-align: right;
-        }
-
-        .chat-input-container {
-            padding: 20px;
-            border-top: 1px solid #e1e1e1;
-            background: white;
-        }
-
-        .chat-input {
-            display: flex;
-            gap: 12px;
-            align-items: flex-end;
-        }
-
-        .message-input {
-            flex: 1;
-            padding: 14px 16px;
-            border: 2px solid #e1e1e1;
-            border-radius: 25px;
-            font-size: 1rem;
-            resize: none;
-            max-height: 120px;
-            min-height: 50px;
-        }
-
-        .message-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .global-chat .message-input:focus {
-            border-color: var(--info);
-        }
-
-        .send-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .global-chat .send-btn {
-            background: var(--info);
-        }
-
-        .send-btn:hover:not(:disabled) {
-            background: var(--secondary);
-            transform: scale(1.05);
-        }
-
-        .global-chat .send-btn:hover:not(:disabled) {
-            background: #0a7a9c;
-        }
-
-        .send-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            position: absolute;
-            right: 0;
-            top: 0;
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .messages-container {
-                grid-template-columns: 1fr;
-            }
-
-            .users-list {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 280px;
-                height: 100%;
-                z-index: 200;
-                transform: translateX(-100%);
-            }
-
-            .users-list.active {
-                transform: translateX(0);
-            }
-
-            .menu-toggle {
-                display: block;
-            }
-
-            .close-menu {
-                display: block;
-            }
-
-            .app-header {
-                padding: 1rem;
-            }
-
-            .logo span {
-                font-size: 1.1rem;
-            }
-
-            .user-menu span {
-                display: none;
-            }
-
-            .chat-header {
-                padding: 15px;
-            }
-
-            .chat-messages {
-                padding: 15px;
-            }
-
-            .message {
-                max-width: 90%;
-            }
-
-            .chat-input-container {
-                padding: 15px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .login-container {
-                padding: 20px 15px;
-                margin: 10px auto;
-            }
-
-            .app-container {
-                border-radius: 15px;
-            }
-
-            .message {
-                max-width: 95%;
-            }
-
-            .chat-input {
-                gap: 8px;
-            }
-
-            .send-btn {
-                width: 45px;
-                height: 45px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bowen Chat</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    #login-container, #chat-container {
+      display: none;
+      flex-direction: column;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+      height: 300px;
+      background: #fafafa;
+    }
+
+    .message {
+      margin-bottom: 8px;
+      background: #e9ecef;
+      padding: 8px 10px;
+      border-radius: 8px;
+    }
+
+    .message b {
+      color: #007bff;
+    }
+
+    #chat-input {
+      display: flex;
+      gap: 10px;
+    }
+
+    #message-input {
+      flex: 1;
+    }
+
+    #logout {
+      background: #dc3545;
+    }
+
+    #logout:hover {
+      background: #a71d2a;
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 10px;
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    .switch:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div class="login-container" id="loginScreen">
-        <div class="login-header">
-            <h1>Bowen Chat</h1>
-            <p>Log in op je account</p>
-        </div>
-        
-        <div class="error-message" id="errorMessage"></div>
-        <div class="success-message" id="successMessage"></div>
-        
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">Gebruikersnaam</label>
-                <input type="text" id="username" class="form-control" placeholder="Voer gebruikersnaam in" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Wachtwoord</label>
-                <div class="input-with-icon">
-                    <input type="password" id="password" class="form-control" placeholder="Voer wachtwoord in" required>
-                    <button type="button" class="password-toggle" id="togglePassword">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <button type="submit" class="btn btn-primary" id="loginBtn">
-                <i class="fas fa-sign-in-alt"></i>Inloggen
-            </button>
-        </form>
 
-        <div class="switch-form">
-            <p>Nog geen account? <a id="switchToRegister">Account aanmaken</a></p>
-        </div>
+  <!-- LOGIN & REGISTRATIE -->
+  <div id="login-container">
+    <h2>Bowen Chat</h2>
+
+    <form id="login-form">
+      <input type="text" id="login-username" placeholder="Gebruikersnaam" required />
+      <input type="password" id="login-password" placeholder="Wachtwoord" required />
+      <button type="submit">Inloggen</button>
+    </form>
+
+    <form id="register-form" style="display:none;">
+      <input type="text" id="register-username" placeholder="Kies een gebruikersnaam" required />
+      <input type="password" id="register-password" placeholder="Kies een wachtwoord" required />
+      <button type="submit">Registreren</button>
+    </form>
+
+    <div class="switch" id="toggle-form">Nog geen account? Registreer hier</div>
+  </div>
+
+  <!-- CHAT -->
+  <div id="chat-container">
+    <h2>Global Chat</h2>
+    <div id="chat-messages"></div>
+
+    <div id="chat-input">
+      <input type="text" id="message-input" placeholder="Typ een bericht..." />
+      <button id="send-message">Versturen</button>
     </div>
 
-    <!-- Register Screen -->
-    <div class="login-container hidden" id="registerScreen">
-        <div class="login-header">
-            <h1>Account Aanmaken</h1>
-            <p>Maak een nieuw account aan</p>
-        </div>
-        
-        <div class="error-message" id="registerErrorMessage"></div>
-        <div class="success-message" id="registerSuccessMessage"></div>
-        
-        <form id="registerForm">
-            <div class="form-group">
-                <label for="registerUsername">Gebruikersnaam</label>
-                <input type="text" id="registerUsername" class="form-control" placeholder="Kies een gebruikersnaam" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="registerPassword">Wachtwoord</label>
-                <div class="input-with-icon">
-                    <input type="password" id="registerPassword" class="form-control" placeholder="Kies een wachtwoord" required minlength="6">
-                    <button type="button" class="password-toggle" id="toggleRegisterPassword">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                <small style="color: #666; font-size: 0.8rem;">Minimaal 6 karakters</small>
-            </div>
-            
-            <div class="form-group">
-                <label for="confirmPassword">Bevestig Wachtwoord</label>
-                <div class="input-with-icon">
-                    <input type="password" id="confirmPassword" class="form-control" placeholder="Herhaal wachtwoord" required>
-                    <button type="button" class="password-toggle" id="toggleConfirmPassword">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <button type="submit" class="btn btn-success" id="registerBtn">
-                <i class="fas fa-user-plus"></i>Account Aanmaken
-            </button>
-        </form>
-
-        <div class="switch-form">
-            <p>Al een account? <a id="switchToLogin">Inloggen</a></p>
-        </div>
-    </div>
-
-    <!-- Main App -->
-    <div class="app-container hidden" id="appContainer">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="logo">
-                <button class="menu-toggle" id="menuToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <i class="fas fa-comments"></i>
-                <span>Bowen Chat</span>
-            </div>
-            <div class="user-menu">
-                <button class="change-password-btn" onclick="openChangePasswordModal()" title="Wachtwoord wijzigen">
-                    <i class="fas fa-key"></i>
-                </button>
-                <div class="user-avatar" id="userAvatar">B</div>
-                <span id="userGreeting">Welkom, Bowen</span>
-                <button class="logout-btn" onclick="logout()" title="Uitloggen">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
-            </div>
-        </header>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="messages-container">
-                <!-- Mobile Menu Overlay -->
-                <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-
-                <!-- Users List -->
-                <div class="users-list" id="usersList">
-                    <div class="users-header">
-                        <h4><i class="fas fa-users"></i> Chats</h4>
-                        <button class="close-menu" id="closeMenu">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="users-content" id="usersChatList">
-                        <!-- Global Chat Item -->
-                        <div class="chat-type-item global-chat active" onclick="selectGlobalChat()">
-                            <div class="chat-type-icon">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            <div class="user-info-small">
-                                <div class="user-name">Global Chat</div>
-                                <div class="user-status">Iedereen kan chatten</div>
-                            </div>
-                        </div>
-                        <div class="spinner"></div>
-                    </div>
-                </div>
-
-                <!-- Chat Window -->
-                <div class="chat-window">
-                    <div class="chat-header global-chat-header" id="chatHeader">
-                        <div class="chat-type-icon">
-                            <i class="fas fa-globe"></i>
-                        </div>
-                        <div id="selectedUserInfo">
-                            <h4>Global Chat</h4>
-                            <small>Chat met iedereen</small>
-                        </div>
-                    </div>
-
-                    <div class="chat-messages" id="chatMessages">
-                        <div style="text-align: center; padding: 40px; color: #666;">
-                            <i class="fas fa-globe" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                            <h3>Welkom in Global Chat!</h3>
-                            <p>Dit is een openbare chat waar iedereen kan berichten sturen</p>
-                        </div>
-                    </div>
-
-                    <div class="chat-input-container">
-                        <div class="chat-input global-chat">
-                            <textarea class="message-input" id="messageInput" placeholder="Typ je bericht voor iedereen..." rows="1"></textarea>
-                            <button class="send-btn" id="sendMessageBtn">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Change Password Modal -->
-    <div class="modal hidden" id="changePasswordModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Wachtwoord Wijzigen</h3>
-                <button class="close-modal" onclick="closeModal('changePasswordModal')">&times;</button>
-            </div>
-            <form id="changePasswordForm">
-                <div class="form-group">
-                    <label for="currentPassword">Huidig Wachtwoord</label>
-                    <input type="password" id="currentPassword" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="newPassword">Nieuw Wachtwoord</label>
-                    <input type="password" id="newPassword" class="form-control" required minlength="6">
-                </div>
-                <div class="form-group">
-                    <label for="confirmNewPassword">Bevestig Nieuw Wachtwoord</label>
-                    <input type="password" id="confirmNewPassword" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Wachtwoord Wijzigen</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Firebase config
-        const firebaseConfig = {
-            databaseURL: "https://mijn-startpagina-default-rtdb.europe-west1.firebasedatabase.app/"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // Global variables
-        let currentUser = null;
-        let currentChatUser = null;
-        let isGlobalChat = true;
-        let unreadMessages = {};
-        let userStatusListeners = {};
-
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-        });
-
-        async function initializeApp() {
-            // Password toggles
-            setupPasswordToggle('togglePassword', 'password');
-            setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
-            setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
-            setupPasswordToggle('toggleCurrentPassword', 'currentPassword');
-            setupPasswordToggle('toggleNewPassword', 'newPassword');
-            setupPasswordToggle('toggleConfirmNewPassword', 'confirmNewPassword');
-
-            // Login form
-            document.getElementById('loginForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                handleLogin();
-            });
-
-            // Register form
-            document.getElementById('registerForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                handleRegister();
-            });
-
-            // Change password form
-            document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                changeOwnPassword();
-            });
-
-            // Form switching
-            document.getElementById('switchToRegister').addEventListener('click', showRegisterForm);
-            document.getElementById('switchToLogin').addEventListener('click', showLoginForm);
-
-            // Message sending
-            document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
-            document.getElementById('messageInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-
-            // Mobile menu
-            document.getElementById('menuToggle').addEventListener('click', toggleMobileMenu);
-            document.getElementById('closeMenu').addEventListener('click', closeMobileMenu);
-            document.getElementById('mobileMenuOverlay').addEventListener('click', closeMobileMenu);
-
-            // Start with global chat
-            loadGlobalChat();
-        }
-
-        function setupPasswordToggle(toggleId, inputId) {
-            const toggle = document.getElementById(toggleId);
-            const input = document.getElementById(inputId);
-            
-            if (toggle && input) {
-                toggle.addEventListener('click', function() {
-                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                    input.setAttribute('type', type);
-                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-                });
-            }
-        }
-
-        function showLoginForm() {
-            document.getElementById('registerScreen').classList.add('hidden');
-            document.getElementById('loginScreen').classList.remove('hidden');
-            clearMessages();
-        }
-
-        function showRegisterForm() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('registerScreen').classList.remove('hidden');
-            clearMessages();
-        }
-
-        // Mobile menu functions
-        function toggleMobileMenu() {
-            document.getElementById('usersList').classList.toggle('active');
-            document.getElementById('mobileMenuOverlay').classList.toggle('active');
-        }
-
-        function closeMobileMenu() {
-            document.getElementById('usersList').classList.remove('active');
-            document.getElementById('mobileMenuOverlay').classList.remove('active');
-        }
-
-        // Hash een wachtwoord
-        function hashPassword(password) {
-            return CryptoJS.SHA256(password).toString();
-        }
-
-        // Authentication functions
-        async function handleLogin() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            if (!username || !password) {
-                showError('Vul zowel gebruikersnaam als wachtwoord in!');
-                return;
-            }
-
-            setLoading(true, 'login');
-
-            try {
-                const usersRef = database.ref('users');
-                const snapshot = await usersRef.once('value');
-                
-                let userFound = false;
-                let userData = null;
-                let userId = null;
-
-                snapshot.forEach((childSnapshot) => {
-                    const user = childSnapshot.val();
-                    if (user.username === username) {
-                        const inputPasswordHash = hashPassword(password);
-                        console.log('Input hash:', inputPasswordHash);
-                        console.log('Stored hash:', user.passwordHash);
-                        
-                        if (user.passwordHash === inputPasswordHash) {
-                            userFound = true;
-                            userData = user;
-                            userId = childSnapshot.key;
-                        }
-                    }
-                });
-
-                if (!userFound) {
-                    showError('Ongeldige gebruikersnaam of wachtwoord!');
-                    return;
-                }
-
-                currentUser = {
-                    id: userId,
-                    username: userData.username,
-                    isAdmin: userData.isAdmin || false
-                };
-
-                // Update user status
-                await database.ref('users/' + userId).update({
-                    lastLogin: new Date().toISOString(),
-                    status: "online"
-                });
-
-                showApp();
-                
-            } catch (error) {
-                showError('Fout bij inloggen: ' + error.message);
-            } finally {
-                setLoading(false, 'login');
-            }
-        }
-
-        async function handleRegister() {
-            const username = document.getElementById('registerUsername').value;
-            const password = document.getElementById('registerPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-
-            if (!username || !password || !confirmPassword) {
-                showError('Vul alle velden in!', 'register');
-                return;
-            }
-
-            if (password.length < 6) {
-                showError('Wachtwoord moet minimaal 6 karakters lang zijn!', 'register');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showError('Wachtwoorden komen niet overeen!', 'register');
-                return;
-            }
-
-            setLoading(true, 'register');
-
-            try {
-                const usersRef = database.ref('users');
-                const snapshot = await usersRef.once('value');
-                
-                // Check if username already exists
-                let usernameExists = false;
-                snapshot.forEach((childSnapshot) => {
-                    const user = childSnapshot.val();
-                    if (user.username === username) {
-                        usernameExists = true;
-                    }
-                });
-
-                if (usernameExists) {
-                    showError('Deze gebruikersnaam bestaat al!', 'register');
-                    return;
-                }
-
-                // Create new user
-                const newUser = {
-                    username: username,
-                    passwordHash: hashPassword(password),
-                    isAdmin: false,
-                    status: "online",
-                    createdAt: new Date().toISOString(),
-                    lastLogin: new Date().toISOString()
-                };
-
-                await usersRef.push(newUser);
-                showSuccess('Account succesvol aangemaakt! Je kunt nu inloggen.', 'register');
-                
-                // Switch back to login form after 2 seconds
-                setTimeout(() => {
-                    showLoginForm();
-                    document.getElementById('username').value = username;
-                }, 2000);
-
-            } catch (error) {
-                showError('Fout bij registreren: ' + error.message, 'register');
-            } finally {
-                setLoading(false, 'register');
-            }
-        }
-
-        function showApp() {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('registerScreen').classList.add('hidden');
-            document.getElementById('appContainer').classList.remove('hidden');
-            
-            // Update UI
-            document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
-            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
-            
-            // Load chat data
-            loadUsersForChat();
-            startGlobalChatListener();
-            startPrivateMessagesListener();
-            
-            clearMessages();
-        }
-
-        function logout() {
-            if (currentUser) {
-                // Update status naar offline
-                database.ref('users/' + currentUser.id).update({
-                    status: "offline",
-                    lastSeen: new Date().toISOString()
-                });
-            }
-            
-            // Remove all listeners
-            if (userStatusListeners) {
-                Object.values(userStatusListeners).forEach(listener => {
-                    if (listener) listener();
-                });
-            }
-            
-            currentUser = null;
-            document.getElementById('appContainer').classList.add('hidden');
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        // Change password functions
-        function openChangePasswordModal() {
-            document.getElementById('changePasswordModal').classList.remove('hidden');
-            document.getElementById('currentPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmNewPassword').value = '';
-        }
-
-        async function changeOwnPassword() {
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-
-            if (!currentPassword || !newPassword || !confirmNewPassword) {
-                showError('Vul alle velden in!');
-                return;
-            }
-
-            if (newPassword.length < 6) {
-                showError('Nieuw wachtwoord moet minimaal 6 karakters lang zijn!');
-                return;
-            }
-
-            if (newPassword !== confirmNewPassword) {
-                showError('Nieuwe wachtwoorden komen niet overeen!');
-                return;
-            }
-
-            try {
-                // Verify current password
-                const userRef = database.ref('users/' + currentUser.id);
-                const snapshot = await userRef.once('value');
-                const userData = snapshot.val();
-
-                const currentPasswordHash = hashPassword(currentPassword);
-                if (userData.passwordHash !== currentPasswordHash) {
-                    showError('Huidig wachtwoord is incorrect!');
-                    return;
-                }
-
-                // Update to new password
-                const newPasswordHash = hashPassword(newPassword);
-                await userRef.update({
-                    passwordHash: newPasswordHash
-                });
-
-                closeModal('changePasswordModal');
-                showSuccess('Wachtwoord succesvol gewijzigd!');
-                
-            } catch (error) {
-                showError('Fout bij wijzigen wachtwoord: ' + error.message);
-            }
-        }
-
-        // Chat functions
-        function selectGlobalChat() {
-            isGlobalChat = true;
-            currentChatUser = null;
-            
-            // Update UI
-            document.getElementById('selectedUserInfo').innerHTML = `
-                <h4>Global Chat</h4>
-                <small>Chat met iedereen</small>
-            `;
-            
-            // Set active state
-            document.querySelectorAll('.chat-type-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelectorAll('.user-chat-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.closest('.chat-type-item').classList.add('active');
-            
-            // Load global messages
-            loadGlobalChat();
-            
-            // Close mobile menu on selection
-            closeMobileMenu();
-        }
-
-        async function loadGlobalChat() {
-            try {
-                const globalMessagesRef = database.ref('globalMessages');
-                const snapshot = await globalMessagesRef.orderByChild('timestamp').once('value');
-                
-                let messagesHtml = '';
-                
-                snapshot.forEach((messageSnapshot) => {
-                    const message = messageSnapshot.val();
-                    const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    const date = new Date(message.timestamp).toLocaleDateString();
-                    
-                    const isCurrentUser = message.userId === currentUser.id;
-                    const messageClass = isCurrentUser ? 'sent' : 'global';
-                    
-                    messagesHtml += `
-                        <div class="message ${messageClass}">
-                            ${!isCurrentUser ? `<div class="message-sender">${message.username}</div>` : ''}
-                            ${message.text}
-                            <div class="message-time">${time} • ${date}</div>
-                        </div>
-                    `;
-                });
-                
-                document.getElementById('chatMessages').innerHTML = messagesHtml || `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <i class="fas fa-globe" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                        <h3>Welkom in Global Chat!</h3>
-                        <p>Dit is een openbare chat waar iedereen kan berichten sturen</p>
-                    </div>
-                `;
-                
-                // Scroll to bottom
-                const chatMessages = document.getElementById('chatMessages');
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                
-            } catch (error) {
-                console.error('Error loading global chat:', error);
-            }
-        }
-
-        async function sendMessage() {
-            const messageInput = document.getElementById('messageInput');
-            const text = messageInput.value.trim();
-            
-            if (!text) return;
-            
-            try {
-                if (isGlobalChat) {
-                    // Send to global chat
-                    const newMessage = {
-                        userId: currentUser.id,
-                        username: currentUser.username,
-                        text: text,
-                        timestamp: Date.now()
-                    };
-                    
-                    await database.ref('globalMessages').push(newMessage);
-                } else if (currentChatUser) {
-                    // Send to private chat
-                    const newMessage = {
-                        from: currentUser.id,
-                        to: currentChatUser.id,
-                        text: text,
-                        timestamp: Date.now(),
-                        read: false
-                    };
-                    
-                    await database.ref('messages').push(newMessage);
-                }
-                
-                messageInput.value = '';
-                
-                // Reload messages
-                if (isGlobalChat) {
-                    loadGlobalChat();
-                } else if (currentChatUser) {
-                    loadChatMessages(currentChatUser.id);
-                }
-                
-            } catch (error) {
-                showError('Fout bij verzenden bericht: ' + error.message);
-            }
-        }
-
-        // Messages system functions
-        async function loadUsersForChat() {
-            try {
-                const usersSnapshot = await database.ref('users').once('value');
-                let usersHtml = `
-                    <div class="chat-type-item global-chat active" onclick="selectGlobalChat()">
-                        <div class="chat-type-icon">
-                            <i class="fas fa-globe"></i>
-                        </div>
-                        <div class="user-info-small">
-                            <div class="user-name">Global Chat</div>
-                            <div class="user-status">Iedereen kan chatten</div>
-                        </div>
-                    </div>
-                `;
-                
-                usersSnapshot.forEach((userSnapshot) => {
-                    const user = userSnapshot.val();
-                    if (user.username !== currentUser.username) {
-                        const statusClass = user.status === "online" ? "status-online" : "status-offline";
-                        const statusText = user.status === "online" ? "Online" : "Offline";
-                        
-                        usersHtml += `
-                            <div class="user-chat-item" onclick="selectUserForChat('${userSnapshot.key}', '${user.username}')">
-                                <div class="user-avatar-small">
-                                    ${user.username.charAt(0).toUpperCase()}
-                                    <div class="status-indicator ${statusClass}"></div>
-                                </div>
-                                <div class="user-info-small">
-                                    <div class="user-name">${user.username}</div>
-                                    <div class="user-status">${statusText}</div>
-                                </div>
-                                ${unreadMessages[userSnapshot.key] ? `<div class="unread-badge">${unreadMessages[userSnapshot.key]}</div>` : ''}
-                            </div>
-                        `;
-                    }
-                });
-                
-                document.getElementById('usersChatList').innerHTML = usersHtml || '<p>Geen andere gebruikers gevonden</p>';
-                
-                // Start listening for user status changes
-                startUserStatusListeners();
-                
-            } catch (error) {
-                console.error('Error loading users for chat:', error);
-            }
-        }
-
-        function startUserStatusListeners() {
-            // Remove existing listeners
-            if (userStatusListeners) {
-                Object.values(userStatusListeners).forEach(listener => {
-                    if (listener) listener();
-                });
-                userStatusListeners = {};
-            }
-            
-            // Listen for status changes of all users
-            const usersRef = database.ref('users');
-            usersRef.on('child_changed', (snapshot) => {
-                const user = snapshot.val();
-                const userId = snapshot.key;
-                
-                if (user.username !== currentUser.username) {
-                    updateUserStatus(userId, user.status);
-                }
-            });
-        }
-
-        function updateUserStatus(userId, status) {
-            const userItems = document.querySelectorAll('.user-chat-item');
-            userItems.forEach(item => {
-                if (item.getAttribute('data-user-id') === userId) {
-                    const statusIndicator = item.querySelector('.status-indicator');
-                    const statusText = item.querySelector('.user-status');
-                    
-                    if (statusIndicator && statusText) {
-                        statusIndicator.className = 'status-indicator ' + (status === 'online' ? 'status-online' : 'status-offline');
-                        statusText.textContent = status === 'online' ? 'Online' : 'Offline';
-                    }
-                }
-            });
-        }
-
-        function selectUserForChat(userId, username) {
-            isGlobalChat = false;
-            currentChatUser = { id: userId, username: username };
-            
-            // Update UI
-            document.getElementById('selectedUserInfo').innerHTML = `
-                <div class="user-avatar-small">
-                    ${username.charAt(0).toUpperCase()}
-                    <div class="status-indicator status-online"></div>
-                </div>
-                <div>
-                    <div class="user-name">${username}</div>
-                    <div class="user-status">Online</div>
-                </div>
-            `;
-            
-            // Remove global chat styling
-            document.getElementById('chatHeader').classList.remove('global-chat-header');
-            document.querySelector('.chat-input').classList.remove('global-chat');
-            
-            // Load messages
-            loadChatMessages(userId);
-            
-            // Set active state
-            document.querySelectorAll('.chat-type-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelectorAll('.user-chat-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.closest('.user-chat-item').classList.add('active');
-            
-            // Reset unread count for this user
-            if (unreadMessages[userId]) {
-                unreadMessages[userId] = 0;
-                updateUnreadBadge(userId);
-            }
-            
-            // Close mobile menu on selection
-            closeMobileMenu();
-        }
-
-        async function loadChatMessages(otherUserId) {
-            try {
-                const messagesRef = database.ref('messages');
-                const snapshot = await messagesRef.orderByChild('timestamp').once('value');
-                
-                let messagesHtml = '';
-                
-                snapshot.forEach((messageSnapshot) => {
-                    const message = messageSnapshot.val();
-                    
-                    // Check if message is between current user and selected user
-                    if ((message.from === currentUser.id && message.to === otherUserId) ||
-                        (message.from === otherUserId && message.to === currentUser.id)) {
-                        
-                        const messageClass = message.from === currentUser.id ? 'sent' : 'received';
-                        const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                        
-                        messagesHtml += `
-                            <div class="message ${messageClass}">
-                                ${message.text}
-                                <div class="message-time">${time}</div>
-                                ${messageClass === 'sent' ? `<div class="message-status">${message.read ? 'Gelezen' : 'Verzonden'}</div>` : ''}
-                            </div>
-                        `;
-                    }
-                });
-                
-                document.getElementById('chatMessages').innerHTML = messagesHtml || '<p>Nog geen berichten. Start het gesprek!</p>';
-                
-                // Scroll to bottom
-                const chatMessages = document.getElementById('chatMessages');
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                
-                // Mark messages as read
-                markMessagesAsRead(otherUserId);
-                
-            } catch (error) {
-                console.error('Error loading chat messages:', error);
-            }
-        }
-
-        async function markMessagesAsRead(otherUserId) {
-            try {
-                const messagesRef = database.ref('messages');
-                const snapshot = await messagesRef.orderByChild('timestamp').once('value');
-                
-                const updates = {};
-                
-                snapshot.forEach((messageSnapshot) => {
-                    const message = messageSnapshot.val();
-                    
-                    // Mark messages from other user to current user as read
-                    if (message.from === otherUserId && message.to === currentUser.id && !message.read) {
-                        updates[`${messageSnapshot.key}/read`] = true;
-                    }
-                });
-                
-                if (Object.keys(updates).length > 0) {
-                    await messagesRef.update(updates);
-                }
-                
-            } catch (error) {
-                console.error('Error marking messages as read:', error);
-            }
-        }
-
-        function startPrivateMessagesListener() {
-            // Listen for new private messages
-            const messagesRef = database.ref('messages');
-            messagesRef.on('child_added', (snapshot) => {
-                const message = snapshot.val();
-                
-                // If message is for current user and not from current user
-                if (message.to === currentUser.id && message.from !== currentUser.id) {
-                    // If not currently viewing chat with this user, increment unread count
-                    if (!currentChatUser || currentChatUser.id !== message.from) {
-                        if (!unreadMessages[message.from]) {
-                            unreadMessages[message.from] = 0;
-                        }
-                        unreadMessages[message.from]++;
-                        updateUnreadBadge(message.from);
-                    }
-                }
-            });
-        }
-
-        function updateUnreadBadge(userId) {
-            const userItems = document.querySelectorAll('.user-chat-item');
-            userItems.forEach(item => {
-                if (item.getAttribute('data-user-id') === userId) {
-                    let badge = item.querySelector('.unread-badge');
-                    
-                    if (unreadMessages[userId] > 0) {
-                        if (!badge) {
-                            badge = document.createElement('div');
-                            badge.className = 'unread-badge';
-                            item.appendChild(badge);
-                        }
-                        badge.textContent = unreadMessages[userId];
-                    } else if (badge) {
-                        badge.remove();
-                    }
-                }
-            });
-        }
-
-        function startGlobalChatListener() {
-            database.ref('globalMessages').on('child_added', function(snapshot) {
-                if (isGlobalChat) {
-                    loadGlobalChat();
-                }
-            });
-        }
-
-        // Utility functions
-        function showError(message, formType = 'login') {
-            const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-            
-            const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
-            successDiv.style.display = 'none';
-        }
-
-        function showSuccess(message, formType = 'login') {
-            const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
-            successDiv.textContent = message;
-            successDiv.style.display = 'block';
-            
-            const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
-            errorDiv.style.display = 'none';
-        }
-
-        function clearMessages() {
-            document.getElementById('errorMessage').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'none';
-            document.getElementById('registerErrorMessage').style.display = 'none';
-            document.getElementById('registerSuccessMessage').style.display = 'none';
-        }
-
-        function setLoading(loading, formType = 'login') {
-            const btn = document.getElementById(formType === 'register' ? 'registerBtn' : 'loginBtn');
-            if (loading) {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Laden...';
-            } else {
-                btn.disabled = false;
-                btn.innerHTML = formType === 'register' 
-                    ? '<i class="fas fa-user-plus"></i>Account Aanmaken'
-                    : '<i class="fas fa-sign-in-alt"></i>Inloggen';
-            }
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-    </script>
+    <button id="logout">Uitloggen</button>
+  </div>
+
+  <script type="module">
+    // --- Firebase Config ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyAEgibIURvA8btzJvM2LVHsfBpw6oEnV1s",
+      authDomain: "bowen-chat.firebaseapp.com",
+      databaseURL: "https://bowen-chat-default-rtdb.firebaseio.com",
+      projectId: "bowen-chat",
+      storageBucket: "bowen-chat.firebasestorage.app",
+      messagingSenderId: "376483632957",
+      appId: "1:376483632957:web:ed9f25c3cc2f01a8701fa6"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // --- Cookie functies ---
+    function setCookie(name, value, days) {
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+    }
+
+    function getCookie(name) {
+      return document.cookie.split('; ').reduce((r, v) => {
+        const parts = v.split('=');
+        return parts[0] === name ? decodeURIComponent(parts[1]) : r;
+      }, '');
+    }
+
+    function deleteCookie(name) {
+      setCookie(name, '', -1);
+    }
+
+    // --- Elementen ---
+    const loginContainer = document.getElementById('login-container');
+    const chatContainer = document.getElementById('chat-container');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const chatMessages = document.getElementById('chat-messages');
+    const messageInput = document.getElementById('message-input');
+    const sendMessageButton = document.getElementById('send-message');
+    const logoutButton = document.getElementById('logout');
+    const toggleForm = document.getElementById('toggle-form');
+
+    let currentUser = null;
+
+    // --- Wissel login/register ---
+    toggleForm.addEventListener('click', () => {
+      if (loginForm.style.display === 'none') {
+        loginForm.style.display = 'flex';
+        registerForm.style.display = 'none';
+        toggleForm.textContent = 'Nog geen account? Registreer hier';
+      } else {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'flex';
+        toggleForm.textContent = 'Heb je al een account? Log hier in';
+      }
+    });
+
+    // --- UI tonen/verbergen ---
+    function showChatContainer() {
+      loginContainer.style.display = 'none';
+      chatContainer.style.display = 'flex';
+      loadGlobalChat();
+    }
+
+    function showLoginContainer() {
+      loginContainer.style.display = 'flex';
+      chatContainer.style.display = 'none';
+    }
+
+    // --- Inloggen ---
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      const userSnapshot = await firebase.database().ref(`users/${username}`).once('value');
+      if (!userSnapshot.exists()) {
+        alert('Gebruiker bestaat niet.');
+        return;
+      }
+
+      const hashedPassword = CryptoJS.SHA256(password).toString();
+      const userData = userSnapshot.val();
+
+      if (userData.password !== hashedPassword) {
+        alert('Onjuist wachtwoord.');
+        return;
+      }
+
+      currentUser = username;
+      setCookie('username', username, 7); // 7 dagen geldig
+      showChatContainer();
+    });
+
+    // --- Registreren ---
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('register-username').value.trim();
+      const password = document.getElementById('register-password').value;
+
+      const userRef = firebase.database().ref(`users/${username}`);
+      const userSnapshot = await userRef.once('value');
+      if (userSnapshot.exists()) {
+        alert('Gebruikersnaam is al in gebruik.');
+        return;
+      }
+
+      const hashedPassword = CryptoJS.SHA256(password).toString();
+      await userRef.set({
+        password: hashedPassword,
+        createdAt: Date.now(),
+        online: true
+      });
+
+      alert('Registratie gelukt! Je kunt nu inloggen.');
+      registerForm.reset();
+      toggleForm.click();
+    });
+
+    // --- Uitloggen ---
+    logoutButton.addEventListener('click', () => {
+      deleteCookie('username');
+      currentUser = null;
+      showLoginContainer();
+    });
+
+    // --- Chat laden ---
+    async function loadGlobalChat() {
+      chatMessages.innerHTML = '';
+      const snapshot = await firebase.database().ref('globalMessages').limitToLast(50).once('value');
+      const messages = snapshot.val() || {};
+      Object.values(messages).forEach(msg => appendMessage(msg.sender, msg.text));
+    }
+
+    // --- Bericht versturen ---
+    sendMessageButton.addEventListener('click', async () => {
+      const text = messageInput.value.trim();
+      if (!text || !currentUser) return;
+
+      const newMsg = {
+        sender: currentUser,
+        text,
+        timestamp: Date.now()
+      };
+
+      await firebase.database().ref('globalMessages').push(newMsg);
+      messageInput.value = '';
+    });
+
+    // --- Bericht tonen ---
+    function appendMessage(sender, text) {
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('message');
+      msgDiv.innerHTML = `<b>${sender}:</b> ${text}`;
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // --- Realtime updates ---
+    firebase.database().ref('globalMessages').limitToLast(1).on('child_added', (snapshot) => {
+      const msg = snapshot.val();
+      appendMessage(msg.sender, msg.text);
+    });
+
+    // --- Automatisch inloggen via cookie ---
+    window.addEventListener('load', () => {
+      const savedUser = getCookie('username');
+      if (savedUser) {
+        currentUser = savedUser;
+        showChatContainer();
+      } else {
+        showLoginContainer();
+      }
+    });
+  </script>
 </body>
 </html>
