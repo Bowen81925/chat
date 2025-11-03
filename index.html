@@ -25,6 +25,59 @@
             --info: #118ab2;
             --dark: #2d3748;
             --light: #f8f9fa;
+            --background: #ffffff;
+            --surface: #f8f9fa;
+            --text: #2d3748;
+            --text-secondary: #666;
+            --border: #e1e1e1;
+        }
+
+        .theme-dark {
+            --primary: #7c93fb;
+            --secondary: #9b6bdf;
+            --success: #5fd9d1;
+            --danger: #ff7b7b;
+            --warning: #ffd97a;
+            --info: #2a9dbf;
+            --dark: #e2e8f0;
+            --light: #2d3748;
+            --background: #1a202c;
+            --surface: #2d3748;
+            --text: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --border: #4a5568;
+        }
+
+        .theme-blue {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #1abc9c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --background: #ffffff;
+            --surface: #ecf0f1;
+            --text: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border: #bdc3c7;
+        }
+
+        .theme-green {
+            --primary: #27ae60;
+            --secondary: #2ecc71;
+            --success: #16a085;
+            --danger: #c0392b;
+            --warning: #f39c12;
+            --info: #3498db;
+            --dark: #27ae60;
+            --light: #ecf0f1;
+            --background: #ffffff;
+            --surface: #d5f4e6;
+            --text: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --border: #bdc3c7;
         }
 
         * {
@@ -39,6 +92,7 @@
             min-height: 100vh;
             transition: all 0.3s ease;
             padding: 10px;
+            color: var(--text);
         }
 
         .hidden {
@@ -57,7 +111,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -78,48 +132,6 @@
             opacity: 0.8;
         }
 
-        /* Troll Effects */
-        .troll-mode {
-            animation: rainbow 1s infinite;
-        }
-
-        @keyframes rainbow {
-            0% { background: #ff0000; }
-            16% { background: #ff8000; }
-            33% { background: #ffff00; }
-            50% { background: #00ff00; }
-            66% { background: #0000ff; }
-            83% { background: #8000ff; }
-            100% { background: #ff0080; }
-        }
-
-        .spin {
-            animation: spin 0.5s linear infinite;
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        .shake {
-            animation: shake 0.5s linear infinite;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .bounce {
-            animation: bounce 0.5s ease infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
         /* Login/Register Container */
         .login-container {
             background: rgba(255, 255, 255, 0.95);
@@ -130,6 +142,8 @@
             max-width: 400px;
             backdrop-filter: blur(10px);
             margin: 20px auto;
+            background: var(--background);
+            color: var(--text);
         }
 
         .login-header {
@@ -138,14 +152,14 @@
         }
 
         .login-header h1 {
-            color: var(--dark);
+            color: var(--text);
             font-size: 1.8rem;
             font-weight: 600;
             margin-bottom: 8px;
         }
 
         .login-header p {
-            color: #666;
+            color: var(--text-secondary);
             font-size: 0.9rem;
         }
 
@@ -157,7 +171,7 @@
         .form-group label {
             display: block;
             margin-bottom: 6px;
-            color: var(--dark);
+            color: var(--text);
             font-weight: 500;
             font-size: 0.9rem;
         }
@@ -169,11 +183,12 @@
         .form-control {
             width: 100%;
             padding: 14px 45px 14px 15px;
-            border: 2px solid #e1e1e1;
+            border: 2px solid var(--border);
             border-radius: 12px;
             font-size: 1rem;
             transition: all 0.3s ease;
-            background: #fff;
+            background: var(--surface);
+            color: var(--text);
         }
 
         .form-control:focus {
@@ -190,7 +205,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            color: #666;
+            color: var(--text-secondary);
             padding: 8px;
             font-size: 1rem;
         }
@@ -251,18 +266,6 @@
             color: var(--dark);
         }
 
-        .btn-troll {
-            background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff);
-            color: white;
-            animation: trollButton 2s infinite;
-        }
-
-        @keyframes trollButton {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
@@ -295,7 +298,7 @@
             text-align: center;
             margin-top: 20px;
             padding-top: 20px;
-            border-top: 1px solid #e1e1e1;
+            border-top: 1px solid var(--border);
         }
 
         .switch-form a {
@@ -314,7 +317,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            background: white;
+            background: var(--background);
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -322,14 +325,14 @@
 
         /* Header */
         .app-header {
-            background: rgba(255, 255, 255, 0.98);
+            background: var(--surface);
             backdrop-filter: blur(10px);
             padding: 1rem 1.5rem;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #e1e1e1;
+            border-bottom: 1px solid var(--border);
         }
 
         .logo {
@@ -338,7 +341,7 @@
             gap: 10px;
             font-weight: 700;
             font-size: 1.3rem;
-            color: var(--dark);
+            color: var(--text);
         }
 
         .user-menu {
@@ -416,17 +419,17 @@
             background: var(--light);
         }
 
-        .troll-mode-btn {
+        .theme-toggle-btn {
             background: none;
             border: none;
-            color: #ff00ff;
+            color: var(--info);
             cursor: pointer;
             padding: 8px;
             border-radius: 8px;
             transition: all 0.3s ease;
         }
 
-        .troll-mode-btn:hover {
+        .theme-toggle-btn:hover {
             background: var(--light);
         }
 
@@ -436,7 +439,7 @@
             background: none;
             border: none;
             font-size: 1.5rem;
-            color: var(--dark);
+            color: var(--text);
             cursor: pointer;
             padding: 8px;
             border-radius: 8px;
@@ -480,8 +483,8 @@
         }
 
         .users-list {
-            background: white;
-            border-right: 1px solid #e1e1e1;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -490,7 +493,7 @@
 
         .users-header {
             padding: 20px;
-            border-bottom: 1px solid #e1e1e1;
+            border-bottom: 1px solid var(--border);
             background: var(--light);
             display: flex;
             justify-content: space-between;
@@ -502,7 +505,7 @@
             background: none;
             border: none;
             font-size: 1.5rem;
-            color: var(--dark);
+            color: var(--text);
             cursor: pointer;
             padding: 8px;
             border-radius: 8px;
@@ -530,6 +533,8 @@
             margin-bottom: 8px;
             border: 2px solid transparent;
             position: relative;
+            background: var(--surface);
+            color: var(--text);
         }
 
         .chat-type-item:hover, .chat-type-item.active {
@@ -567,7 +572,7 @@
         }
 
         .chat-window {
-            background: white;
+            background: var(--surface);
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -575,11 +580,12 @@
 
         .chat-header {
             padding: 20px;
-            border-bottom: 1px solid #e1e1e1;
+            border-bottom: 1px solid var(--border);
             background: var(--light);
             display: flex;
             align-items: center;
             gap: 12px;
+            color: var(--text);
         }
 
         .global-chat-header {
@@ -596,7 +602,7 @@
             flex: 1;
             overflow-y: auto;
             padding: 20px;
-            background: #f8f9fa;
+            background: var(--background);
         }
 
         .message {
@@ -616,8 +622,8 @@
         }
 
         .message.received {
-            background: white;
-            color: var(--dark);
+            background: var(--surface);
+            color: var(--text);
             border-bottom-left-radius: 6px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
@@ -676,8 +682,8 @@
 
         .chat-input-container {
             padding: 20px;
-            border-top: 1px solid #e1e1e1;
-            background: white;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
         }
 
         .chat-input {
@@ -689,12 +695,14 @@
         .message-input {
             flex: 1;
             padding: 14px 16px;
-            border: 2px solid #e1e1e1;
+            border: 2px solid var(--border);
             border-radius: 25px;
             font-size: 1rem;
             resize: none;
             max-height: 120px;
             min-height: 50px;
+            background: var(--background);
+            color: var(--text);
         }
 
         .message-input:focus {
@@ -735,7 +743,7 @@
         }
 
         .send-btn:disabled {
-            background: #ccc;
+            background: var(--border);
             cursor: not-allowed;
             transform: none;
         }
@@ -755,13 +763,14 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--background);
             border-radius: 15px;
             padding: 30px;
             max-width: 500px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
+            color: var(--text);
         }
 
         .modal-header {
@@ -780,6 +789,7 @@
             position: absolute;
             right: 0;
             top: 0;
+            color: var(--text);
         }
 
         /* Admin Panel */
@@ -797,7 +807,7 @@
         .admin-user-table th, .admin-user-table td {
             padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border);
         }
 
         .admin-user-table th {
@@ -827,20 +837,12 @@
 
         .stat-label {
             font-size: 0.8rem;
-            color: #666;
-        }
-
-        /* Troll Panel */
-        .troll-controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin: 20px 0;
+            color: var(--text-secondary);
         }
 
         /* Loading Spinner */
         .spinner {
-            border: 3px solid #f3f3f3;
+            border: 3px solid var(--border);
             border-top: 3px solid var(--primary);
             border-radius: 50%;
             width: 30px;
@@ -852,6 +854,41 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Theme Selector */
+        .theme-selector {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .theme-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .theme-option.active {
+            border-color: var(--primary);
+        }
+
+        .theme-default {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .theme-dark {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        }
+
+        .theme-blue {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .theme-green {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
         }
 
         /* Responsive Styles */
@@ -939,8 +976,8 @@
 <body>
     <!-- Update Mode Screen -->
     <div class="update-mode hidden" id="updateModeScreen">
-        <h1><i class="fas fa-tools"></i>De servers kunnen momenteel niet bereikt worden.</h1>
-        <p>Probeer later opnieuw</p>
+        <h1 id="updateModeTitle"><i class="fas fa-tools"></i> De servers kunnen momenteel niet bereikt worden.</h1>
+        <p id="updateModeMessage">Probeer later opnieuw</p>
     </div>
 
     <!-- Login Screen -->
@@ -1003,7 +1040,7 @@
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-                <small style="color: #666; font-size: 0.8rem;">Minimaal 6 karakters</small>
+                <small style="color: var(--text-secondary); font-size: 0.8rem;">Minimaal 6 karakters</small>
             </div>
 
             <div class="form-group">
@@ -1038,6 +1075,9 @@
                 <span>Discord Clone</span>
             </div>
             <div class="user-menu">
+                <button class="theme-toggle-btn" onclick="openThemeSelector()" title="Thema wijzigen">
+                    <i class="fas fa-palette"></i>
+                </button>
                 <button class="change-password-btn" onclick="openChangePasswordModal()" title="Wachtwoord wijzigen">
                     <i class="fas fa-key"></i>
                 </button>
@@ -1046,9 +1086,6 @@
                 </button>
                 <button class="update-mode-btn hidden" id="updateModeBtn" onclick="openUpdateModeModal()" title="Update Modus">
                     <i class="fas fa-tools"></i>
-                </button>
-                <button class="troll-mode-btn hidden" id="trollModeBtn" onclick="openTrollPanel()" title="Troll Modus">
-                    <i class="fas fa-ghost"></i>
                 </button>
                 <div class="user-avatar" id="userAvatar">B</div>
                 <span id="userGreeting">Welkom, Bowen</span>
@@ -1099,7 +1136,7 @@
                         </div>
                     </div>
                     <div class="chat-messages" id="chatMessages">
-                        <div style="text-align: center; padding: 40px; color: #666;">
+                        <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
                             <i class="fas fa-globe" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
                             <h3>Welkom in Global Chat!</h3>
                             <p>Dit is een openbare chat waar iedereen kan berichten sturen</p>
@@ -1166,7 +1203,7 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="adminUsers">0</div>
-                        <div class="stat-label">Admin Gebruikers</div>
+                        <div class="stat-label">Super Gebruikers</div>
                     </div>
                 </div>
 
@@ -1196,7 +1233,18 @@
                 <button class="close-modal" onclick="closeModal('updateModeModal')">&times;</button>
             </div>
             <div>
-                <p>Update modus blokkeert de toegang voor niet-admin gebruikers.</p>
+                <p>Update modus blokkeert de toegang voor niet-super gebruikers.</p>
+                
+                <div class="form-group">
+                    <label for="updateModeTitleInput">Update Modus Titel</label>
+                    <input type="text" id="updateModeTitleInput" class="form-control" placeholder="Titel voor update modus scherm">
+                </div>
+                
+                <div class="form-group">
+                    <label for="updateModeMessageInput">Update Modus Bericht</label>
+                    <textarea id="updateModeMessageInput" class="form-control" placeholder="Bericht voor update modus scherm" rows="3"></textarea>
+                </div>
+                
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button class="btn btn-warning" onclick="enableUpdateMode()">
                         <i class="fas fa-toggle-on"></i> Update Modus Aanzetten
@@ -1212,56 +1260,28 @@
         </div>
     </div>
 
-    <!-- Troll Panel Modal -->
-    <div class="modal hidden" id="trollPanelModal">
+    <!-- Theme Selector Modal -->
+    <div class="modal hidden" id="themeSelectorModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-ghost"></i> Troll Panel</h3>
-                <button class="close-modal" onclick="closeModal('trollPanelModal')">&times;</button>
+                <h3><i class="fas fa-palette"></i> Thema Selectie</h3>
+                <button class="close-modal" onclick="closeModal('themeSelectorModal')">&times;</button>
             </div>
             <div>
-                <p>Activeer verschillende troll effecten (alleen zichtbaar voor jou).</p>
+                <p>Kies een thema voor de applicatie:</p>
                 
-                <div class="troll-controls">
-                    <button class="btn btn-troll" onclick="activateTrollMode('rainbow')">
-                        <i class="fas fa-palette"></i> Rainbow Mode
-                    </button>
-                    <button class="btn btn-troll" onclick="activateTrollMode('spin')">
-                        <i class="fas fa-sync"></i> Spin Alles
-                    </button>
-                    <button class="btn btn-troll" onclick="activateTrollMode('shake')">
-                        <i class="fas fa-earthquake"></i> Shake Alles
-                    </button>
-                    <button class="btn btn-troll" onclick="activateTrollMode('bounce')">
-                        <i class="fas fa-basketball"></i> Bounce Alles
-                    </button>
-                    <button class="btn btn-troll" onclick="activateTrollMode('invert')">
-                        <i class="fas fa-adjust"></i> Invert Kleuren
-                    </button>
-                    <button class="btn btn-troll" onclick="activateTrollMode('zoom')">
-                        <i class="fas fa-search-plus"></i> Zoom In/Out
-                    </button>
-                    <button class="btn btn-troll" onclick="sendFakeMessages()">
-                        <i class="fas fa-robot"></i> Fake Berichten
-                    </button>
-                    <button class="btn btn-danger" onclick="deactivateAllTrolls()">
-                        <i class="fas fa-times"></i> Stop All Trolls
-                    </button>
+                <div class="theme-selector">
+                    <div class="theme-option theme-default active" onclick="changeTheme('default')" title="Standaard Thema"></div>
+                    <div class="theme-option theme-dark" onclick="changeTheme('dark')" title="Donker Thema"></div>
+                    <div class="theme-option theme-blue" onclick="changeTheme('blue')" title="Blauw Thema"></div>
+                    <div class="theme-option theme-green" onclick="changeTheme('green')" title="Groen Thema"></div>
                 </div>
-
-                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-                    <h4>Geavanceerde Trolls</h4>
-                    <div class="troll-controls">
-                        <button class="btn btn-warning" onclick="createFakeError()">
-                            <i class="fas fa-bug"></i> Fake Error
-                        </button>
-                        <button class="btn btn-warning" onclick="mouseTrail()">
-                            <i class="fas fa-mouse"></i> Mouse Trail
-                        </button>
-                        <button class="btn btn-warning" onclick="confettiMode()">
-                            <i class="fas fa-birthday-cake"></i> Confetti Mode
-                        </button>
-                    </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px;">
+                    <h4>Voorbeeld</h4>
+                    <p>Dit is een voorbeeldtekst in het geselecteerde thema.</p>
+                    <button class="btn btn-primary">Voorbeeld Knop</button>
+                    <button class="btn btn-secondary">Secundaire Knop</button>
                 </div>
             </div>
         </div>
@@ -1285,20 +1305,34 @@
     </div>
 
     <script>
-        // Firebase config
-        const firebaseConfig = {
-            databaseURL: "https://mijn-startpagina-default-rtdb.europe-west1.firebasedatabase.app/"
+        // Firebase configs voor meerdere databases
+        const firebaseConfigs = {
+            users: {
+                databaseURL: "https://mijn-startpagina-default-rtdb.europe-west1.firebasedatabase.app/"
+            },
+            globalMessages: {
+                databaseURL: "https://globalmessages-default-rtdb.europe-west1.firebasedatabase.app/"
+            },
+            privateMessages: {
+                databaseURL: "https://privatemessages-ab6a3-default-rtdb.europe-west1.firebasedatabase.app/"
+            }
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        // Initialize Firebase apps
+        const userApp = firebase.initializeApp(firebaseConfigs.users, "users");
+        const globalMessagesApp = firebase.initializeApp(firebaseConfigs.globalMessages, "globalMessages");
+        const privateMessagesApp = firebase.initializeApp(firebaseConfigs.privateMessages, "privateMessages");
+
+        // Get database instances
+        const userDatabase = userApp.database();
+        const globalMessagesDatabase = globalMessagesApp.database();
+        const privateMessagesDatabase = privateMessagesApp.database();
 
         // Global variables
         let currentUser = null;
         let isGlobalChat = true;
         let currentMessageId = null;
-        let activeTrolls = new Set();
+        let currentTheme = 'default';
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
@@ -1359,177 +1393,63 @@
             document.getElementById('closeMenu').addEventListener('click', closeMobileMenu);
             document.getElementById('mobileMenuOverlay').addEventListener('click', closeMobileMenu);
 
+            // Load saved theme
+            const savedTheme = localStorage.getItem('discordCloneTheme');
+            if (savedTheme) {
+                changeTheme(savedTheme, false);
+            }
+
             // Start with global chat
             loadGlobalChat();
         }
 
-        // Troll Functions
-        function openTrollPanel() {
-            if (!currentUser.isAdmin) {
-                showError("Je hebt geen toestemming om het troll panel te openen.");
-                return;
-            }
-            document.getElementById('trollPanelModal').classList.remove('hidden');
+        // Theme Functions
+        function openThemeSelector() {
+            document.getElementById('themeSelectorModal').classList.remove('hidden');
         }
 
-        function activateTrollMode(mode) {
-            deactivateAllTrolls();
-            activeTrolls.add(mode);
-
-            switch(mode) {
-                case 'rainbow':
-                    document.body.classList.add('troll-mode');
-                    break;
-                case 'spin':
-                    document.querySelectorAll('.message, .btn, .user-avatar').forEach(el => {
-                        el.classList.add('spin');
-                    });
-                    break;
-                case 'shake':
-                    document.querySelectorAll('.message, .btn, .user-avatar').forEach(el => {
-                        el.classList.add('shake');
-                    });
-                    break;
-                case 'bounce':
-                    document.querySelectorAll('.message, .btn, .user-avatar').forEach(el => {
-                        el.classList.add('bounce');
-                    });
-                    break;
-                case 'invert':
-                    document.body.style.filter = 'invert(1)';
-                    break;
-                case 'zoom':
-                    document.body.style.transform = 'scale(1.1)';
-                    setTimeout(() => { document.body.style.transform = 'scale(0.9)'; }, 500);
-                    setInterval(() => {
-                        document.body.style.transform = document.body.style.transform === 'scale(1.1)' ? 'scale(0.9)' : 'scale(1.1)';
-                    }, 1000);
-                    break;
-            }
-            showSuccess(`Troll mode geactiveerd: ${mode}`);
-        }
-
-        function deactivateAllTrolls() {
-            activeTrolls.clear();
-            document.body.classList.remove('troll-mode');
-            document.body.style.filter = '';
-            document.body.style.transform = '';
+        function changeTheme(themeName, save = true) {
+            // Remove all theme classes
+            document.body.classList.remove('theme-dark', 'theme-blue', 'theme-green');
             
-            document.querySelectorAll('.spin, .shake, .bounce').forEach(el => {
-                el.classList.remove('spin', 'shake', 'bounce');
+            // Add selected theme class
+            if (themeName !== 'default') {
+                document.body.classList.add(`theme-${themeName}`);
+            }
+            
+            // Update active state in theme selector
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
             });
-        }
-
-        async function sendFakeMessages() {
-            const fakeMessages = [
-                "Hé iedereen! Ik ben een bot! 🤖",
-                "Wow, deze chat is geweldig!",
-                "Iemand zin in een spelletje?",
-                "Haha, grappig bericht! 😂",
-                "Ik denk dat ik te veel koffie heb gedronken...",
-                "Nieuwe feature alert! 🚨",
-                "Wie is er ook online? 👀",
-                "Dit is een automatisch bericht!",
-                "Programmeren is leuk! 💻",
-                "Good morning everyone! ☀️"
-            ];
-
-            for (let i = 0; i < 5; i++) {
-                const randomMessage = fakeMessages[Math.floor(Math.random() * fakeMessages.length)];
-                const fakeUser = `Bot_${Math.floor(Math.random() * 1000)}`;
-                
-                const newMessage = {
-                    userId: 'fake_user_' + Date.now() + i,
-                    username: fakeUser,
-                    text: randomMessage,
-                    timestamp: Date.now() + i
-                };
-
-                await database.ref('globalMessages').push(newMessage);
-                await new Promise(resolve => setTimeout(resolve, 1000));
-            }
-            showSuccess("5 fake berichten verzonden!");
-        }
-
-        function createFakeError() {
-            const fakeErrors = [
-                "Error 404: Gezond verstand niet gevonden",
-                "SyntaxError: Onverwachte grap gedetecteerd",
-                "TypeError: Kan 'serious' niet lezen van undefined",
-                "ReferenceError: Humor is niet gedefinieerd",
-                "RuntimeError: Te veel lol gehad"
-            ];
-
-            const randomError = fakeErrors[Math.floor(Math.random() * fakeErrors.length)];
-            showError(randomError);
+            document.querySelector(`.theme-${themeName}`).classList.add('active');
             
-            // Voeg console error toe voor extra realisme
-            console.error(`[FAKE ERROR] ${randomError}`);
-        }
-
-        function mouseTrail() {
-            const trail = document.createElement('div');
-            trail.style.position = 'fixed';
-            trail.style.width = '20px';
-            trail.style.height = '20px';
-            trail.style.background = 'linear-gradient(45deg, #ff0000, #00ff00, #0000ff)';
-            trail.style.borderRadius = '50%';
-            trail.style.pointerEvents = 'none';
-            trail.style.zIndex = '9999';
-            document.body.appendChild(trail);
-
-            document.addEventListener('mousemove', function(e) {
-                trail.style.left = (e.pageX - 10) + 'px';
-                trail.style.top = (e.pageY - 10) + 'px';
-            });
-
-            activeTrolls.add('mouseTrail');
-            showSuccess("Mouse trail geactiveerd!");
-        }
-
-        function confettiMode() {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            currentTheme = themeName;
             
-            for (let i = 0; i < 100; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    confetti.style.position = 'fixed';
-                    confetti.style.width = '10px';
-                    confetti.style.height = '10px';
-                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.borderRadius = '50%';
-                    confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.top = '-10px';
-                    confetti.style.zIndex = '9999';
-                    document.body.appendChild(confetti);
-
-                    // Animate
-                    confetti.animate([
-                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-                        { transform: `translateY(${window.innerHeight}px) rotate(${360}deg)`, opacity: 0 }
-                    ], {
-                        duration: 2000 + Math.random() * 3000,
-                        easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)'
-                    });
-
-                    // Remove after animation
-                    setTimeout(() => confetti.remove(), 5000);
-                }, i * 100);
+            if (save) {
+                localStorage.setItem('discordCloneTheme', themeName);
+                closeModal('themeSelectorModal');
+                showSuccess('Thema succesvol gewijzigd!');
             }
-            showSuccess("Confetti mode geactiveerd! 🎉");
         }
 
         // Update Mode Functions
         async function checkUpdateMode() {
             try {
-                const updateModeRef = database.ref('appSettings/updateMode');
+                const updateModeRef = userDatabase.ref('appSettings/updateMode');
                 const snapshot = await updateModeRef.once('value');
                 const updateMode = snapshot.val();
                 
-                if (updateMode && updateMode.enabled) {
+                // Update mode only affects non-super users who are logged in
+                if (updateMode && updateMode.enabled && currentUser && !currentUser.isSuperUser) {
+                    // Update de UI met aangepaste berichten als ze bestaan
+                    if (updateMode.customTitle) {
+                        document.getElementById('updateModeTitle').innerHTML = `<i class="fas fa-tools"></i> ${updateMode.customTitle}`;
+                    }
+                    if (updateMode.customMessage) {
+                        document.getElementById('updateModeMessage').textContent = updateMode.customMessage;
+                    }
+                    
                     document.getElementById('updateModeScreen').classList.remove('hidden');
-                    document.getElementById('loginScreen').classList.add('hidden');
-                    document.getElementById('registerScreen').classList.add('hidden');
                     document.getElementById('appContainer').classList.add('hidden');
                 }
             } catch (error) {
@@ -1538,18 +1458,24 @@
         }
 
         async function openUpdateModeModal() {
-            if (!currentUser.isAdmin) {
+            if (!currentUser.isSuperUser) {
                 showError("Je hebt geen toestemming om de update modus te beheren.");
                 return;
             }
 
             try {
-                const updateModeRef = database.ref('appSettings/updateMode');
+                const updateModeRef = userDatabase.ref('appSettings/updateMode');
                 const snapshot = await updateModeRef.once('value');
                 const updateMode = snapshot.val();
                 
                 document.getElementById('updateModeStatus').textContent = 
                     updateMode && updateMode.enabled ? 'AAN' : 'UIT';
+                
+                // Vul de velden in met bestaande waarden
+                if (updateMode) {
+                    document.getElementById('updateModeTitleInput').value = updateMode.customTitle || '';
+                    document.getElementById('updateModeMessageInput').value = updateMode.customMessage || '';
+                }
                 
                 document.getElementById('updateModeModal').classList.remove('hidden');
             } catch (error) {
@@ -1559,20 +1485,27 @@
 
         async function enableUpdateMode() {
             try {
-                await database.ref('appSettings/updateMode').set({
+                const customTitle = document.getElementById('updateModeTitleInput').value.trim();
+                const customMessage = document.getElementById('updateModeMessageInput').value.trim();
+                
+                const updateModeData = {
                     enabled: true,
                     enabledBy: currentUser.username,
                     enabledAt: new Date().toISOString()
-                });
+                };
+                
+                // Voeg aangepaste berichten toe als ze zijn ingevuld
+                if (customTitle) {
+                    updateModeData.customTitle = customTitle;
+                }
+                if (customMessage) {
+                    updateModeData.customMessage = customMessage;
+                }
+                
+                await userDatabase.ref('appSettings/updateMode').set(updateModeData);
                 
                 showSuccess("Update modus is nu ingeschakeld!");
                 document.getElementById('updateModeStatus').textContent = 'AAN';
-                
-                setTimeout(() => {
-                    if (!currentUser.isAdmin) {
-                        logout();
-                    }
-                }, 2000);
                 
             } catch (error) {
                 showError("Fout bij inschakelen update modus: " + error.message);
@@ -1581,7 +1514,7 @@
 
         async function disableUpdateMode() {
             try {
-                await database.ref('appSettings/updateMode').set({
+                await userDatabase.ref('appSettings/updateMode').set({
                     enabled: false,
                     disabledBy: currentUser.username,
                     disabledAt: new Date().toISOString()
@@ -1631,9 +1564,17 @@
             document.getElementById('mobileMenuOverlay').classList.remove('active');
         }
 
-        // Hash een wachtwoord
-        function hashPassword(password) {
-            return CryptoJS.SHA256(password).toString();
+        // Hash een wachtwoord met salt
+        function hashPassword(password, salt = '') {
+            if (!salt) {
+                salt = CryptoJS.lib.WordArray.random(16).toString();
+            }
+            return salt + ':' + CryptoJS.SHA256(salt + password).toString();
+        }
+
+        // Extract salt from hashed password
+        function extractSalt(hashedPassword) {
+            return hashedPassword.split(':')[0];
         }
 
         // Get user IP address
@@ -1662,11 +1603,11 @@
 
             try {
                 // Check update mode first
-                const updateModeRef = database.ref('appSettings/updateMode');
+                const updateModeRef = userDatabase.ref('appSettings/updateMode');
                 const updateSnapshot = await updateModeRef.once('value');
                 const updateMode = updateSnapshot.val();
 
-                const usersRef = database.ref('users');
+                const usersRef = userDatabase.ref('users');
                 const snapshot = await usersRef.once('value');
 
                 let userFound = false;
@@ -1676,7 +1617,8 @@
                 snapshot.forEach((childSnapshot) => {
                     const user = childSnapshot.val();
                     if (user.username === username) {
-                        const inputPasswordHash = hashPassword(password);
+                        const salt = extractSalt(user.passwordHash);
+                        const inputPasswordHash = hashPassword(password, salt);
                         if (user.passwordHash === inputPasswordHash) {
                             userFound = true;
                             userData = user;
@@ -1690,27 +1632,26 @@
                     return;
                 }
 
-                // Check if update mode is enabled and user is not admin
-                if (updateMode && updateMode.enabled && !userData.isAdmin) {
-                    showError('De website is momenteel in onderhoudsmodus. Probeer het later opnieuw.');
-                    return;
-                }
-
                 currentUser = {
                     id: userId,
                     username: userData.username,
-                    isAdmin: userData.isAdmin || false
+                    isSuperUser: userData.isSuperUser || false
                 };
 
                 // Update user status and IP
                 const ip = await getUserIP();
-                await database.ref('users/' + userId).update({
+                await userDatabase.ref('users/' + userId).update({
                     lastLogin: new Date().toISOString(),
                     status: "online",
                     ipAddress: ip
                 });
 
                 showApp();
+
+                // Check update mode after login (for non-super users)
+                if (updateMode && updateMode.enabled && !currentUser.isSuperUser) {
+                    await checkUpdateMode();
+                }
 
             } catch (error) {
                 showError('Fout bij inloggen: ' + error.message);
@@ -1743,7 +1684,7 @@
 
             try {
                 // Check update mode first
-                const updateModeRef = database.ref('appSettings/updateMode');
+                const updateModeRef = userDatabase.ref('appSettings/updateMode');
                 const updateSnapshot = await updateModeRef.once('value');
                 const updateMode = updateSnapshot.val();
 
@@ -1752,7 +1693,7 @@
                     return;
                 }
 
-                const usersRef = database.ref('users');
+                const usersRef = userDatabase.ref('users');
                 const snapshot = await usersRef.once('value');
 
                 // Check if username already exists
@@ -1772,11 +1713,11 @@
                 // Get user IP
                 const ip = await getUserIP();
 
-                // Create new user
+                // Create new user with encrypted password
                 const newUser = {
                     username: username,
-                    passwordHash: hashPassword(password),
-                    isAdmin: false,
+                    passwordHash: hashPassword(password), // Automatically generates salt
+                    isSuperUser: false,
                     status: "online",
                     ipAddress: ip,
                     createdAt: new Date().toISOString(),
@@ -1809,12 +1750,11 @@
             document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
             document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
 
-            // Voeg admin-badge toe als de gebruiker admin is
-            if (currentUser.isAdmin) {
-                document.getElementById('userGreeting').innerHTML += ' <span class="admin-badge" title="Admin">👑</span>';
+            // Voeg super-user-badge toe als de gebruiker super user is
+            if (currentUser.isSuperUser) {
+                document.getElementById('userGreeting').innerHTML += ' <span class="super-user-badge" title="Super Gebruiker">👑</span>';
                 document.getElementById('adminPanelBtn').classList.remove('hidden');
                 document.getElementById('updateModeBtn').classList.remove('hidden');
-                document.getElementById('trollModeBtn').classList.remove('hidden');
             }
 
             // Load chat data
@@ -1827,14 +1767,11 @@
         function logout() {
             if (currentUser) {
                 // Update status naar offline
-                database.ref('users/' + currentUser.id).update({
+                userDatabase.ref('users/' + currentUser.id).update({
                     status: "offline",
                     lastSeen: new Date().toISOString()
                 });
             }
-
-            // Remove all troll effects
-            deactivateAllTrolls();
 
             currentUser = null;
             document.getElementById('appContainer').classList.add('hidden');
@@ -1873,10 +1810,11 @@
 
             try {
                 // Verify current password
-                const userRef = database.ref('users/' + currentUser.id);
+                const userRef = userDatabase.ref('users/' + currentUser.id);
                 const snapshot = await userRef.once('value');
                 const userData = snapshot.val();
-                const currentPasswordHash = hashPassword(currentPassword);
+                const salt = extractSalt(userData.passwordHash);
+                const currentPasswordHash = hashPassword(currentPassword, salt);
 
                 if (userData.passwordHash !== currentPasswordHash) {
                     showError('Huidig wachtwoord is incorrect!');
@@ -1923,13 +1861,18 @@
 
         async function loadGlobalChat() {
             try {
-                const globalMessagesRef = database.ref('globalMessages');
+                const globalMessagesRef = globalMessagesDatabase.ref('globalMessages');
                 const snapshot = await globalMessagesRef.orderByChild('timestamp').once('value');
 
                 let messagesHtml = '';
+                const twoHoursAgo = Date.now() - (2 * 60 * 60 * 1000); // 2 uur geleden
 
                 snapshot.forEach((messageSnapshot) => {
                     const message = messageSnapshot.val();
+                    
+                    // Check if message is older than 2 hours and user is not super user
+                    const canDelete = currentUser.isSuperUser || message.timestamp > twoHoursAgo;
+                    
                     const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     const date = new Date(message.timestamp).toLocaleDateString();
 
@@ -1941,7 +1884,7 @@
                             ${!isCurrentUser ? `<div class="message-sender">${message.username}</div>` : ''}
                             ${message.text}
                             <div class="message-time">${time} • ${date}</div>
-                            ${isCurrentUser || currentUser.isAdmin ? `
+                            ${(isCurrentUser && canDelete) || currentUser.isSuperUser ? `
                                 <div class="message-actions">
                                     <button onclick="editMessage('${messageSnapshot.key}', '${message.text}')"><i class="fas fa-edit"></i></button>
                                     <button onclick="deleteMessage('${messageSnapshot.key}')"><i class="fas fa-trash"></i></button>
@@ -1952,7 +1895,7 @@
                 });
 
                 document.getElementById('chatMessages').innerHTML = messagesHtml || `
-                    <div style="text-align: center; padding: 40px; color: #666;">
+                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
                         <i class="fas fa-globe" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
                         <h3>Welkom in Global Chat!</h3>
                         <p>Dit is een openbare chat waar iedereen kan berichten sturen</p>
@@ -1984,7 +1927,7 @@
                         timestamp: Date.now()
                     };
 
-                    await database.ref('globalMessages').push(newMessage);
+                    await globalMessagesDatabase.ref('globalMessages').push(newMessage);
                 }
 
                 messageInput.value = '';
@@ -2002,7 +1945,7 @@
         // Messages system functions
         async function loadUsersForChat() {
             try {
-                const usersSnapshot = await database.ref('users').once('value');
+                const usersSnapshot = await userDatabase.ref('users').once('value');
                 let usersHtml = `
                     <div class="chat-type-item global-chat active" onclick="selectGlobalChat()">
                         <div class="chat-type-icon">
@@ -2023,7 +1966,7 @@
         }
 
         function startGlobalChatListener() {
-            database.ref('globalMessages').on('child_added', function(snapshot) {
+            globalMessagesDatabase.ref('globalMessages').on('child_added', function(snapshot) {
                 if (isGlobalChat) {
                     loadGlobalChat();
                 }
@@ -2043,7 +1986,7 @@
 
             try {
                 if (isGlobalChat) {
-                    await database.ref(`globalMessages/${currentMessageId}`).update({
+                    await globalMessagesDatabase.ref(`globalMessages/${currentMessageId}`).update({
                         text: newText,
                         edited: true
                     });
@@ -2064,16 +2007,32 @@
 
         async function deleteMessage(messageId) {
             try {
-                if (!currentUser.isAdmin && !document.querySelector(`.message[data-message-id="${messageId}"].sent`)) {
-                    showError("Je hebt geen toestemming om dit bericht te verwijderen.");
+                const twoHoursAgo = Date.now() - (2 * 60 * 60 * 1000); // 2 uur geleden
+                let canDelete = false;
+
+                if (currentUser.isSuperUser) {
+                    canDelete = true;
+                } else {
+                    // Check if message is from current user and not older than 2 hours
+                    const messageRef = globalMessagesDatabase.ref(`globalMessages/${messageId}`);
+                    const snapshot = await messageRef.once('value');
+                    const message = snapshot.val();
+                    
+                    if (message.userId === currentUser.id && message.timestamp > twoHoursAgo) {
+                        canDelete = true;
+                    }
+                }
+
+                if (!canDelete) {
+                    showError("Je kunt dit bericht niet verwijderen. Berichten kunnen alleen binnen 2 uur na verzenden worden verwijderd, tenzij je een super gebruiker bent.");
                     return;
                 }
 
                 if (isGlobalChat) {
-                    await database.ref(`globalMessages/${messageId}`).remove();
+                    await globalMessagesDatabase.ref(`globalMessages/${messageId}`).remove();
                 }
 
-                showSuccess("Bericht succesvol verwijdered!");
+                showSuccess("Bericht succesvol verwijderd!");
 
                 // Reload messages
                 if (isGlobalChat) {
@@ -2087,7 +2046,7 @@
 
         // Admin functions
         async function openAdminPanel() {
-            if (!currentUser.isAdmin) {
+            if (!currentUser.isSuperUser) {
                 showError("Je hebt geen toestemming om het admin-paneel te openen.");
                 return;
             }
@@ -2099,7 +2058,7 @@
                 await loadAdminStats();
 
                 // Load users
-                const usersSnapshot = await database.ref('users').once('value');
+                const usersSnapshot = await userDatabase.ref('users').once('value');
                 let usersHtml = `
                     <table class="admin-user-table">
                         <tr>
@@ -2107,14 +2066,15 @@
                             <th>Status</th>
                             <th>IP Adres</th>
                             <th>Laatste Login</th>
-                            <th>Admin</th>
+                            <th>Super User</th>
+                            <th>Wachtwoord Hash</th>
                             <th>Acties</th>
                         </tr>
                 `;
 
                 usersSnapshot.forEach((userSnapshot) => {
                     const user = userSnapshot.val();
-                    const isAdmin = user.isAdmin ? 'Ja' : 'Nee';
+                    const isSuperUser = user.isSuperUser ? 'Ja' : 'Nee';
                     const statusText = user.status === "online" ? "Online" : "Offline";
                     const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Onbekend';
 
@@ -2124,10 +2084,11 @@
                             <td>${statusText}</td>
                             <td>${user.ipAddress || 'Onbekend'}</td>
                             <td>${lastLogin}</td>
-                            <td>${isAdmin}</td>
+                            <td>${isSuperUser}</td>
+                            <td style="font-size: 0.7rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${user.passwordHash}">${user.passwordHash}</td>
                             <td>
-                                <button class="btn btn-info" onclick="toggleAdmin('${userSnapshot.key}', ${!user.isAdmin})">
-                                    ${user.isAdmin ? 'Admin verwijderen' : 'Admin maken'}
+                                <button class="btn btn-info" onclick="toggleSuperUser('${userSnapshot.key}', ${!user.isSuperUser})">
+                                    ${user.isSuperUser ? 'Super user verwijderen' : 'Super user maken'}
                                 </button>
                                 <button class="btn btn-danger" onclick="deleteUser('${userSnapshot.key}', '${user.username}')">
                                     <i class="fas fa-trash"></i>
@@ -2147,25 +2108,25 @@
 
         async function loadAdminStats() {
             try {
-                const usersSnapshot = await database.ref('users').once('value');
-                const messagesSnapshot = await database.ref('globalMessages').once('value');
+                const usersSnapshot = await userDatabase.ref('users').once('value');
+                const messagesSnapshot = await globalMessagesDatabase.ref('globalMessages').once('value');
 
                 let totalUsers = 0;
                 let onlineUsers = 0;
-                let adminUsers = 0;
+                let superUsers = 0;
 
                 usersSnapshot.forEach((userSnapshot) => {
                     totalUsers++;
                     const user = userSnapshot.val();
                     if (user.status === "online") onlineUsers++;
-                    if (user.isAdmin) adminUsers++;
+                    if (user.isSuperUser) superUsers++;
                 });
 
                 const totalMessages = messagesSnapshot.numChildren();
 
                 document.getElementById('totalUsers').textContent = totalUsers;
                 document.getElementById('onlineUsers').textContent = onlineUsers;
-                document.getElementById('adminUsers').textContent = adminUsers;
+                document.getElementById('adminUsers').textContent = superUsers;
                 document.getElementById('totalMessages').textContent = totalMessages;
 
             } catch (error) {
@@ -2173,14 +2134,14 @@
             }
         }
 
-        async function toggleAdmin(userId, makeAdmin) {
+        async function toggleSuperUser(userId, makeSuperUser) {
             try {
-                const userRef = database.ref('users/' + userId);
-                await userRef.update({ isAdmin: makeAdmin });
-                showSuccess(`Gebruiker is nu ${makeAdmin ? 'admin' : 'geen admin meer'}.`);
+                const userRef = userDatabase.ref('users/' + userId);
+                await userRef.update({ isSuperUser: makeSuperUser });
+                showSuccess(`Gebruiker is nu ${makeSuperUser ? 'super user' : 'geen super user meer'}.`);
                 openAdminPanel(); // Herlaad het admin-paneel
             } catch (error) {
-                showError("Fout bij bijwerken van admin-status: " + error.message);
+                showError("Fout bij bijwerken van super-user-status: " + error.message);
             }
         }
 
@@ -2190,7 +2151,7 @@
             }
 
             try {
-                await database.ref('users/' + userId).remove();
+                await userDatabase.ref('users/' + userId).remove();
                 showSuccess(`Gebruiker "${username}" succesvol verwijderd.`);
                 openAdminPanel(); // Herlaad het admin-paneel
             } catch (error) {
@@ -2200,13 +2161,13 @@
 
         // Database cleanup functions
         async function cleanupOldMessages() {
-            if (!currentUser.isAdmin) return;
+            if (!currentUser.isSuperUser) return;
 
             try {
                 const now = Date.now();
                 const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000); // 30 dagen geleden
                 
-                const globalMessagesRef = database.ref('globalMessages');
+                const globalMessagesRef = globalMessagesDatabase.ref('globalMessages');
                 const snapshot = await globalMessagesRef.once('value');
                 
                 let deletedCount = 0;
@@ -2221,7 +2182,7 @@
                 });
                 
                 if (deletedCount > 0) {
-                    await database.ref().update(updates);
+                    await globalMessagesDatabase.ref().update(updates);
                     showSuccess(`${deletedCount} oude berichten (ouder dan 30 dagen) verwijderd.`);
                 } else {
                     showSuccess("Geen oude berichten gevonden om te verwijderen.");
@@ -2235,14 +2196,14 @@
         }
 
         async function clearAllMessages() {
-            if (!currentUser.isAdmin) return;
+            if (!currentUser.isSuperUser) return;
 
             if (!confirm("Weet je zeker dat je ALLE berichten wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.")) {
                 return;
             }
 
             try {
-                await database.ref('globalMessages').remove();
+                await globalMessagesDatabase.ref('globalMessages').remove();
                 showSuccess("Alle berichten succesvol verwijderd.");
                 openAdminPanel(); // Herlaad het admin-paneel
                 
