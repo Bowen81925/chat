@@ -57,7 +57,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -66,35 +66,21 @@
             font-size: 2rem;
             text-align: center;
             flex-direction: column;
-            padding: 20px;
         }
 
         .update-mode h1 {
             margin-bottom: 20px;
             font-size: 3rem;
-            color: #ff6b6b;
         }
 
         .update-mode p {
-            font-size: 1.5rem;
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-
-        .update-mode .custom-message {
             font-size: 1.2rem;
             opacity: 0.8;
-            font-style: italic;
-            max-width: 600px;
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
         }
 
         /* Troll Effects */
         .troll-mode {
-            animation: rainbow 2s infinite;
+            animation: rainbow 1s infinite;
         }
 
         @keyframes rainbow {
@@ -108,7 +94,7 @@
         }
 
         .spin {
-            animation: spin 1s linear infinite;
+            animation: spin 0.5s linear infinite;
         }
 
         @keyframes spin {
@@ -126,59 +112,12 @@
         }
 
         .bounce {
-            animation: bounce 0.8s ease infinite;
+            animation: bounce 0.5s ease infinite;
         }
 
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .pulse {
-            animation: pulse 1s ease infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .flip {
-            animation: flip 2s ease infinite;
-        }
-
-        @keyframes flip {
-            0% { transform: perspective(400px) rotateY(0); }
-            50% { transform: perspective(400px) rotateY(180deg); }
-            100% { transform: perspective(400px) rotateY(360deg); }
-        }
-
-        .float {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* Confetti */
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        /* Mouse Trail */
-        .trail {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
+            50% { transform: translateY(-20px); }
         }
 
         /* Login/Register Container */
@@ -611,20 +550,6 @@
             color: white;
         }
 
-        .chat-type-item.private-chat {
-            border-color: var(--success);
-            background: rgba(78, 205, 196, 0.1);
-        }
-
-        .chat-type-item.private-chat.active {
-            background: var(--success);
-            color: white;
-        }
-
-        .chat-type-item.private-chat.active .chat-type-icon {
-            color: white;
-        }
-
         .chat-type-icon {
             font-size: 1.2rem;
             width: 44px;
@@ -639,10 +564,6 @@
 
         .global-chat .chat-type-icon {
             background: var(--info);
-        }
-
-        .private-chat .chat-type-icon {
-            background: var(--success);
         }
 
         .chat-window {
@@ -669,16 +590,6 @@
         .global-chat-header .chat-type-icon {
             background: white;
             color: var(--info);
-        }
-
-        .private-chat-header {
-            background: var(--success);
-            color: white;
-        }
-
-        .private-chat-header .chat-type-icon {
-            background: white;
-            color: var(--success);
         }
 
         .chat-messages {
@@ -719,14 +630,6 @@
             margin-right: 0;
         }
 
-        .message.private {
-            background: var(--success);
-            color: white;
-            max-width: 90%;
-            margin-left: 0;
-            margin-right: 0;
-        }
-
         .message-time {
             font-size: 0.7rem;
             opacity: 0.7;
@@ -739,10 +642,6 @@
         }
 
         .message.global .message-time {
-            text-align: left;
-        }
-
-        .message.private .message-time {
             text-align: left;
         }
 
@@ -807,10 +706,6 @@
             border-color: var(--info);
         }
 
-        .private-chat .message-input:focus {
-            border-color: var(--success);
-        }
-
         .send-btn {
             background: var(--primary);
             color: white;
@@ -830,10 +725,6 @@
             background: var(--info);
         }
 
-        .private-chat .send-btn {
-            background: var(--success);
-        }
-
         .send-btn:hover:not(:disabled) {
             background: var(--secondary);
             transform: scale(1.05);
@@ -841,10 +732,6 @@
 
         .global-chat .send-btn:hover:not(:disabled) {
             background: #0a7a9c;
-        }
-
-        .private-chat .send-btn:hover:not(:disabled) {
-            background: #3db5a8;
         }
 
         .send-btn:disabled {
@@ -1052,11 +939,8 @@
 <body>
     <!-- Update Mode Screen -->
     <div class="update-mode hidden" id="updateModeScreen">
-        <h1><i class="fas fa-tools"></i> Onderhoudsmodus</h1>
-        <p>De website is momenteel niet beschikbaar</p>
-        <div class="custom-message" id="updateModeMessage">
-            Standaard onderhoudsbericht...
-        </div>
+        <h1><i class="fas fa-tools"></i>De servers kunnen momenteel niet bereikt worden.</h1>
+        <p>Probeer later opnieuw</p>
     </div>
 
     <!-- Login Screen -->
@@ -1300,25 +1184,6 @@
                 <div id="adminUserList">
                     <div class="spinner"></div>
                 </div>
-
-                <h4>Admin Troll Controls</h4>
-                <div class="troll-controls">
-                    <button class="btn btn-troll" onclick="adminActivateTrollMode('rainbow')">
-                        <i class="fas fa-palette"></i> Rainbow Mode (Alle gebruikers)
-                    </button>
-                    <button class="btn btn-troll" onclick="adminActivateTrollMode('shake')">
-                        <i class="fas fa-earthquake"></i> Shake Alles (Alle gebruikers)
-                    </button>
-                    <button class="btn btn-troll" onclick="adminActivateTrollMode('bounce')">
-                        <i class="fas fa-basketball"></i> Bounce Alles (Alle gebruikers)
-                    </button>
-                    <button class="btn btn-troll" onclick="sendGlobalFakeMessages()">
-                        <i class="fas fa-robot"></i> Fake Berichten (Alle gebruikers)
-                    </button>
-                    <button class="btn btn-danger" onclick="adminDeactivateAllTrolls()">
-                        <i class="fas fa-times"></i> Stop Alle Trolls
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -1332,12 +1197,6 @@
             </div>
             <div>
                 <p>Update modus blokkeert de toegang voor niet-admin gebruikers.</p>
-                
-                <div class="form-group">
-                    <label for="updateModeMessageInput">Aanpasbaar bericht:</label>
-                    <textarea id="updateModeMessageInput" class="form-control" rows="3" placeholder="Voer een custom bericht in voor de onderhoudspagina...">De servers kunnen momenteel niet bereikt worden. Probeer later opnieuw.</textarea>
-                </div>
-                
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button class="btn btn-warning" onclick="enableUpdateMode()">
                         <i class="fas fa-toggle-on"></i> Update Modus Aanzetten
@@ -1376,15 +1235,6 @@
                     <button class="btn btn-troll" onclick="activateTrollMode('bounce')">
                         <i class="fas fa-basketball"></i> Bounce Alles
                     </button>
-                    <button class="btn btn-troll" onclick="activateTrollMode('pulse')">
-                        <i class="fas fa-heartbeat"></i> Pulse Alles
-                    </button>
-                    <button class="btn btn-troll" onclick="activateTrollMode('flip')">
-                        <i class="fas fa-sync-alt"></i> Flip Alles
-                    </button>
-                    <button class="btn btn-troll" onclick="activateTrollMode('float')">
-                        <i class="fas fa-cloud"></i> Float Alles
-                    </button>
                     <button class="btn btn-troll" onclick="activateTrollMode('invert')">
                         <i class="fas fa-adjust"></i> Invert Kleuren
                     </button>
@@ -1411,12 +1261,6 @@
                         <button class="btn btn-warning" onclick="confettiMode()">
                             <i class="fas fa-birthday-cake"></i> Confetti Mode
                         </button>
-                        <button class="btn btn-warning" onclick="typingEffect()">
-                            <i class="fas fa-keyboard"></i> Typing Effect
-                        </button>
-                        <button class="btn btn-warning" onclick="emojiRain()">
-                            <i class="fas fa-smile"></i> Emoji Regen
-                        </button>
                     </div>
                 </div>
             </div>
@@ -1441,39 +1285,20 @@
     </div>
 
     <script>
-        // Firebase configs voor 3 databases
-        const firebaseConfigs = {
-            main: {
-                databaseURL: "https://mijn-startpagina-default-rtdb.europe-west1.firebasedatabase.app/"
-            },
-            globalMessages: {
-                databaseURL: "https://globalmessages-default-rtdb.europe-west1.firebasedatabase.app/"
-            },
-            privateMessages: {
-                databaseURL: "https://privatemessages-ab6a3-default-rtdb.europe-west1.firebasedatabase.app/"
-            }
+        // Firebase config
+        const firebaseConfig = {
+            databaseURL: "https://mijn-startpagina-default-rtdb.europe-west1.firebasedatabase.app/"
         };
 
-        // Initialize Firebase instances
-        const appMain = firebase.initializeApp(firebaseConfigs.main, "main");
-        const appGlobalMessages = firebase.initializeApp(firebaseConfigs.globalMessages, "globalMessages");
-        const appPrivateMessages = firebase.initializeApp(firebaseConfigs.privateMessages, "privateMessages");
-
-        // Get database references
-        const database = firebase.database(appMain);
-        const globalMessagesDB = firebase.database(appGlobalMessages);
-        const privateMessagesDB = firebase.database(appPrivateMessages);
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
         // Global variables
         let currentUser = null;
         let isGlobalChat = true;
-        let isPrivateChat = false;
-        let currentRecipient = null;
         let currentMessageId = null;
-        let currentChatId = null;
         let activeTrolls = new Set();
-        let globalTrollMode = null;
-        let mouseTrailInterval = null;
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
@@ -1481,33 +1306,16 @@
         });
 
         async function initializeApp() {
-            // Check if user is already logged in
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    // Verify user still exists in database
-                    const userRef = database.ref('users/' + currentUser.id);
-                    const snapshot = await userRef.once('value');
-                    if (snapshot.exists()) {
-                        showApp();
-                    } else {
-                        localStorage.removeItem('currentUser');
-                        currentUser = null;
-                    }
-                } catch (error) {
-                    localStorage.removeItem('currentUser');
-                    currentUser = null;
-                }
-            }
-
-            // Check update mode
+            // Check update mode first
             await checkUpdateMode();
 
             // Password toggles
             setupPasswordToggle('togglePassword', 'password');
             setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
             setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
+            setupPasswordToggle('toggleCurrentPassword', 'currentPassword');
+            setupPasswordToggle('toggleNewPassword', 'newPassword');
+            setupPasswordToggle('toggleConfirmNewPassword', 'confirmNewPassword');
 
             // Login form
             document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -1553,133 +1361,14 @@
 
             // Start with global chat
             loadGlobalChat();
-            
-            // Listen for global troll modes
-            startGlobalTrollListener();
         }
-
-        // VERBETERDE CHAT SELECTION - Werkt nu altijd!
-        function selectGlobalChat() {
-            console.log('Global chat selected');
-            isGlobalChat = true;
-            isPrivateChat = false;
-            currentRecipient = null;
-
-            // Update UI
-            updateChatUI('Global Chat', 'Chat met iedereen', 'global-chat-header', 'fas fa-globe', 'global-chat', 'Typ je bericht voor iedereen...');
-
-            // Set active state - gebruik querySelector met specifieke selector
-            document.querySelectorAll('.chat-type-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            document.querySelector('.chat-type-item.global-chat').classList.add('active');
-
-            // Load global messages
-            loadGlobalChat();
-
-            // Close mobile menu on selection
-            closeMobileMenu();
-        }
-
-        function selectPrivateChat(userId, username) {
-            console.log('Private chat selected:', username);
-            isGlobalChat = false;
-            isPrivateChat = true;
-            currentRecipient = {
-                id: userId,
-                username: username
-            };
-
-            // Update UI
-            updateChatUI(username, 'Privé chat', 'private-chat-header', 'fas fa-user', 'private-chat', `Typ een bericht voor ${username}...`);
-
-            // Set active state - verwijder alle active classes en voeg toe aan geklikte item
-            document.querySelectorAll('.chat-type-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // Zoek het geklikte item en maak het actief
-            const clickedItem = event.target.closest('.chat-type-item');
-            if (clickedItem) {
-                clickedItem.classList.add('active');
-            }
-
-            // Load private messages
-            loadPrivateChat();
-
-            // Close mobile menu on selection
-            closeMobileMenu();
-        }
-
-        function updateChatUI(title, subtitle, headerClass, iconClass, inputClass, placeholder) {
-            // Update selected user info
-            document.getElementById('selectedUserInfo').innerHTML = `
-                <h4>${title}</h4>
-                <small>${subtitle}</small>
-            `;
-
-            // Update chat header
-            document.getElementById('chatHeader').className = `chat-header ${headerClass}`;
-            document.getElementById('chatHeader').innerHTML = `
-                <div class="chat-type-icon">
-                    <i class="${iconClass}"></i>
-                </div>
-                <div>
-                    <h4>${title}</h4>
-                    <small>${subtitle}</small>
-                </div>
-            `;
-
-            // Update input styling
-            document.querySelector('.chat-input').className = `chat-input ${inputClass}`;
-            document.getElementById('messageInput').placeholder = placeholder;
-        }
-
-        // VERBETERDE loadUsersForChat - Voegt click event listeners toe
-        async function loadUsersForChat() {
-            try {
-                const usersSnapshot = await database.ref('users').once('value');
-                let usersHtml = `
-                    <div class="chat-type-item global-chat active" onclick="selectGlobalChat()">
-                        <div class="chat-type-icon">
-                            <i class="fas fa-globe"></i>
-                        </div>
-                        <div class="user-info-small">
-                            <div class="user-name">Global Chat</div>
-                            <div class="user-status">Iedereen kan chatten</div>
-                        </div>
-                    </div>
-                `;
-
-                usersSnapshot.forEach((childSnapshot) => {
-                    const user = childSnapshot.val();
-                    if (user.username !== currentUser.username) {
-                        usersHtml += `
-                            <div class="chat-type-item private-chat" onclick="selectPrivateChat('${childSnapshot.key}', '${user.username}')">
-                                <div class="chat-type-icon">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="user-info-small">
-                                    <div class="user-name">${user.username}</div>
-                                    <div class="user-status">${user.status === 'online' ? 'Online' : 'Offline'}</div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-
-                document.getElementById('usersChatList').innerHTML = usersHtml;
-
-            } catch (error) {
-                console.error('Error loading users for chat:', error);
-            }
-        }
-
-        // [Rest van de functies blijven hetzelfde - troll functions, update mode, etc.]
-        // Alleen de chat selection is verbeterd
 
         // Troll Functions
         function openTrollPanel() {
+            if (!currentUser.isAdmin) {
+                showError("Je hebt geen toestemming om het troll panel te openen.");
+                return;
+            }
             document.getElementById('trollPanelModal').classList.remove('hidden');
         }
 
@@ -1687,27 +1376,37 @@
             deactivateAllTrolls();
             activeTrolls.add(mode);
 
-            const effects = {
-                'rainbow': () => document.body.classList.add('troll-mode'),
-                'spin': () => document.querySelectorAll('.message, .btn, .user-avatar, .chat-type-icon').forEach(el => el.classList.add('spin')),
-                'shake': () => document.querySelectorAll('.message, .btn, .user-avatar').forEach(el => el.classList.add('shake')),
-                'bounce': () => document.querySelectorAll('.message, .btn, .user-avatar').forEach(el => el.classList.add('bounce')),
-                'pulse': () => document.querySelectorAll('.message, .btn, .user-avatar').forEach(el => el.classList.add('pulse')),
-                'flip': () => document.querySelectorAll('.message').forEach(el => el.classList.add('flip')),
-                'float': () => document.querySelectorAll('.message').forEach(el => el.classList.add('float')),
-                'invert': () => document.body.style.filter = 'invert(1)',
-                'zoom': () => {
+            switch(mode) {
+                case 'rainbow':
+                    document.body.classList.add('troll-mode');
+                    break;
+                case 'spin':
+                    document.querySelectorAll('.message, .btn, .user-avatar').forEach(el => {
+                        el.classList.add('spin');
+                    });
+                    break;
+                case 'shake':
+                    document.querySelectorAll('.message, .btn, .user-avatar').forEach(el => {
+                        el.classList.add('shake');
+                    });
+                    break;
+                case 'bounce':
+                    document.querySelectorAll('.message, .btn, .user-avatar').forEach(el => {
+                        el.classList.add('bounce');
+                    });
+                    break;
+                case 'invert':
+                    document.body.style.filter = 'invert(1)';
+                    break;
+                case 'zoom':
                     document.body.style.transform = 'scale(1.1)';
+                    setTimeout(() => { document.body.style.transform = 'scale(0.9)'; }, 500);
                     setInterval(() => {
                         document.body.style.transform = document.body.style.transform === 'scale(1.1)' ? 'scale(0.9)' : 'scale(1.1)';
                     }, 1000);
-                }
-            };
-
-            if (effects[mode]) {
-                effects[mode]();
-                showSuccess(`Troll mode geactiveerd: ${mode}`);
+                    break;
             }
+            showSuccess(`Troll mode geactiveerd: ${mode}`);
         }
 
         function deactivateAllTrolls() {
@@ -1716,162 +1415,108 @@
             document.body.style.filter = '';
             document.body.style.transform = '';
             
-            const classes = ['spin', 'shake', 'bounce', 'pulse', 'flip', 'float'];
-            classes.forEach(cls => {
-                document.querySelectorAll(`.${cls}`).forEach(el => el.classList.remove(cls));
+            document.querySelectorAll('.spin, .shake, .bounce').forEach(el => {
+                el.classList.remove('spin', 'shake', 'bounce');
             });
+        }
 
-            // Stop mouse trail
-            if (mouseTrailInterval) {
-                clearInterval(mouseTrailInterval);
-                mouseTrailInterval = null;
+        async function sendFakeMessages() {
+            const fakeMessages = [
+                "Hé iedereen! Ik ben een bot! 🤖",
+                "Wow, deze chat is geweldig!",
+                "Iemand zin in een spelletje?",
+                "Haha, grappig bericht! 😂",
+                "Ik denk dat ik te veel koffie heb gedronken...",
+                "Nieuwe feature alert! 🚨",
+                "Wie is er ook online? 👀",
+                "Dit is een automatisch bericht!",
+                "Programmeren is leuk! 💻",
+                "Good morning everyone! ☀️"
+            ];
+
+            for (let i = 0; i < 5; i++) {
+                const randomMessage = fakeMessages[Math.floor(Math.random() * fakeMessages.length)];
+                const fakeUser = `Bot_${Math.floor(Math.random() * 1000)}`;
+                
+                const newMessage = {
+                    userId: 'fake_user_' + Date.now() + i,
+                    username: fakeUser,
+                    text: randomMessage,
+                    timestamp: Date.now() + i
+                };
+
+                await database.ref('globalMessages').push(newMessage);
+                await new Promise(resolve => setTimeout(resolve, 1000));
             }
+            showSuccess("5 fake berichten verzonden!");
+        }
+
+        function createFakeError() {
+            const fakeErrors = [
+                "Error 404: Gezond verstand niet gevonden",
+                "SyntaxError: Onverwachte grap gedetecteerd",
+                "TypeError: Kan 'serious' niet lezen van undefined",
+                "ReferenceError: Humor is niet gedefinieerd",
+                "RuntimeError: Te veel lol gehad"
+            ];
+
+            const randomError = fakeErrors[Math.floor(Math.random() * fakeErrors.length)];
+            showError(randomError);
             
-            // Remove all trails and confetti
-            document.querySelectorAll('.trail, .confetti').forEach(el => el.remove());
+            // Voeg console error toe voor extra realisme
+            console.error(`[FAKE ERROR] ${randomError}`);
         }
 
-        // Admin Troll Functions
-        async function adminActivateTrollMode(mode) {
-            if (!currentUser.isAdmin) {
-                showError("Je hebt geen toestemming om globale troll modes te activeren.");
-                return;
-            }
-
-            try {
-                await database.ref('appSettings/globalTrollMode').set({
-                    mode: mode,
-                    activatedBy: currentUser.username,
-                    activatedAt: new Date().toISOString()
-                });
-                showSuccess(`Globale troll mode geactiveerd: ${mode} (voor alle gebruikers)`);
-            } catch (error) {
-                showError("Fout bij activeren globale troll mode: " + error.message);
-            }
-        }
-
-        async function adminDeactivateAllTrolls() {
-            if (!currentUser.isAdmin) {
-                showError("Je hebt geen toestemming om globale troll modes te deactiveren.");
-                return;
-            }
-
-            try {
-                await database.ref('appSettings/globalTrollMode').set(null);
-                showSuccess("Alle globale troll modes gedeactiveerd");
-            } catch (error) {
-                showError("Fout bij deactiveren globale troll modes: " + error.message);
-            }
-        }
-
-        function startGlobalTrollListener() {
-            database.ref('appSettings/globalTrollMode').on('value', function(snapshot) {
-                const trollMode = snapshot.val();
-                if (trollMode && trollMode.mode) {
-                    globalTrollMode = trollMode.mode;
-                    activateTrollMode(trollMode.mode);
-                } else {
-                    globalTrollMode = null;
-                    if (!activeTrolls.size) {
-                        deactivateAllTrolls();
-                    }
-                }
-            });
-        }
-
-        // Nieuwe Troll Effects
         function mouseTrail() {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-            
+            const trail = document.createElement('div');
+            trail.style.position = 'fixed';
+            trail.style.width = '20px';
+            trail.style.height = '20px';
+            trail.style.background = 'linear-gradient(45deg, #ff0000, #00ff00, #0000ff)';
+            trail.style.borderRadius = '50%';
+            trail.style.pointerEvents = 'none';
+            trail.style.zIndex = '9999';
+            document.body.appendChild(trail);
+
             document.addEventListener('mousemove', function(e) {
-                const trail = document.createElement('div');
-                trail.className = 'trail';
-                trail.style.background = colors[Math.floor(Math.random() * colors.length)];
                 trail.style.left = (e.pageX - 10) + 'px';
                 trail.style.top = (e.pageY - 10) + 'px';
-                document.body.appendChild(trail);
-
-                // Remove trail after animation
-                setTimeout(() => {
-                    if (trail.parentNode) {
-                        trail.parentNode.removeChild(trail);
-                    }
-                }, 1000);
             });
 
+            activeTrolls.add('mouseTrail');
             showSuccess("Mouse trail geactiveerd!");
         }
 
         function confettiMode() {
-            const emojis = ['🎉', '🎊', '✨', '🌟', '💫', '🔥', '💖', '🎈', '🥳', '😄'];
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
             
             for (let i = 0; i < 100; i++) {
                 setTimeout(() => {
                     const confetti = document.createElement('div');
-                    confetti.className = 'confetti';
-                    confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = '50%';
                     confetti.style.left = Math.random() * 100 + 'vw';
-                    confetti.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                    confetti.style.opacity = Math.random() + 0.5;
+                    confetti.style.top = '-10px';
+                    confetti.style.zIndex = '9999';
                     document.body.appendChild(confetti);
 
+                    // Animate
                     confetti.animate([
-                        { transform: 'translateY(-100px) rotate(0deg)', opacity: 1 },
-                        { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                        { transform: `translateY(${window.innerHeight}px) rotate(${360}deg)`, opacity: 0 }
                     ], {
                         duration: 2000 + Math.random() * 3000,
                         easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)'
                     });
 
+                    // Remove after animation
                     setTimeout(() => confetti.remove(), 5000);
                 }, i * 100);
             }
             showSuccess("Confetti mode geactiveerd! 🎉");
-        }
-
-        function typingEffect() {
-            const messages = document.querySelectorAll('.message');
-            messages.forEach((message, index) => {
-                const text = message.textContent;
-                message.textContent = '';
-                
-                let i = 0;
-                const typeInterval = setInterval(() => {
-                    if (i < text.length) {
-                        message.textContent += text.charAt(i);
-                        i++;
-                    } else {
-                        clearInterval(typeInterval);
-                    }
-                }, 50 + (index * 10));
-            });
-            showSuccess("Typing effect geactiveerd!");
-        }
-
-        function emojiRain() {
-            const emojis = ['😀', '😂', '🤣', '😍', '🤔', '😎', '🥳', '🤩', '😜', '🤪', '😇', '🥰'];
-            
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => {
-                    const emoji = document.createElement('div');
-                    emoji.className = 'confetti';
-                    emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                    emoji.style.left = Math.random() * 100 + 'vw';
-                    emoji.style.fontSize = (Math.random() * 30 + 20) + 'px';
-                    document.body.appendChild(emoji);
-
-                    emoji.animate([
-                        { transform: 'translateY(-100px) rotate(0deg)', opacity: 1 },
-                        { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-                    ], {
-                        duration: 3000 + Math.random() * 2000,
-                        easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)'
-                    });
-
-                    setTimeout(() => emoji.remove(), 6000);
-                }, i * 200);
-            }
-            showSuccess("Emoji regen geactiveerd! 🌈");
         }
 
         // Update Mode Functions
@@ -1882,19 +1527,14 @@
                 const updateMode = snapshot.val();
                 
                 if (updateMode && updateMode.enabled) {
-                    showUpdateModeScreen(updateMode.customMessage || 'De servers kunnen momenteel niet bereikt worden. Probeer later opnieuw.');
+                    document.getElementById('updateModeScreen').classList.remove('hidden');
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('registerScreen').classList.add('hidden');
+                    document.getElementById('appContainer').classList.add('hidden');
                 }
             } catch (error) {
-                console.log('Update mode check mislukt, maar doorgaan...');
+                console.error('Error checking update mode:', error);
             }
-        }
-
-        function showUpdateModeScreen(message) {
-            document.getElementById('updateModeMessage').textContent = message;
-            document.getElementById('updateModeScreen').classList.remove('hidden');
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('registerScreen').classList.add('hidden');
-            document.getElementById('appContainer').classList.add('hidden');
         }
 
         async function openUpdateModeModal() {
@@ -1911,10 +1551,6 @@
                 document.getElementById('updateModeStatus').textContent = 
                     updateMode && updateMode.enabled ? 'AAN' : 'UIT';
                 
-                if (updateMode && updateMode.customMessage) {
-                    document.getElementById('updateModeMessageInput').value = updateMode.customMessage;
-                }
-                
                 document.getElementById('updateModeModal').classList.remove('hidden');
             } catch (error) {
                 showError("Fout bij laden update modus status: " + error.message);
@@ -1922,19 +1558,11 @@
         }
 
         async function enableUpdateMode() {
-            if (!currentUser.isAdmin) {
-                showError("Je hebt geen toestemming om de update modus te beheren.");
-                return;
-            }
-
             try {
-                const customMessage = document.getElementById('updateModeMessageInput').value || 'De servers kunnen momenteel niet bereikt worden. Probeer later opnieuw.';
-                
                 await database.ref('appSettings/updateMode').set({
                     enabled: true,
                     enabledBy: currentUser.username,
-                    enabledAt: new Date().toISOString(),
-                    customMessage: customMessage
+                    enabledAt: new Date().toISOString()
                 });
                 
                 showSuccess("Update modus is nu ingeschakeld!");
@@ -1952,11 +1580,6 @@
         }
 
         async function disableUpdateMode() {
-            if (!currentUser.isAdmin) {
-                showError("Je hebt geen toestemming om de update modus te beheren.");
-                return;
-            }
-
             try {
                 await database.ref('appSettings/updateMode').set({
                     enabled: false,
@@ -1972,9 +1595,709 @@
             }
         }
 
-        // [Rest van de functies - authentication, chat, etc.]
-        // Deze blijven hetzelfde als in de vorige versie
+        function setupPasswordToggle(toggleId, inputId) {
+            const toggle = document.getElementById(toggleId);
+            const input = document.getElementById(inputId);
 
+            if (toggle && input) {
+                toggle.addEventListener('click', function() {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+                });
+            }
+        }
+
+        function showLoginForm() {
+            document.getElementById('registerScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            clearMessages();
+        }
+
+        function showRegisterForm() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('registerScreen').classList.remove('hidden');
+            clearMessages();
+        }
+
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            document.getElementById('usersList').classList.toggle('active');
+            document.getElementById('mobileMenuOverlay').classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('usersList').classList.remove('active');
+            document.getElementById('mobileMenuOverlay').classList.remove('active');
+        }
+
+        // Hash een wachtwoord
+        function hashPassword(password) {
+            return CryptoJS.SHA256(password).toString();
+        }
+
+        // Get user IP address
+        async function getUserIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.error('Error fetching IP:', error);
+                return 'Onbekend';
+            }
+        }
+
+        // Authentication functions
+        async function handleLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                showError('Vul zowel gebruikersnaam als wachtwoord in!');
+                return;
+            }
+
+            setLoading(true, 'login');
+
+            try {
+                // Check update mode first
+                const updateModeRef = database.ref('appSettings/updateMode');
+                const updateSnapshot = await updateModeRef.once('value');
+                const updateMode = updateSnapshot.val();
+
+                const usersRef = database.ref('users');
+                const snapshot = await usersRef.once('value');
+
+                let userFound = false;
+                let userData = null;
+                let userId = null;
+
+                snapshot.forEach((childSnapshot) => {
+                    const user = childSnapshot.val();
+                    if (user.username === username) {
+                        const inputPasswordHash = hashPassword(password);
+                        if (user.passwordHash === inputPasswordHash) {
+                            userFound = true;
+                            userData = user;
+                            userId = childSnapshot.key;
+                        }
+                    }
+                });
+
+                if (!userFound) {
+                    showError('Ongeldige gebruikersnaam of wachtwoord!');
+                    return;
+                }
+
+                // Check if update mode is enabled and user is not admin
+                if (updateMode && updateMode.enabled && !userData.isAdmin) {
+                    showError('De website is momenteel in onderhoudsmodus. Probeer het later opnieuw.');
+                    return;
+                }
+
+                currentUser = {
+                    id: userId,
+                    username: userData.username,
+                    isAdmin: userData.isAdmin || false
+                };
+
+                // Update user status and IP
+                const ip = await getUserIP();
+                await database.ref('users/' + userId).update({
+                    lastLogin: new Date().toISOString(),
+                    status: "online",
+                    ipAddress: ip
+                });
+
+                showApp();
+
+            } catch (error) {
+                showError('Fout bij inloggen: ' + error.message);
+            } finally {
+                setLoading(false, 'login');
+            }
+        }
+
+        async function handleRegister() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!username || !password || !confirmPassword) {
+                showError('Vul alle velden in!', 'register');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Wachtwoord moet minimaal 6 karakters lang zijn!', 'register');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('Wachtwoorden komen niet overeen!', 'register');
+                return;
+            }
+
+            setLoading(true, 'register');
+
+            try {
+                // Check update mode first
+                const updateModeRef = database.ref('appSettings/updateMode');
+                const updateSnapshot = await updateModeRef.once('value');
+                const updateMode = updateSnapshot.val();
+
+                if (updateMode && updateMode.enabled) {
+                    showError('Registratie is tijdelijk uitgeschakeld vanwege onderhoud.', 'register');
+                    return;
+                }
+
+                const usersRef = database.ref('users');
+                const snapshot = await usersRef.once('value');
+
+                // Check if username already exists
+                let usernameExists = false;
+                snapshot.forEach((childSnapshot) => {
+                    const user = childSnapshot.val();
+                    if (user.username === username) {
+                        usernameExists = true;
+                    }
+                });
+
+                if (usernameExists) {
+                    showError('Deze gebruikersnaam bestaat al!', 'register');
+                    return;
+                }
+
+                // Get user IP
+                const ip = await getUserIP();
+
+                // Create new user
+                const newUser = {
+                    username: username,
+                    passwordHash: hashPassword(password),
+                    isAdmin: false,
+                    status: "online",
+                    ipAddress: ip,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                };
+
+                await usersRef.push(newUser);
+                showSuccess('Account succesvol aangemaakt! Je kunt nu inloggen.', 'register');
+
+                // Switch back to login form after 2 seconds
+                setTimeout(() => {
+                    showLoginForm();
+                    document.getElementById('username').value = username;
+                }, 2000);
+
+            } catch (error) {
+                showError('Fout bij registreren: ' + error.message, 'register');
+            } finally {
+                setLoading(false, 'register');
+            }
+        }
+
+        function showApp() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('registerScreen').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+            document.getElementById('updateModeScreen').classList.add('hidden');
+
+            // Update UI
+            document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
+            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+
+            // Voeg admin-badge toe als de gebruiker admin is
+            if (currentUser.isAdmin) {
+                document.getElementById('userGreeting').innerHTML += ' <span class="admin-badge" title="Admin">👑</span>';
+                document.getElementById('adminPanelBtn').classList.remove('hidden');
+                document.getElementById('updateModeBtn').classList.remove('hidden');
+                document.getElementById('trollModeBtn').classList.remove('hidden');
+            }
+
+            // Load chat data
+            loadUsersForChat();
+            startGlobalChatListener();
+
+            clearMessages();
+        }
+
+        function logout() {
+            if (currentUser) {
+                // Update status naar offline
+                database.ref('users/' + currentUser.id).update({
+                    status: "offline",
+                    lastSeen: new Date().toISOString()
+                });
+            }
+
+            // Remove all troll effects
+            deactivateAllTrolls();
+
+            currentUser = null;
+            document.getElementById('appContainer').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // Change password functions
+        function openChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmNewPassword').value = '';
+        }
+
+        async function changeOwnPassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+            if (!currentPassword || !newPassword || !confirmNewPassword) {
+                showError('Vul alle velden in!');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showError('Nieuw wachtwoord moet minimaal 6 karakters lang zijn!');
+                return;
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                showError('Nieuwe wachtwoorden komen niet overeen!');
+                return;
+            }
+
+            try {
+                // Verify current password
+                const userRef = database.ref('users/' + currentUser.id);
+                const snapshot = await userRef.once('value');
+                const userData = snapshot.val();
+                const currentPasswordHash = hashPassword(currentPassword);
+
+                if (userData.passwordHash !== currentPasswordHash) {
+                    showError('Huidig wachtwoord is incorrect!');
+                    return;
+                }
+
+                // Update to new password
+                const newPasswordHash = hashPassword(newPassword);
+                await userRef.update({
+                    passwordHash: newPasswordHash
+                });
+
+                closeModal('changePasswordModal');
+                showSuccess('Wachtwoord succesvol gewijzigd!');
+
+            } catch (error) {
+                showError('Fout bij wijzigen wachtwoord: ' + error.message);
+            }
+        }
+
+        // Chat functions
+        function selectGlobalChat() {
+            isGlobalChat = true;
+
+            // Update UI
+            document.getElementById('selectedUserInfo').innerHTML = `
+                <h4>Global Chat</h4>
+                <small>Chat met iedereen</small>
+            `;
+
+            // Set active state
+            document.querySelectorAll('.chat-type-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            event.target.closest('.chat-type-item').classList.add('active');
+
+            // Load global messages
+            loadGlobalChat();
+
+            // Close mobile menu on selection
+            closeMobileMenu();
+        }
+
+        async function loadGlobalChat() {
+            try {
+                const globalMessagesRef = database.ref('globalMessages');
+                const snapshot = await globalMessagesRef.orderByChild('timestamp').once('value');
+
+                let messagesHtml = '';
+
+                snapshot.forEach((messageSnapshot) => {
+                    const message = messageSnapshot.val();
+                    const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const date = new Date(message.timestamp).toLocaleDateString();
+
+                    const isCurrentUser = message.userId === currentUser.id;
+                    const messageClass = isCurrentUser ? 'sent' : 'global';
+
+                    messagesHtml += `
+                        <div class="message ${messageClass}" data-message-id="${messageSnapshot.key}">
+                            ${!isCurrentUser ? `<div class="message-sender">${message.username}</div>` : ''}
+                            ${message.text}
+                            <div class="message-time">${time} • ${date}</div>
+                            ${isCurrentUser || currentUser.isAdmin ? `
+                                <div class="message-actions">
+                                    <button onclick="editMessage('${messageSnapshot.key}', '${message.text}')"><i class="fas fa-edit"></i></button>
+                                    <button onclick="deleteMessage('${messageSnapshot.key}')"><i class="fas fa-trash"></i></button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+
+                document.getElementById('chatMessages').innerHTML = messagesHtml || `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <i class="fas fa-globe" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3>Welkom in Global Chat!</h3>
+                        <p>Dit is een openbare chat waar iedereen kan berichten sturen</p>
+                    </div>
+                `;
+
+                // Scroll to bottom
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            } catch (error) {
+                console.error('Error loading global chat:', error);
+            }
+        }
+
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const text = messageInput.value.trim();
+
+            if (!text) return;
+
+            try {
+                if (isGlobalChat) {
+                    // Send to global chat
+                    const newMessage = {
+                        userId: currentUser.id,
+                        username: currentUser.username,
+                        text: text,
+                        timestamp: Date.now()
+                    };
+
+                    await database.ref('globalMessages').push(newMessage);
+                }
+
+                messageInput.value = '';
+
+                // Reload messages
+                if (isGlobalChat) {
+                    loadGlobalChat();
+                }
+
+            } catch (error) {
+                showError('Fout bij verzenden bericht: ' + error.message);
+            }
+        }
+
+        // Messages system functions
+        async function loadUsersForChat() {
+            try {
+                const usersSnapshot = await database.ref('users').once('value');
+                let usersHtml = `
+                    <div class="chat-type-item global-chat active" onclick="selectGlobalChat()">
+                        <div class="chat-type-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="user-info-small">
+                            <div class="user-name">Global Chat</div>
+                            <div class="user-status">Iedereen kan chatten</div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('usersChatList').innerHTML = usersHtml;
+
+            } catch (error) {
+                console.error('Error loading users for chat:', error);
+            }
+        }
+
+        function startGlobalChatListener() {
+            database.ref('globalMessages').on('child_added', function(snapshot) {
+                if (isGlobalChat) {
+                    loadGlobalChat();
+                }
+            });
+        }
+
+        // Message actions
+        function editMessage(messageId, text) {
+            currentMessageId = messageId;
+            document.getElementById('editMessageText').value = text;
+            document.getElementById('editMessageModal').classList.remove('hidden');
+        }
+
+        async function saveEditedMessage() {
+            const newText = document.getElementById('editMessageText').value.trim();
+            if (!newText) return;
+
+            try {
+                if (isGlobalChat) {
+                    await database.ref(`globalMessages/${currentMessageId}`).update({
+                        text: newText,
+                        edited: true
+                    });
+                }
+
+                closeModal('editMessageModal');
+                showSuccess('Bericht succesvol bewerkt!');
+
+                // Reload messages
+                if (isGlobalChat) {
+                    loadGlobalChat();
+                }
+
+            } catch (error) {
+                showError('Fout bij bewerken bericht: ' + error.message);
+            }
+        }
+
+        async function deleteMessage(messageId) {
+            try {
+                if (!currentUser.isAdmin && !document.querySelector(`.message[data-message-id="${messageId}"].sent`)) {
+                    showError("Je hebt geen toestemming om dit bericht te verwijderen.");
+                    return;
+                }
+
+                if (isGlobalChat) {
+                    await database.ref(`globalMessages/${messageId}`).remove();
+                }
+
+                showSuccess("Bericht succesvol verwijdered!");
+
+                // Reload messages
+                if (isGlobalChat) {
+                    loadGlobalChat();
+                }
+
+            } catch (error) {
+                showError("Fout bij verwijderen van bericht: " + error.message);
+            }
+        }
+
+        // Admin functions
+        async function openAdminPanel() {
+            if (!currentUser.isAdmin) {
+                showError("Je hebt geen toestemming om het admin-paneel te openen.");
+                return;
+            }
+
+            document.getElementById('adminPanelModal').classList.remove('hidden');
+
+            try {
+                // Load statistics
+                await loadAdminStats();
+
+                // Load users
+                const usersSnapshot = await database.ref('users').once('value');
+                let usersHtml = `
+                    <table class="admin-user-table">
+                        <tr>
+                            <th>Gebruikersnaam</th>
+                            <th>Status</th>
+                            <th>IP Adres</th>
+                            <th>Laatste Login</th>
+                            <th>Admin</th>
+                            <th>Acties</th>
+                        </tr>
+                `;
+
+                usersSnapshot.forEach((userSnapshot) => {
+                    const user = userSnapshot.val();
+                    const isAdmin = user.isAdmin ? 'Ja' : 'Nee';
+                    const statusText = user.status === "online" ? "Online" : "Offline";
+                    const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Onbekend';
+
+                    usersHtml += `
+                        <tr>
+                            <td>${user.username}</td>
+                            <td>${statusText}</td>
+                            <td>${user.ipAddress || 'Onbekend'}</td>
+                            <td>${lastLogin}</td>
+                            <td>${isAdmin}</td>
+                            <td>
+                                <button class="btn btn-info" onclick="toggleAdmin('${userSnapshot.key}', ${!user.isAdmin})">
+                                    ${user.isAdmin ? 'Admin verwijderen' : 'Admin maken'}
+                                </button>
+                                <button class="btn btn-danger" onclick="deleteUser('${userSnapshot.key}', '${user.username}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                usersHtml += '</table>';
+                document.getElementById('adminUserList').innerHTML = usersHtml;
+
+            } catch (error) {
+                showError("Fout bij laden van gebruikers: " + error.message);
+            }
+        }
+
+        async function loadAdminStats() {
+            try {
+                const usersSnapshot = await database.ref('users').once('value');
+                const messagesSnapshot = await database.ref('globalMessages').once('value');
+
+                let totalUsers = 0;
+                let onlineUsers = 0;
+                let adminUsers = 0;
+
+                usersSnapshot.forEach((userSnapshot) => {
+                    totalUsers++;
+                    const user = userSnapshot.val();
+                    if (user.status === "online") onlineUsers++;
+                    if (user.isAdmin) adminUsers++;
+                });
+
+                const totalMessages = messagesSnapshot.numChildren();
+
+                document.getElementById('totalUsers').textContent = totalUsers;
+                document.getElementById('onlineUsers').textContent = onlineUsers;
+                document.getElementById('adminUsers').textContent = adminUsers;
+                document.getElementById('totalMessages').textContent = totalMessages;
+
+            } catch (error) {
+                console.error('Error loading admin stats:', error);
+            }
+        }
+
+        async function toggleAdmin(userId, makeAdmin) {
+            try {
+                const userRef = database.ref('users/' + userId);
+                await userRef.update({ isAdmin: makeAdmin });
+                showSuccess(`Gebruiker is nu ${makeAdmin ? 'admin' : 'geen admin meer'}.`);
+                openAdminPanel(); // Herlaad het admin-paneel
+            } catch (error) {
+                showError("Fout bij bijwerken van admin-status: " + error.message);
+            }
+        }
+
+        async function deleteUser(userId, username) {
+            if (!confirm(`Weet je zeker dat je gebruiker "${username}" wilt verwijderen?`)) {
+                return;
+            }
+
+            try {
+                await database.ref('users/' + userId).remove();
+                showSuccess(`Gebruiker "${username}" succesvol verwijderd.`);
+                openAdminPanel(); // Herlaad het admin-paneel
+            } catch (error) {
+                showError("Fout bij verwijderen van gebruiker: " + error.message);
+            }
+        }
+
+        // Database cleanup functions
+        async function cleanupOldMessages() {
+            if (!currentUser.isAdmin) return;
+
+            try {
+                const now = Date.now();
+                const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000); // 30 dagen geleden
+                
+                const globalMessagesRef = database.ref('globalMessages');
+                const snapshot = await globalMessagesRef.once('value');
+                
+                let deletedCount = 0;
+                const updates = {};
+                
+                snapshot.forEach((messageSnapshot) => {
+                    const message = messageSnapshot.val();
+                    if (message.timestamp < thirtyDaysAgo) {
+                        updates[`globalMessages/${messageSnapshot.key}`] = null;
+                        deletedCount++;
+                    }
+                });
+                
+                if (deletedCount > 0) {
+                    await database.ref().update(updates);
+                    showSuccess(`${deletedCount} oude berichten (ouder dan 30 dagen) verwijderd.`);
+                } else {
+                    showSuccess("Geen oude berichten gevonden om te verwijderen.");
+                }
+                
+                openAdminPanel(); // Herlaad het admin-paneel
+                
+            } catch (error) {
+                showError("Fout bij opschonen van berichten: " + error.message);
+            }
+        }
+
+        async function clearAllMessages() {
+            if (!currentUser.isAdmin) return;
+
+            if (!confirm("Weet je zeker dat je ALLE berichten wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.")) {
+                return;
+            }
+
+            try {
+                await database.ref('globalMessages').remove();
+                showSuccess("Alle berichten succesvol verwijderd.");
+                openAdminPanel(); // Herlaad het admin-paneel
+                
+                // Herlaad de chat
+                if (isGlobalChat) {
+                    loadGlobalChat();
+                }
+                
+            } catch (error) {
+                showError("Fout bij verwijderen van berichten: " + error.message);
+            }
+        }
+
+        // Utility functions
+        function showError(message, formType = 'login') {
+            const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+
+            const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
+            successDiv.style.display = 'none';
+        }
+
+        function showSuccess(message, formType = 'login') {
+            const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+
+            const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
+            errorDiv.style.display = 'none';
+        }
+
+        function clearMessages() {
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('registerErrorMessage').style.display = 'none';
+            document.getElementById('registerSuccessMessage').style.display = 'none';
+        }
+
+        function setLoading(loading, formType = 'login') {
+            const btn = document.getElementById(formType === 'register' ? 'registerBtn' : 'loginBtn');
+            if (loading) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Laden...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = formType === 'register'
+                    ? '<i class="fas fa-user-plus"></i> Account Aanmaken'
+                    : '<i class="fas fa-sign-in-alt"></i> Inloggen';
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
     </script>
 </body>
 </html>
