@@ -50,6 +50,34 @@
             pointer-events: none;
         }
 
+        /* Update Mode */
+        .update-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .update-mode h1 {
+            margin-bottom: 20px;
+            font-size: 3rem;
+        }
+
+        .update-mode p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
         /* Login/Register Container */
         .login-container {
             background: rgba(255, 255, 255, 0.95);
@@ -174,6 +202,11 @@
         .btn-danger {
             background: var(--danger);
             color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
         }
 
         .btn:disabled {
@@ -312,6 +345,20 @@
         }
 
         .admin-panel-btn:hover {
+            background: var(--light);
+        }
+
+        .update-mode-btn {
+            background: none;
+            border: none;
+            color: var(--warning);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .update-mode-btn:hover {
             background: var(--light);
         }
 
@@ -729,8 +776,10 @@
             background: white;
             border-radius: 15px;
             padding: 30px;
-            max-width: 400px;
+            max-width: 500px;
             width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-header {
@@ -772,6 +821,31 @@
         .admin-user-table th {
             background-color: var(--light);
             font-weight: 600;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
         }
 
         /* Loading Spinner */
@@ -873,6 +947,12 @@
     </style>
 </head>
 <body>
+    <!-- Update Mode Screen -->
+    <div class="update-mode hidden" id="updateModeScreen">
+        <h1><i class="fas fa-tools"></i> Update Modus</h1>
+        <p>De website wordt bijgewerkt. Probeer het later opnieuw.</p>
+    </div>
+
     <!-- Login Screen -->
     <div class="login-container" id="loginScreen">
         <div class="login-header">
@@ -973,6 +1053,9 @@
                 </button>
                 <button class="admin-panel-btn hidden" id="adminPanelBtn" onclick="openAdminPanel()" title="Admin Paneel">
                     <i class="fas fa-cog"></i>
+                </button>
+                <button class="update-mode-btn hidden" id="updateModeBtn" onclick="openUpdateModeModal()" title="Update Modus">
+                    <i class="fas fa-tools"></i>
                 </button>
                 <div class="user-avatar" id="userAvatar">B</div>
                 <span id="userGreeting">Welkom, Bowen</span>
@@ -1075,9 +1158,62 @@
                 <button class="close-modal" onclick="closeModal('adminPanelModal')">&times;</button>
             </div>
             <div class="admin-panel-content">
+                <div class="admin-stats" id="adminStats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalUsers">0</div>
+                        <div class="stat-label">Totaal Gebruikers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="onlineUsers">0</div>
+                        <div class="stat-label">Online Gebruikers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalMessages">0</div>
+                        <div class="stat-label">Totaal Berichten</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="adminUsers">0</div>
+                        <div class="stat-label">Admin Gebruikers</div>
+                    </div>
+                </div>
+
+                <h4>Database Beheer</h4>
+                <div style="margin-bottom: 20px;">
+                    <button class="btn btn-warning" onclick="cleanupOldMessages()">
+                        <i class="fas fa-trash"></i> Oude Berichten Opschonen
+                    </button>
+                    <button class="btn btn-danger" onclick="clearAllMessages()">
+                        <i class="fas fa-broom"></i> Alle Berichten Wissen
+                    </button>
+                </div>
+
                 <h4>Gebruikers beheren</h4>
                 <div id="adminUserList">
                     <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Mode Modal -->
+    <div class="modal hidden" id="updateModeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Modus Beheer</h3>
+                <button class="close-modal" onclick="closeModal('updateModeModal')">&times;</button>
+            </div>
+            <div>
+                <p>Update modus blokkeert de toegang voor niet-admin gebruikers.</p>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-warning" onclick="enableUpdateMode()">
+                        <i class="fas fa-toggle-on"></i> Update Modus Aanzetten
+                    </button>
+                    <button class="btn btn-success" onclick="disableUpdateMode()">
+                        <i class="fas fa-toggle-off"></i> Update Modus Uitzetten
+                    </button>
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: var(--light); border-radius: 8px;">
+                    <small><strong>Huidige status:</strong> <span id="updateModeStatus">Uit</span></small>
                 </div>
             </div>
         </div>
@@ -1124,6 +1260,9 @@
         });
 
         async function initializeApp() {
+            // Check update mode first
+            await checkUpdateMode();
+
             // Password toggles
             setupPasswordToggle('togglePassword', 'password');
             setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
@@ -1176,6 +1315,83 @@
 
             // Start with global chat
             loadGlobalChat();
+        }
+
+        // Update Mode Functions
+        async function checkUpdateMode() {
+            try {
+                const updateModeRef = database.ref('appSettings/updateMode');
+                const snapshot = await updateModeRef.once('value');
+                const updateMode = snapshot.val();
+                
+                if (updateMode && updateMode.enabled) {
+                    document.getElementById('updateModeScreen').classList.remove('hidden');
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('registerScreen').classList.add('hidden');
+                    document.getElementById('appContainer').classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error checking update mode:', error);
+            }
+        }
+
+        async function openUpdateModeModal() {
+            if (!currentUser.isAdmin) {
+                showError("Je hebt geen toestemming om de update modus te beheren.");
+                return;
+            }
+
+            try {
+                const updateModeRef = database.ref('appSettings/updateMode');
+                const snapshot = await updateModeRef.once('value');
+                const updateMode = snapshot.val();
+                
+                document.getElementById('updateModeStatus').textContent = 
+                    updateMode && updateMode.enabled ? 'AAN' : 'UIT';
+                
+                document.getElementById('updateModeModal').classList.remove('hidden');
+            } catch (error) {
+                showError("Fout bij laden update modus status: " + error.message);
+            }
+        }
+
+        async function enableUpdateMode() {
+            try {
+                await database.ref('appSettings/updateMode').set({
+                    enabled: true,
+                    enabledBy: currentUser.username,
+                    enabledAt: new Date().toISOString()
+                });
+                
+                showSuccess("Update modus is nu ingeschakeld!");
+                document.getElementById('updateModeStatus').textContent = 'AAN';
+                
+                // Forceer refresh voor niet-admin gebruikers
+                setTimeout(() => {
+                    if (!currentUser.isAdmin) {
+                        logout();
+                    }
+                }, 2000);
+                
+            } catch (error) {
+                showError("Fout bij inschakelen update modus: " + error.message);
+            }
+        }
+
+        async function disableUpdateMode() {
+            try {
+                await database.ref('appSettings/updateMode').set({
+                    enabled: false,
+                    disabledBy: currentUser.username,
+                    disabledAt: new Date().toISOString()
+                });
+                
+                showSuccess("Update modus is nu uitgeschakeld!");
+                document.getElementById('updateModeStatus').textContent = 'UIT';
+                
+            } catch (error) {
+                showError("Fout bij uitschakelen update modus: " + error.message);
+            }
         }
 
         function setupPasswordToggle(toggleId, inputId) {
@@ -1244,6 +1460,11 @@
             setLoading(true, 'login');
 
             try {
+                // Check update mode first
+                const updateModeRef = database.ref('appSettings/updateMode');
+                const updateSnapshot = await updateModeRef.once('value');
+                const updateMode = updateSnapshot.val();
+
                 const usersRef = database.ref('users');
                 const snapshot = await usersRef.once('value');
 
@@ -1265,6 +1486,12 @@
 
                 if (!userFound) {
                     showError('Ongeldige gebruikersnaam of wachtwoord!');
+                    return;
+                }
+
+                // Check if update mode is enabled and user is not admin
+                if (updateMode && updateMode.enabled && !userData.isAdmin) {
+                    showError('De website is momenteel in onderhoudsmodus. Probeer het later opnieuw.');
                     return;
                 }
 
@@ -1314,6 +1541,16 @@
             setLoading(true, 'register');
 
             try {
+                // Check update mode first
+                const updateModeRef = database.ref('appSettings/updateMode');
+                const updateSnapshot = await updateModeRef.once('value');
+                const updateMode = updateSnapshot.val();
+
+                if (updateMode && updateMode.enabled) {
+                    showError('Registratie is tijdelijk uitgeschakeld vanwege onderhoud.', 'register');
+                    return;
+                }
+
                 const usersRef = database.ref('users');
                 const snapshot = await usersRef.once('value');
 
@@ -1365,6 +1602,7 @@
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('registerScreen').classList.add('hidden');
             document.getElementById('appContainer').classList.remove('hidden');
+            document.getElementById('updateModeScreen').classList.add('hidden');
 
             // Update UI
             document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
@@ -1374,12 +1612,12 @@
             if (currentUser.isAdmin) {
                 document.getElementById('userGreeting').innerHTML += ' <span class="admin-badge" title="Admin">👑</span>';
                 document.getElementById('adminPanelBtn').classList.remove('hidden');
+                document.getElementById('updateModeBtn').classList.remove('hidden');
             }
 
             // Load chat data
             loadUsersForChat();
             startGlobalChatListener();
-            startPrivateMessagesListener();
 
             clearMessages();
         }
@@ -1554,17 +1792,6 @@
                     };
 
                     await database.ref('globalMessages').push(newMessage);
-                } else if (currentChatUser) {
-                    // Send to private chat
-                    const newMessage = {
-                        from: currentUser.id,
-                        to: currentChatUser.id,
-                        text: text,
-                        timestamp: Date.now(),
-                        read: false
-                    };
-
-                    await database.ref('messages').push(newMessage);
                 }
 
                 messageInput.value = '';
@@ -1572,8 +1799,6 @@
                 // Reload messages
                 if (isGlobalChat) {
                     loadGlobalChat();
-                } else if (currentChatUser) {
-                    loadChatMessages(currentChatUser.id);
                 }
 
             } catch (error) {
@@ -1605,7 +1830,7 @@
                         const isAdmin = user.isAdmin ? '<span class="admin-badge" title="Admin">👑</span>' : '';
 
                         usersHtml += `
-                            <div class="user-chat-item" onclick="selectUserForChat('${userSnapshot.key}', '${user.username}')" data-user-id="${userSnapshot.key}">
+                            <div class="user-chat-item" data-user-id="${userSnapshot.key}">
                                 <div class="user-avatar-small">
                                     ${user.username.charAt(0).toUpperCase()}
                                     <div class="status-indicator ${statusClass}"></div>
@@ -1614,7 +1839,6 @@
                                     <div class="user-name">${user.username} ${isAdmin}</div>
                                     <div class="user-status">${statusText}</div>
                                 </div>
-                                ${unreadMessages[userSnapshot.key] ? `<div class="unread-badge">${unreadMessages[userSnapshot.key]}</div>` : ''}
                             </div>
                         `;
                     }
@@ -1666,161 +1890,6 @@
             });
         }
 
-        function selectUserForChat(userId, username) {
-            isGlobalChat = false;
-            currentChatUser = { id: userId, username: username };
-
-            // Update UI
-            document.getElementById('selectedUserInfo').innerHTML = `
-                <div class="user-avatar-small">
-                    ${username.charAt(0).toUpperCase()}
-                    <div class="status-indicator status-online"></div>
-                </div>
-                <div>
-                    <div class="user-name">${username}</div>
-                    <div class="user-status">Online</div>
-                </div>
-            `;
-
-            // Remove global chat styling
-            document.getElementById('chatHeader').classList.remove('global-chat-header');
-            document.querySelector('.chat-input').classList.remove('global-chat');
-
-            // Load messages
-            loadChatMessages(userId);
-
-            // Set active state
-            document.querySelectorAll('.chat-type-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            document.querySelectorAll('.user-chat-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            event.target.closest('.user-chat-item').classList.add('active');
-
-            // Reset unread count for this user
-            if (unreadMessages[userId]) {
-                unreadMessages[userId] = 0;
-                updateUnreadBadge(userId);
-            }
-
-            // Close mobile menu on selection
-            closeMobileMenu();
-        }
-
-        async function loadChatMessages(otherUserId) {
-            try {
-                const messagesRef = database.ref('messages');
-                const snapshot = await messagesRef.orderByChild('timestamp').once('value');
-
-                let messagesHtml = '';
-
-                snapshot.forEach((messageSnapshot) => {
-                    const message = messageSnapshot.val();
-
-                    // Check if message is between current user and selected user
-                    if ((message.from === currentUser.id && message.to === otherUserId) ||
-                        (message.from === otherUserId && message.to === currentUser.id)) {
-
-                        const messageClass = message.from === currentUser.id ? 'sent' : 'received';
-                        const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
-                        messagesHtml += `
-                            <div class="message ${messageClass}" data-message-id="${messageSnapshot.key}">
-                                ${message.text}
-                                <div class="message-time">${time}</div>
-                                ${messageClass === 'sent' ? `
-                                    <div class="message-actions">
-                                        <button onclick="editMessage('${messageSnapshot.key}', '${message.text}')"><i class="fas fa-edit"></i></button>
-                                        <button onclick="deleteMessage('${messageSnapshot.key}')"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                    }
-                });
-
-                document.getElementById('chatMessages').innerHTML = messagesHtml || '<p>Nog geen berichten. Start het gesprek!</p>';
-
-                // Scroll to bottom
-                const chatMessages = document.getElementById('chatMessages');
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                // Mark messages as read
-                markMessagesAsRead(otherUserId);
-
-            } catch (error) {
-                console.error('Error loading chat messages:', error);
-            }
-        }
-
-        async function markMessagesAsRead(otherUserId) {
-            try {
-                const messagesRef = database.ref('messages');
-                const snapshot = await messagesRef.orderByChild('timestamp').once('value');
-
-                const updates = {};
-
-                snapshot.forEach((messageSnapshot) => {
-                    const message = messageSnapshot.val();
-
-                    // Mark messages from other user to current user as read
-                    if (message.from === otherUserId && message.to === currentUser.id && !message.read) {
-                        updates[`${messageSnapshot.key}/read`] = true;
-                    }
-                });
-
-                if (Object.keys(updates).length > 0) {
-                    await messagesRef.update(updates);
-                }
-
-            } catch (error) {
-                console.error('Error marking messages as read:', error);
-            }
-        }
-
-        function startPrivateMessagesListener() {
-            // Listen for new private messages
-            const messagesRef = database.ref('messages');
-            messagesRef.on('child_added', (snapshot) => {
-                const message = snapshot.val();
-
-                // If message is for current user and not from current user
-                if (message.to === currentUser.id && message.from !== currentUser.id) {
-                    // If not currently viewing chat with this user, increment unread count
-                    if (!currentChatUser || currentChatUser.id !== message.from) {
-                        if (!unreadMessages[message.from]) {
-                            unreadMessages[message.from] = 0;
-                        }
-                        unreadMessages[message.from]++;
-                        updateUnreadBadge(message.from);
-                    }
-                }
-            });
-        }
-
-        function updateUnreadBadge(userId) {
-            const userItems = document.querySelectorAll('.user-chat-item');
-            userItems.forEach(item => {
-                if (item.getAttribute('data-user-id') === userId) {
-                    let badge = item.querySelector('.unread-badge');
-
-                    if (unreadMessages[userId] > 0) {
-                        if (!badge) {
-                            badge = document.createElement('div');
-                            badge.className = 'unread-badge';
-                            item.appendChild(badge);
-                        }
-                        badge.textContent = unreadMessages[userId];
-                    } else if (badge) {
-                        badge.remove();
-                    }
-                }
-            });
-        }
-
         function startGlobalChatListener() {
             database.ref('globalMessages').on('child_added', function(snapshot) {
                 if (isGlobalChat) {
@@ -1846,11 +1915,6 @@
                         text: newText,
                         edited: true
                     });
-                } else {
-                    await database.ref(`messages/${currentMessageId}`).update({
-                        text: newText,
-                        edited: true
-                    });
                 }
 
                 closeModal('editMessageModal');
@@ -1859,8 +1923,6 @@
                 // Reload messages
                 if (isGlobalChat) {
                     loadGlobalChat();
-                } else if (currentChatUser) {
-                    loadChatMessages(currentChatUser.id);
                 }
 
             } catch (error) {
@@ -1877,8 +1939,6 @@
 
                 if (isGlobalChat) {
                     await database.ref(`globalMessages/${messageId}`).remove();
-                } else {
-                    await database.ref(`messages/${messageId}`).remove();
                 }
 
                 showSuccess("Bericht succesvol verwijderd!");
@@ -1886,8 +1946,6 @@
                 // Reload messages
                 if (isGlobalChat) {
                     loadGlobalChat();
-                } else if (currentChatUser) {
-                    loadChatMessages(currentChatUser.id);
                 }
 
             } catch (error) {
@@ -1905,6 +1963,10 @@
             document.getElementById('adminPanelModal').classList.remove('hidden');
 
             try {
+                // Load statistics
+                await loadAdminStats();
+
+                // Load users
                 const usersSnapshot = await database.ref('users').once('value');
                 let usersHtml = `
                     <table class="admin-user-table">
@@ -1912,6 +1974,7 @@
                             <th>Gebruikersnaam</th>
                             <th>Status</th>
                             <th>IP Adres</th>
+                            <th>Laatste Login</th>
                             <th>Admin</th>
                             <th>Acties</th>
                         </tr>
@@ -1921,16 +1984,21 @@
                     const user = userSnapshot.val();
                     const isAdmin = user.isAdmin ? 'Ja' : 'Nee';
                     const statusText = user.status === "online" ? "Online" : "Offline";
+                    const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Onbekend';
 
                     usersHtml += `
                         <tr>
                             <td>${user.username}</td>
                             <td>${statusText}</td>
                             <td>${user.ipAddress || 'Onbekend'}</td>
+                            <td>${lastLogin}</td>
                             <td>${isAdmin}</td>
                             <td>
                                 <button class="btn btn-info" onclick="toggleAdmin('${userSnapshot.key}', ${!user.isAdmin})">
                                     ${user.isAdmin ? 'Admin verwijderen' : 'Admin maken'}
+                                </button>
+                                <button class="btn btn-danger" onclick="deleteUser('${userSnapshot.key}', '${user.username}')">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </td>
                         </tr>
@@ -1945,6 +2013,34 @@
             }
         }
 
+        async function loadAdminStats() {
+            try {
+                const usersSnapshot = await database.ref('users').once('value');
+                const messagesSnapshot = await database.ref('globalMessages').once('value');
+
+                let totalUsers = 0;
+                let onlineUsers = 0;
+                let adminUsers = 0;
+
+                usersSnapshot.forEach((userSnapshot) => {
+                    totalUsers++;
+                    const user = userSnapshot.val();
+                    if (user.status === "online") onlineUsers++;
+                    if (user.isAdmin) adminUsers++;
+                });
+
+                const totalMessages = messagesSnapshot.numChildren();
+
+                document.getElementById('totalUsers').textContent = totalUsers;
+                document.getElementById('onlineUsers').textContent = onlineUsers;
+                document.getElementById('adminUsers').textContent = adminUsers;
+                document.getElementById('totalMessages').textContent = totalMessages;
+
+            } catch (error) {
+                console.error('Error loading admin stats:', error);
+            }
+        }
+
         async function toggleAdmin(userId, makeAdmin) {
             try {
                 const userRef = database.ref('users/' + userId);
@@ -1953,6 +2049,78 @@
                 openAdminPanel(); // Herlaad het admin-paneel
             } catch (error) {
                 showError("Fout bij bijwerken van admin-status: " + error.message);
+            }
+        }
+
+        async function deleteUser(userId, username) {
+            if (!confirm(`Weet je zeker dat je gebruiker "${username}" wilt verwijderen?`)) {
+                return;
+            }
+
+            try {
+                await database.ref('users/' + userId).remove();
+                showSuccess(`Gebruiker "${username}" succesvol verwijderd.`);
+                openAdminPanel(); // Herlaad het admin-paneel
+            } catch (error) {
+                showError("Fout bij verwijderen van gebruiker: " + error.message);
+            }
+        }
+
+        // Database cleanup functions
+        async function cleanupOldMessages() {
+            if (!currentUser.isAdmin) return;
+
+            try {
+                const now = Date.now();
+                const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000); // 30 dagen geleden
+                
+                const globalMessagesRef = database.ref('globalMessages');
+                const snapshot = await globalMessagesRef.once('value');
+                
+                let deletedCount = 0;
+                const updates = {};
+                
+                snapshot.forEach((messageSnapshot) => {
+                    const message = messageSnapshot.val();
+                    if (message.timestamp < thirtyDaysAgo) {
+                        updates[`globalMessages/${messageSnapshot.key}`] = null;
+                        deletedCount++;
+                    }
+                });
+                
+                if (deletedCount > 0) {
+                    await database.ref().update(updates);
+                    showSuccess(`${deletedCount} oude berichten (ouder dan 30 dagen) verwijderd.`);
+                } else {
+                    showSuccess("Geen oude berichten gevonden om te verwijderen.");
+                }
+                
+                openAdminPanel(); // Herlaad het admin-paneel
+                
+            } catch (error) {
+                showError("Fout bij opschonen van berichten: " + error.message);
+            }
+        }
+
+        async function clearAllMessages() {
+            if (!currentUser.isAdmin) return;
+
+            if (!confirm("Weet je zeker dat je ALLE berichten wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.")) {
+                return;
+            }
+
+            try {
+                await database.ref('globalMessages').remove();
+                showSuccess("Alle berichten succesvol verwijderd.");
+                openAdminPanel(); // Herlaad het admin-paneel
+                
+                // Herlaad de chat
+                if (isGlobalChat) {
+                    loadGlobalChat();
+                }
+                
+            } catch (error) {
+                showError("Fout bij verwijderen van berichten: " + error.message);
             }
         }
 
