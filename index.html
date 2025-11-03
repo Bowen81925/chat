@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Clone</title>
+    <title>Ultimate Chat</title>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -30,6 +30,7 @@
             --text: #2d3748;
             --text-secondary: #666;
             --border: #e1e1e1;
+            --accent: #ff6b6b;
         }
 
         .theme-dark {
@@ -46,6 +47,7 @@
             --text: #e2e8f0;
             --text-secondary: #a0aec0;
             --border: #4a5568;
+            --accent: #ff7b7b;
         }
 
         .theme-blue {
@@ -62,6 +64,7 @@
             --text: #2c3e50;
             --text-secondary: #7f8c8d;
             --border: #bdc3c7;
+            --accent: #e74c3c;
         }
 
         .theme-green {
@@ -78,6 +81,7 @@
             --text: #2c3e50;
             --text-secondary: #7f8c8d;
             --border: #bdc3c7;
+            --accent: #c0392b;
         }
 
         .theme-purple {
@@ -94,6 +98,7 @@
             --text: #2c3e50;
             --text-secondary: #7f8c8d;
             --border: #d2b4de;
+            --accent: #e74c3c;
         }
 
         .theme-orange {
@@ -110,6 +115,7 @@
             --text: #2c3e50;
             --text-secondary: #7f8c8d;
             --border: #f5b041;
+            --accent: #c0392b;
         }
 
         .theme-pink {
@@ -126,6 +132,7 @@
             --text: #2d3436;
             --text-secondary: #636e72;
             --border: #fab1a0;
+            --accent: #d63031;
         }
 
         .theme-midnight {
@@ -142,6 +149,75 @@
             --text: #dfe6e9;
             --text-secondary: #b2bec3;
             --border: #636e72;
+            --accent: #d63031;
+        }
+
+        .theme-cyber {
+            --primary: #00ff9d;
+            --secondary: #00b8ff;
+            --success: #00ff9d;
+            --danger: #ff006e;
+            --warning: #ffcc00;
+            --info: #00b8ff;
+            --dark: #00ff9d;
+            --light: #0a0a0a;
+            --background: #000000;
+            --surface: #1a1a1a;
+            --text: #00ff9d;
+            --text-secondary: #00b8ff;
+            --border: #00ff9d;
+            --accent: #ff006e;
+        }
+
+        .theme-sunset {
+            --primary: #ff6b6b;
+            --secondary: #ffa726;
+            --success: #66bb6a;
+            --danger: #ef5350;
+            --warning: #ffa726;
+            --info: #42a5f5;
+            --dark: #5d4037;
+            --light: #fff3e0;
+            --background: #ffffff;
+            --surface: #fff3e0;
+            --text: #5d4037;
+            --text-secondary: #8d6e63;
+            --border: #ffccbc;
+            --accent: #ef5350;
+        }
+
+        .theme-nature {
+            --primary: #388e3c;
+            --secondary: #689f38;
+            --success: #388e3c;
+            --danger: #d32f2f;
+            --warning: #fbc02d;
+            --info: #0288d1;
+            --dark: #1b5e20;
+            --light: #e8f5e8;
+            --background: #ffffff;
+            --surface: #e8f5e8;
+            --text: #1b5e20;
+            --text-secondary: #4caf50;
+            --border: #a5d6a7;
+            --accent: #d32f2f;
+        }
+
+        .theme-royal {
+            --primary: #512da8;
+            --secondary: #303f9f;
+            --success: #388e3c;
+            --danger: #d32f2f;
+            --warning: #ffa000;
+            --info: #1976d2;
+            --dark: #311b92;
+            --light: #ede7f6;
+            --background: #ffffff;
+            --surface: #ede7f6;
+            --text: #311b92;
+            --text-secondary: #5e35b1;
+            --border: #b39ddb;
+            --accent: #d32f2f;
         }
 
         * {
@@ -168,6 +244,27 @@
             pointer-events: none;
         }
 
+        /* Version Badge */
+        .version-badge {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .version-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
         /* Update Mode */
         .update-mode {
             position: fixed;
@@ -175,7 +272,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -194,6 +291,17 @@
         .update-mode p {
             font-size: 1.2rem;
             opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .flappy-bird-container {
+            margin-top: 30px;
+        }
+
+        #flappyBirdCanvas {
+            border: 3px solid white;
+            border-radius: 10px;
+            background: #87CEEB;
         }
 
         /* Login/Register Container */
@@ -208,6 +316,7 @@
             margin: 20px auto;
             background: var(--background);
             color: var(--text);
+            position: relative;
         }
 
         .login-header {
@@ -615,6 +724,11 @@
             background: rgba(78, 205, 196, 0.1);
         }
 
+        .chat-type-item.admin-chat {
+            border-color: var(--danger);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
         .chat-type-item.global-chat.active {
             background: var(--info);
             color: white;
@@ -625,11 +739,20 @@
             color: white;
         }
 
+        .chat-type-item.admin-chat.active {
+            background: var(--danger);
+            color: white;
+        }
+
         .chat-type-item.global-chat.active .chat-type-icon {
             color: white;
         }
 
         .chat-type-item.private-chat.active .chat-type-icon {
+            color: white;
+        }
+
+        .chat-type-item.admin-chat.active .chat-type-icon {
             color: white;
         }
 
@@ -651,6 +774,10 @@
 
         .private-chat .chat-type-icon {
             background: var(--success);
+        }
+
+        .admin-chat .chat-type-icon {
+            background: var(--danger);
         }
 
         .user-status-indicator {
@@ -701,6 +828,11 @@
             color: white;
         }
 
+        .admin-chat-header {
+            background: var(--danger);
+            color: white;
+        }
+
         .global-chat-header .chat-type-icon {
             background: white;
             color: var(--info);
@@ -709,6 +841,11 @@
         .private-chat-header .chat-type-icon {
             background: white;
             color: var(--success);
+        }
+
+        .admin-chat-header .chat-type-icon {
+            background: white;
+            color: var(--danger);
         }
 
         .chat-messages {
@@ -757,6 +894,14 @@
             margin-right: 0;
         }
 
+        .message.admin {
+            background: var(--danger);
+            color: white;
+            max-width: 90%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
         .message-time {
             font-size: 0.7rem;
             opacity: 0.7;
@@ -768,7 +913,7 @@
             text-align: left;
         }
 
-        .message.global .message-time, .message.private .message-time {
+        .message.global .message-time, .message.private .message-time, .message.admin .message-time {
             text-align: left;
         }
 
@@ -839,6 +984,10 @@
             border-color: var(--success);
         }
 
+        .admin-chat .message-input:focus {
+            border-color: var(--danger);
+        }
+
         .send-btn {
             background: var(--primary);
             color: white;
@@ -862,6 +1011,10 @@
             background: var(--success);
         }
 
+        .admin-chat .send-btn {
+            background: var(--danger);
+        }
+
         .send-btn:hover:not(:disabled) {
             background: var(--secondary);
             transform: scale(1.05);
@@ -873,6 +1026,10 @@
 
         .private-chat .send-btn:hover:not(:disabled) {
             background: #3a9b8c;
+        }
+
+        .admin-chat .send-btn:hover:not(:disabled) {
+            background: #cc5252;
         }
 
         .send-btn:disabled {
@@ -1008,11 +1165,17 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .theme-option:hover {
+            transform: scale(1.1);
         }
 
         .theme-option.active {
             border-color: var(--primary);
             transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .theme-default {
@@ -1045,6 +1208,65 @@
 
         .theme-midnight {
             background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 100%);
+        }
+
+        .theme-cyber {
+            background: linear-gradient(135deg, #00ff9d 0%, #00b8ff 100%);
+        }
+
+        .theme-sunset {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+        }
+
+        .theme-nature {
+            background: linear-gradient(135deg, #388e3c 0%, #689f38 100%);
+        }
+
+        .theme-royal {
+            background: linear-gradient(135deg, #512da8 0%, #303f9f 100%);
+        }
+
+        /* Changelog Modal */
+        .changelog-content {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .changelog-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .changelog-version {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .changelog-date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .changelog-features {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .changelog-features li {
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .changelog-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
         }
 
         /* Responsive Styles */
@@ -1130,16 +1352,24 @@
     </style>
 </head>
 <body>
+    <!-- Version Badge -->
+    <div class="version-badge" onclick="openChangelog()">v0.05</div>
+
     <!-- Update Mode Screen -->
     <div class="update-mode hidden" id="updateModeScreen">
-        <h1 id="updateModeTitle"><i class="fas fa-tools"></i> De servers kunnen momenteel niet bereikt worden.</h1>
-        <p id="updateModeMessage">Probeer later opnieuw</p>
+        <h1 id="updateModeTitle"><i class="fas fa-tools"></i> Ultimate Chat is momenteel in onderhoud</h1>
+        <p id="updateModeMessage">We zijn even bezig met updates. Probeer het later opnieuw!</p>
+        
+        <div class="flappy-bird-container">
+            <canvas id="flappyBirdCanvas" width="320" height="480"></canvas>
+            <p style="margin-top: 15px; font-size: 1rem;">Speel Flappy Bird terwijl je wacht! Gebruik spatiebalk of klik om te springen.</p>
+        </div>
     </div>
 
     <!-- Login Screen -->
     <div class="login-container" id="loginScreen">
         <div class="login-header">
-            <h1>Discord Clone</h1>
+            <h1>Ultimate Chat</h1>
             <p>Log in op je account</p>
         </div>
 
@@ -1228,7 +1458,7 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <i class="fas fa-comments"></i>
-                <span>Discord Clone</span>
+                <span>Ultimate Chat</span>
             </div>
             <div class="user-menu">
                 <button class="theme-toggle-btn" onclick="openThemeSelector()" title="Thema wijzigen">
@@ -1243,8 +1473,8 @@
                 <button class="update-mode-btn hidden" id="updateModeBtn" onclick="openUpdateModeModal()" title="Update Modus">
                     <i class="fas fa-tools"></i>
                 </button>
-                <div class="user-avatar" id="userAvatar">B</div>
-                <span id="userGreeting">Welkom, Bowen</span>
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span id="userGreeting">Welkom, Gebruiker</span>
                 <button class="logout-btn" onclick="logout()" title="Uitloggen">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
@@ -1276,6 +1506,17 @@
                                 <div class="user-status">Iedereen kan chatten</div>
                             </div>
                         </div>
+
+                        <!-- Admin Chat Item (only for admins) -->
+                        <div class="chat-type-item admin-chat hidden" id="adminChatItem" onclick="selectAdminChat()">
+                            <div class="chat-type-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="user-info-small">
+                                <div class="user-name">Admin Monitor</div>
+                                <div class="user-status">Bekijk alle privé chats</div>
+                            </div>
+                        </div>
                         <!-- Private Chats will be loaded here -->
                         <div class="spinner"></div>
                     </div>
@@ -1295,7 +1536,7 @@
                     <div class="chat-messages" id="chatMessages">
                         <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
                             <i class="fas fa-globe" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                            <h3>Welkom in Global Chat!</h3>
+                            <h3>Welkom in Ultimate Chat!</h3>
                             <p>Dit is een openbare chat waar iedereen kan berichten sturen</p>
                         </div>
                     </div>
@@ -1360,8 +1601,22 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="adminUsers">0</div>
-                        <div class="stat-label">Super Gebruikers</div>
+                        <div class="stat-label">Admin Gebruikers</div>
                     </div>
+                </div>
+
+                <h4>IP Beheer</h4>
+                <div style="margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label for="ipToBan">IP Adres om te blokkeren</label>
+                        <input type="text" id="ipToBan" class="form-control" placeholder="Bijv. 192.168.1.1">
+                    </div>
+                    <button class="btn btn-danger" onclick="banIP()">
+                        <i class="fas fa-ban"></i> IP Blokkeren
+                    </button>
+                    <button class="btn btn-success" onclick="unbanIP()">
+                        <i class="fas fa-check"></i> IP Deblokkeren
+                    </button>
                 </div>
 
                 <h4>Database Beheer</h4>
@@ -1390,7 +1645,7 @@
                 <button class="close-modal" onclick="closeModal('updateModeModal')">&times;</button>
             </div>
             <div>
-                <p>Update modus blokkeert de toegang voor niet-super gebruikers.</p>
+                <p>Update modus blokkeert de toegang voor niet-admin gebruikers.</p>
                 
                 <div class="form-group">
                     <label for="updateModeTitleInput">Update Modus Titel</label>
@@ -1436,6 +1691,10 @@
                     <div class="theme-option theme-orange" onclick="changeTheme('orange')" title="Oranje Thema">O</div>
                     <div class="theme-option theme-pink" onclick="changeTheme('pink')" title="Roze Thema">R</div>
                     <div class="theme-option theme-midnight" onclick="changeTheme('midnight')" title="Middernacht Thema">M</div>
+                    <div class="theme-option theme-cyber" onclick="changeTheme('cyber')" title="Cyber Thema">C</div>
+                    <div class="theme-option theme-sunset" onclick="changeTheme('sunset')" title="Zonsondergang Thema">Z</div>
+                    <div class="theme-option theme-nature" onclick="changeTheme('nature')" title="Natuur Thema">N</div>
+                    <div class="theme-option theme-royal" onclick="changeTheme('royal')" title="Koninklijk Thema">K</div>
                 </div>
                 
                 <div style="margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px;">
@@ -1443,6 +1702,76 @@
                     <p>Dit is een voorbeeldtekst in het geselecteerde thema.</p>
                     <button class="btn btn-primary">Voorbeeld Knop</button>
                     <button class="btn btn-secondary">Secundaire Knop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Changelog Modal -->
+    <div class="modal hidden" id="changelogModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-clipboard-list"></i> Ultimate Chat - Wijzigingenlog</h3>
+                <button class="close-modal" onclick="closeModal('changelogModal')">&times;</button>
+            </div>
+            <div class="changelog-content">
+                <div class="changelog-item">
+                    <div class="changelog-version">v0.05 - Huidige Versie</div>
+                    <div class="changelog-date">December 2023</div>
+                    <ul class="changelog-features">
+                        <li>IP blokkering systeem toegevoegd voor admins</li>
+                        <li>Admin monitor voor het bekijken van alle privé chats</li>
+                        <li>Flappy Bird spel toegevoegd aan update modus scherm</li>
+                        <li>4 nieuwe thema's: Cyber, Zonsondergang, Natuur, Koninklijk</li>
+                        <li>Verbeterde thema selector met hover effecten</li>
+                        <li>Naam gewijzigd naar Ultimate Chat</li>
+                        <li>Versie badge met changelog</li>
+                        <li>Verbeterde beveiliging en prestaties</li>
+                    </ul>
+                </div>
+                
+                <div class="changelog-item">
+                    <div class="changelog-version">v0.04</div>
+                    <div class="changelog-date">November 2023</div>
+                    <ul class="changelog-features">
+                        <li>Privé chat functionaliteit toegevoegd</li>
+                        <li>Cookie ondersteuning voor automatisch inloggen</li>
+                        <li>8 verschillende thema's</li>
+                        <li>Wachtwoord zichtbaarheid voor admins</li>
+                    </ul>
+                </div>
+                
+                <div class="changelog-item">
+                    <div class="changelog-version">v0.03</div>
+                    <div class="changelog-date">Oktober 2023</div>
+                    <ul class="changelog-features">
+                        <li>Drie Firebase database ondersteuning</li>
+                        <li>Verbeterde beveiliging met salt-based hashing</li>
+                        <li>Bericht beperkingen (2 uur voor verwijderen)</li>
+                        <li>Update mode verbeteringen</li>
+                    </ul>
+                </div>
+                
+                <div class="changelog-item">
+                    <div class="changelog-version">v0.02</div>
+                    <div class="changelog-date">September 2023</div>
+                    <ul class="changelog-features">
+                        <li>Admin panel met gebruikersbeheer</li>
+                        <li>Aanpasbare update mode berichten</li>
+                        <li>Thema ondersteuning</li>
+                        <li>Responsive design verbeteringen</li>
+                    </ul>
+                </div>
+                
+                <div class="changelog-item">
+                    <div class="changelog-version">v0.01</div>
+                    <div class="changelog-date">Augustus 2023</div>
+                    <ul class="changelog-features">
+                        <li>Eerste release van Ultimate Chat</li>
+                        <li>Basis chat functionaliteit</li>
+                        <li>Gebruikers authenticatie</li>
+                        <li>Global chat room</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -1492,9 +1821,199 @@
         // Global variables
         let currentUser = null;
         let isGlobalChat = true;
+        let isAdminChat = false;
         let currentMessageId = null;
         let currentTheme = 'default';
         let selectedPrivateChat = null;
+        let flappyBirdGame = null;
+
+        // Flappy Bird Game
+        class FlappyBird {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.width = canvas.width;
+                this.height = canvas.height;
+                
+                // Game state
+                this.gameOver = false;
+                this.score = 0;
+                this.frameCount = 0;
+                
+                // Bird properties
+                this.bird = {
+                    x: 50,
+                    y: this.height / 2,
+                    width: 30,
+                    height: 30,
+                    velocity: 0,
+                    gravity: 0.5,
+                    jump: -8,
+                    color: '#FFD700'
+                };
+                
+                // Pipes
+                this.pipes = [];
+                this.pipeWidth = 50;
+                this.pipeGap = 120;
+                this.pipeSpeed = 2;
+                this.pipeFrequency = 120;
+                
+                // Start the game
+                this.setupEventListeners();
+                this.gameLoop();
+            }
+            
+            setupEventListeners() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        this.birdJump();
+                    }
+                });
+                
+                this.canvas.addEventListener('click', () => {
+                    this.birdJump();
+                });
+            }
+            
+            birdJump() {
+                if (this.gameOver) {
+                    this.resetGame();
+                } else {
+                    this.bird.velocity = this.bird.jump;
+                }
+            }
+            
+            resetGame() {
+                this.bird.y = this.height / 2;
+                this.bird.velocity = 0;
+                this.pipes = [];
+                this.score = 0;
+                this.frameCount = 0;
+                this.gameOver = false;
+            }
+            
+            update() {
+                if (this.gameOver) return;
+                
+                this.frameCount++;
+                
+                // Update bird
+                this.bird.velocity += this.bird.gravity;
+                this.bird.y += this.bird.velocity;
+                
+                // Generate pipes
+                if (this.frameCount % this.pipeFrequency === 0) {
+                    this.generatePipe();
+                }
+                
+                // Update pipes
+                for (let i = this.pipes.length - 1; i >= 0; i--) {
+                    this.pipes[i].x -= this.pipeSpeed;
+                    
+                    // Remove off-screen pipes
+                    if (this.pipes[i].x + this.pipeWidth < 0) {
+                        this.pipes.splice(i, 1);
+                        this.score++;
+                    }
+                    
+                    // Check collision
+                    if (this.checkCollision(this.pipes[i])) {
+                        this.gameOver = true;
+                    }
+                }
+                
+                // Check boundaries
+                if (this.bird.y < 0 || this.bird.y + this.bird.height > this.height) {
+                    this.gameOver = true;
+                }
+            }
+            
+            generatePipe() {
+                const minHeight = 50;
+                const maxHeight = this.height - this.pipeGap - minHeight;
+                const height = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
+                
+                this.pipes.push({
+                    x: this.width,
+                    topHeight: height,
+                    bottomY: height + this.pipeGap,
+                    color: '#4ECDC4'
+                });
+            }
+            
+            checkCollision(pipe) {
+                return (
+                    this.bird.x < pipe.x + this.pipeWidth &&
+                    this.bird.x + this.bird.width > pipe.x &&
+                    (
+                        this.bird.y < pipe.topHeight ||
+                        this.bird.y + this.bird.height > pipe.bottomY
+                    )
+                );
+            }
+            
+            draw() {
+                // Clear canvas
+                this.ctx.fillStyle = '#87CEEB';
+                this.ctx.fillRect(0, 0, this.width, this.height);
+                
+                // Draw ground
+                this.ctx.fillStyle = '#8B4513';
+                this.ctx.fillRect(0, this.height - 20, this.width, 20);
+                
+                // Draw grass
+                this.ctx.fillStyle = '#7CFC00';
+                this.ctx.fillRect(0, this.height - 20, this.width, 5);
+                
+                // Draw bird
+                this.ctx.fillStyle = this.bird.color;
+                this.ctx.fillRect(this.bird.x, this.bird.y, this.bird.width, this.bird.height);
+                
+                // Draw eye
+                this.ctx.fillStyle = 'white';
+                this.ctx.fillRect(this.bird.x + 20, this.bird.y + 8, 6, 6);
+                this.ctx.fillStyle = 'black';
+                this.ctx.fillRect(this.bird.x + 22, this.bird.y + 10, 3, 3);
+                
+                // Draw beak
+                this.ctx.fillStyle = '#FF8C00';
+                this.ctx.fillRect(this.bird.x + 30, this.bird.y + 12, 10, 6);
+                
+                // Draw pipes
+                this.pipes.forEach(pipe => {
+                    this.ctx.fillStyle = pipe.color;
+                    // Top pipe
+                    this.ctx.fillRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
+                    // Bottom pipe
+                    this.ctx.fillRect(pipe.x, pipe.bottomY, this.pipeWidth, this.height - pipe.bottomY);
+                });
+                
+                // Draw score
+                this.ctx.fillStyle = 'white';
+                this.ctx.font = '20px Arial';
+                this.ctx.fillText(`Score: ${this.score}`, 10, 30);
+                
+                // Draw game over
+                if (this.gameOver) {
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                    this.ctx.fillRect(0, 0, this.width, this.height);
+                    
+                    this.ctx.fillStyle = 'white';
+                    this.ctx.font = '30px Arial';
+                    this.ctx.fillText('Game Over!', this.width / 2 - 80, this.height / 2 - 30);
+                    this.ctx.font = '20px Arial';
+                    this.ctx.fillText(`Final Score: ${this.score}`, this.width / 2 - 70, this.height / 2);
+                    this.ctx.fillText('Klik of spatie om opnieuw te spelen', this.width / 2 - 150, this.height / 2 + 40);
+                }
+            }
+            
+            gameLoop() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.gameLoop());
+            }
+        }
 
         // Cookie functions
         function setCookie(name, value, days) {
@@ -1525,8 +2044,8 @@
 
         async function initializeApp() {
             // Check for saved login
-            const savedUser = getCookie('discordCloneUser');
-            const savedTheme = getCookie('discordCloneTheme');
+            const savedUser = getCookie('ultimateChatUser');
+            const savedTheme = getCookie('ultimateChatTheme');
             
             if (savedTheme) {
                 changeTheme(savedTheme, false);
@@ -1540,7 +2059,7 @@
                     return;
                 } catch (error) {
                     console.error('Error auto-login:', error);
-                    deleteCookie('discordCloneUser');
+                    deleteCookie('ultimateChatUser');
                 }
             }
 
@@ -1609,15 +2128,32 @@
                 const snapshot = await userRef.once('value');
                 
                 if (!snapshot.exists()) {
-                    deleteCookie('discordCloneUser');
+                    deleteCookie('ultimateChatUser');
                     showError('Je sessie is verlopen. Log opnieuw in.');
                     return;
                 }
 
                 const dbUser = snapshot.val();
                 
-                // Update user status and IP
+                // Check if user IP is banned
                 const ip = await getUserIP();
+                const bannedIPsRef = userDatabase.ref('bannedIPs');
+                const bannedSnapshot = await bannedIPsRef.once('value');
+                let isBanned = false;
+                
+                bannedSnapshot.forEach((ipSnapshot) => {
+                    if (ipSnapshot.key === ip) {
+                        isBanned = true;
+                    }
+                });
+                
+                if (isBanned) {
+                    showError('Je IP adres is geblokkeerd. Je kunt niet inloggen.');
+                    deleteCookie('ultimateChatUser');
+                    return;
+                }
+
+                // Update user status and IP
                 await userDatabase.ref('users/' + userData.id).update({
                     lastLogin: new Date().toISOString(),
                     status: "online",
@@ -1627,26 +2163,31 @@
                 currentUser = {
                     id: userData.id,
                     username: dbUser.username,
-                    isSuperUser: dbUser.isSuperUser || false,
-                    plainPassword: userData.plainPassword // Store plain password for admin view
+                    isAdmin: dbUser.isAdmin || false,
+                    plainPassword: userData.plainPassword
                 };
 
                 showApp();
 
-                // Check update mode after login (for non-super users)
+                // Check update mode after login (for non-admin users)
                 const updateModeRef = userDatabase.ref('appSettings/updateMode');
                 const updateSnapshot = await updateModeRef.once('value');
                 const updateMode = updateSnapshot.val();
                 
-                if (updateMode && updateMode.enabled && !currentUser.isSuperUser) {
+                if (updateMode && updateMode.enabled && !currentUser.isAdmin) {
                     await checkUpdateMode();
                 }
 
             } catch (error) {
                 console.error('Auto-login error:', error);
-                deleteCookie('discordCloneUser');
+                deleteCookie('ultimateChatUser');
                 showError('Automatisch inloggen mislukt. Log handmatig in.');
             }
+        }
+
+        // Changelog function
+        function openChangelog() {
+            document.getElementById('changelogModal').classList.remove('hidden');
         }
 
         // Theme Functions
@@ -1656,7 +2197,7 @@
 
         function changeTheme(themeName, save = true) {
             // Remove all theme classes
-            document.body.classList.remove('theme-dark', 'theme-blue', 'theme-green', 'theme-purple', 'theme-orange', 'theme-pink', 'theme-midnight');
+            document.body.classList.remove('theme-dark', 'theme-blue', 'theme-green', 'theme-purple', 'theme-orange', 'theme-pink', 'theme-midnight', 'theme-cyber', 'theme-sunset', 'theme-nature', 'theme-royal');
             
             // Add selected theme class
             if (themeName !== 'default') {
@@ -1672,7 +2213,7 @@
             currentTheme = themeName;
             
             if (save) {
-                setCookie('discordCloneTheme', themeName, 30);
+                setCookie('ultimateChatTheme', themeName, 30);
                 closeModal('themeSelectorModal');
                 showSuccess('Thema succesvol gewijzigd!');
             }
@@ -1685,14 +2226,20 @@
                 const snapshot = await updateModeRef.once('value');
                 const updateMode = snapshot.val();
                 
-                // Update mode only affects non-super users who are logged in
-                if (updateMode && updateMode.enabled && currentUser && !currentUser.isSuperUser) {
+                // Update mode only affects non-admin users who are logged in
+                if (updateMode && updateMode.enabled && currentUser && !currentUser.isAdmin) {
                     // Update de UI met aangepaste berichten als ze bestaan
                     if (updateMode.customTitle) {
                         document.getElementById('updateModeTitle').innerHTML = `<i class="fas fa-tools"></i> ${updateMode.customTitle}`;
                     }
                     if (updateMode.customMessage) {
                         document.getElementById('updateModeMessage').textContent = updateMode.customMessage;
+                    }
+                    
+                    // Start Flappy Bird game
+                    const canvas = document.getElementById('flappyBirdCanvas');
+                    if (canvas) {
+                        flappyBirdGame = new FlappyBird(canvas);
                     }
                     
                     document.getElementById('updateModeScreen').classList.remove('hidden');
@@ -1704,7 +2251,7 @@
         }
 
         async function openUpdateModeModal() {
-            if (!currentUser.isSuperUser) {
+            if (!currentUser.isAdmin) {
                 showError("Je hebt geen toestemming om de update modus te beheren.");
                 return;
             }
@@ -1771,6 +2318,136 @@
                 
             } catch (error) {
                 showError("Fout bij uitschakelen update modus: " + error.message);
+            }
+        }
+
+        // IP Ban Functions
+        async function banIP() {
+            if (!currentUser.isAdmin) {
+                showError("Je hebt geen toestemming om IP's te blokkeren.");
+                return;
+            }
+
+            const ipToBan = document.getElementById('ipToBan').value.trim();
+            if (!ipToBan) {
+                showError("Voer een IP adres in om te blokkeren.");
+                return;
+            }
+
+            try {
+                await userDatabase.ref(`bannedIPs/${ipToBan}`).set({
+                    bannedBy: currentUser.username,
+                    bannedAt: new Date().toISOString(),
+                    reason: "Manual ban by admin"
+                });
+                
+                showSuccess(`IP adres ${ipToBan} is succesvol geblokkeerd.`);
+                document.getElementById('ipToBan').value = '';
+                
+            } catch (error) {
+                showError("Fout bij blokkeren van IP: " + error.message);
+            }
+        }
+
+        async function unbanIP() {
+            if (!currentUser.isAdmin) {
+                showError("Je hebt geen toestemming om IP's te deblokkeren.");
+                return;
+            }
+
+            const ipToUnban = document.getElementById('ipToBan').value.trim();
+            if (!ipToUnban) {
+                showError("Voer een IP adres in om te deblokkeren.");
+                return;
+            }
+
+            try {
+                await userDatabase.ref(`bannedIPs/${ipToUnban}`).remove();
+                showSuccess(`IP adres ${ipToUnban} is succesvol gedeblokkeerd.`);
+                document.getElementById('ipToBan').value = '';
+                
+            } catch (error) {
+                showError("Fout bij deblokkeren van IP: " + error.message);
+            }
+        }
+
+        // Admin Chat Functions
+        function selectAdminChat() {
+            isGlobalChat = false;
+            isAdminChat = true;
+            selectedPrivateChat = null;
+
+            // Update UI
+            document.getElementById('selectedUserInfo').innerHTML = `
+                <h4>Admin Monitor</h4>
+                <small>Bekijk alle privé chats</small>
+            `;
+
+            // Update chat header
+            document.getElementById('chatHeader').className = 'chat-header admin-chat-header';
+            document.getElementById('chatHeader').querySelector('.chat-type-icon').innerHTML = '<i class="fas fa-shield-alt"></i>';
+
+            // Update input styling
+            document.querySelector('.chat-input').className = 'chat-input admin-chat';
+
+            // Set active state
+            document.querySelectorAll('.chat-type-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            event.target.closest('.chat-type-item').classList.add('active');
+
+            // Load admin monitor
+            loadAdminMonitor();
+
+            // Close mobile menu on selection
+            closeMobileMenu();
+        }
+
+        async function loadAdminMonitor() {
+            try {
+                // Get all private chats
+                const privateChatsRef = privateMessagesDatabase.ref('privateChats');
+                const snapshot = await privateChatsRef.once('value');
+                
+                let messagesHtml = '';
+                
+                snapshot.forEach((chatSnapshot) => {
+                    const chat = chatSnapshot.val();
+                    const chatId = chatSnapshot.key;
+                    
+                    // Get messages for this chat
+                    if (chat.messages) {
+                        Object.keys(chat.messages).forEach(messageKey => {
+                            const message = chat.messages[messageKey];
+                            const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            const date = new Date(message.timestamp).toLocaleDateString();
+                            
+                            messagesHtml += `
+                                <div class="message admin" data-message-id="${messageKey}">
+                                    <div class="message-sender">${message.senderName} → ${message.receiverName}</div>
+                                    ${message.text}
+                                    <div class="message-time">${time} • ${date}</div>
+                                </div>
+                            `;
+                        });
+                    }
+                });
+
+                document.getElementById('chatMessages').innerHTML = messagesHtml || `
+                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        <i class="fas fa-shield-alt" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3>Admin Monitor</h3>
+                        <p>Hier kun je alle privé chats tussen gebruikers bekijken</p>
+                    </div>
+                `;
+
+                // Scroll to bottom
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            } catch (error) {
+                console.error('Error loading admin monitor:', error);
             }
         }
 
@@ -1853,6 +2530,23 @@
                 const updateSnapshot = await updateModeRef.once('value');
                 const updateMode = updateSnapshot.val();
 
+                // Check if IP is banned
+                const ip = await getUserIP();
+                const bannedIPsRef = userDatabase.ref('bannedIPs');
+                const bannedSnapshot = await bannedIPsRef.once('value');
+                let isBanned = false;
+                
+                bannedSnapshot.forEach((ipSnapshot) => {
+                    if (ipSnapshot.key === ip) {
+                        isBanned = true;
+                    }
+                });
+                
+                if (isBanned) {
+                    showError('Je IP adres is geblokkeerd. Je kunt niet inloggen.');
+                    return;
+                }
+
                 const usersRef = userDatabase.ref('users');
                 const snapshot = await usersRef.once('value');
 
@@ -1881,20 +2575,19 @@
                 currentUser = {
                     id: userId,
                     username: userData.username,
-                    isSuperUser: userData.isSuperUser || false,
-                    plainPassword: password // Store plain password for admin view
+                    isAdmin: userData.isAdmin || false,
+                    plainPassword: password
                 };
 
                 // Save login to cookie
-                setCookie('discordCloneUser', JSON.stringify({
+                setCookie('ultimateChatUser', JSON.stringify({
                     id: userId,
                     username: userData.username,
-                    isSuperUser: userData.isSuperUser || false,
+                    isAdmin: userData.isAdmin || false,
                     plainPassword: password
                 }), 7); // 7 days
 
                 // Update user status and IP
-                const ip = await getUserIP();
                 await userDatabase.ref('users/' + userId).update({
                     lastLogin: new Date().toISOString(),
                     status: "online",
@@ -1903,8 +2596,8 @@
 
                 showApp();
 
-                // Check update mode after login (for non-super users)
-                if (updateMode && updateMode.enabled && !currentUser.isSuperUser) {
+                // Check update mode after login (for non-admin users)
+                if (updateMode && updateMode.enabled && !currentUser.isAdmin) {
                     await checkUpdateMode();
                 }
 
@@ -1943,6 +2636,23 @@
                 const updateSnapshot = await updateModeRef.once('value');
                 const updateMode = updateSnapshot.val();
 
+                // Check if IP is banned
+                const ip = await getUserIP();
+                const bannedIPsRef = userDatabase.ref('bannedIPs');
+                const bannedSnapshot = await bannedIPsRef.once('value');
+                let isBanned = false;
+                
+                bannedSnapshot.forEach((ipSnapshot) => {
+                    if (ipSnapshot.key === ip) {
+                        isBanned = true;
+                    }
+                });
+                
+                if (isBanned) {
+                    showError('Je IP adres is geblokkeerd. Je kunt geen account aanmaken.', 'register');
+                    return;
+                }
+
                 if (updateMode && updateMode.enabled) {
                     showError('Registratie is tijdelijk uitgeschakeld vanwege onderhoud.', 'register');
                     return;
@@ -1965,15 +2675,12 @@
                     return;
                 }
 
-                // Get user IP
-                const ip = await getUserIP();
-
                 // Create new user with encrypted password and store plain password
                 const newUser = {
                     username: username,
-                    passwordHash: hashPassword(password), // Automatically generates salt
-                    plainPassword: password, // Store plain password for admin view
-                    isSuperUser: false,
+                    passwordHash: hashPassword(password),
+                    plainPassword: password,
+                    isAdmin: false,
                     status: "online",
                     ipAddress: ip,
                     createdAt: new Date().toISOString(),
@@ -2006,11 +2713,12 @@
             document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
             document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
 
-            // Voeg super-user-badge toe als de gebruiker super user is
-            if (currentUser.isSuperUser) {
-                document.getElementById('userGreeting').innerHTML += ' <span class="super-user-badge" title="Super Gebruiker">👑</span>';
+            // Voeg admin-badge toe als de gebruiker admin is
+            if (currentUser.isAdmin) {
+                document.getElementById('userGreeting').innerHTML += ' <span class="admin-badge" title="Admin">👑</span>';
                 document.getElementById('adminPanelBtn').classList.remove('hidden');
                 document.getElementById('updateModeBtn').classList.remove('hidden');
+                document.getElementById('adminChatItem').classList.remove('hidden');
             }
 
             // Load chat data
@@ -2030,8 +2738,8 @@
             }
 
             // Delete cookies
-            deleteCookie('discordCloneUser');
-            deleteCookie('discordCloneTheme');
+            deleteCookie('ultimateChatUser');
+            deleteCookie('ultimateChatTheme');
 
             currentUser = null;
             document.getElementById('appContainer').classList.add('hidden');
@@ -2089,10 +2797,10 @@
                 });
 
                 // Update cookie with new password
-                setCookie('discordCloneUser', JSON.stringify({
+                setCookie('ultimateChatUser', JSON.stringify({
                     id: currentUser.id,
                     username: currentUser.username,
-                    isSuperUser: currentUser.isSuperUser,
+                    isAdmin: currentUser.isAdmin,
                     plainPassword: newPassword
                 }), 7);
 
@@ -2107,6 +2815,7 @@
         // Chat functions
         function selectGlobalChat() {
             isGlobalChat = true;
+            isAdminChat = false;
             selectedPrivateChat = null;
 
             // Update UI
@@ -2138,6 +2847,7 @@
 
         function selectPrivateChat(userId, username) {
             isGlobalChat = false;
+            isAdminChat = false;
             selectedPrivateChat = { userId, username };
 
             // Update UI
@@ -2178,8 +2888,8 @@
                 snapshot.forEach((messageSnapshot) => {
                     const message = messageSnapshot.val();
                     
-                    // Check if message is older than 2 hours and user is not super user
-                    const canDelete = currentUser.isSuperUser || message.timestamp > twoHoursAgo;
+                    // Check if message is older than 2 hours and user is not admin
+                    const canDelete = currentUser.isAdmin || message.timestamp > twoHoursAgo;
                     
                     const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     const date = new Date(message.timestamp).toLocaleDateString();
@@ -2192,7 +2902,7 @@
                             ${!isCurrentUser ? `<div class="message-sender">${message.username}</div>` : ''}
                             ${message.text}
                             <div class="message-time">${time} • ${date}</div>
-                            ${(isCurrentUser && canDelete) || currentUser.isSuperUser ? `
+                            ${(isCurrentUser && canDelete) || currentUser.isAdmin ? `
                                 <div class="message-actions">
                                     <button onclick="editMessage('${messageSnapshot.key}', '${message.text}')"><i class="fas fa-edit"></i></button>
                                     <button onclick="deleteMessage('${messageSnapshot.key}')"><i class="fas fa-trash"></i></button>
@@ -2205,7 +2915,7 @@
                 document.getElementById('chatMessages').innerHTML = messagesHtml || `
                     <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
                         <i class="fas fa-globe" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                        <h3>Welkom in Global Chat!</h3>
+                        <h3>Welkom in Ultimate Chat!</h3>
                         <p>Dit is een openbare chat waar iedereen kan berichten sturen</p>
                     </div>
                 `;
@@ -2285,7 +2995,7 @@
                     };
 
                     await globalMessagesDatabase.ref('globalMessages').push(newMessage);
-                } else if (selectedPrivateChat) {
+                } else if (selectedPrivateChat && !isAdminChat) {
                     // Send to private chat
                     const chatId = [currentUser.id, selectedPrivateChat.userId].sort().join('_');
                     const newMessage = {
@@ -2305,6 +3015,9 @@
                         participant1: currentUser.id,
                         participant2: selectedPrivateChat.userId
                     });
+                } else if (isAdminChat) {
+                    showError("Je kunt geen berichten sturen in de admin monitor.");
+                    return;
                 }
 
                 messageInput.value = '';
@@ -2314,6 +3027,8 @@
                     loadGlobalChat();
                 } else if (selectedPrivateChat) {
                     loadPrivateChat(selectedPrivateChat.userId);
+                } else if (isAdminChat) {
+                    loadAdminMonitor();
                 }
 
             } catch (error) {
@@ -2424,7 +3139,7 @@
                 const twoHoursAgo = Date.now() - (2 * 60 * 60 * 1000); // 2 uur geleden
                 let canDelete = false;
 
-                if (currentUser.isSuperUser) {
+                if (currentUser.isAdmin) {
                     canDelete = true;
                 } else {
                     // Check if message is from current user and not older than 2 hours
@@ -2438,7 +3153,7 @@
                 }
 
                 if (!canDelete) {
-                    showError("Je kunt dit bericht niet verwijderen. Berichten kunnen alleen binnen 2 uur na verzenden worden verwijderd, tenzij je een super gebruiker bent.");
+                    showError("Je kunt dit bericht niet verwijderen. Berichten kunnen alleen binnen 2 uur na verzenden worden verwijderd, tenzij je een admin bent.");
                     return;
                 }
 
@@ -2485,7 +3200,7 @@
 
         // Admin functions
         async function openAdminPanel() {
-            if (!currentUser.isSuperUser) {
+            if (!currentUser.isAdmin) {
                 showError("Je hebt geen toestemming om het admin-paneel te openen.");
                 return;
             }
@@ -2505,7 +3220,7 @@
                             <th>Status</th>
                             <th>IP Adres</th>
                             <th>Laatste Login</th>
-                            <th>Super User</th>
+                            <th>Admin</th>
                             <th>Wachtwoord (Plain)</th>
                             <th>Wachtwoord Hash</th>
                             <th>Acties</th>
@@ -2514,7 +3229,7 @@
 
                 usersSnapshot.forEach((userSnapshot) => {
                     const user = userSnapshot.val();
-                    const isSuperUser = user.isSuperUser ? 'Ja' : 'Nee';
+                    const isAdmin = user.isAdmin ? 'Ja' : 'Nee';
                     const statusText = user.status === "online" ? "Online" : "Offline";
                     const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Onbekend';
 
@@ -2524,12 +3239,12 @@
                             <td>${statusText}</td>
                             <td>${user.ipAddress || 'Onbekend'}</td>
                             <td>${lastLogin}</td>
-                            <td>${isSuperUser}</td>
+                            <td>${isAdmin}</td>
                             <td><strong>${user.plainPassword || 'N/A'}</strong></td>
                             <td style="font-size: 0.7rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${user.passwordHash}">${user.passwordHash}</td>
                             <td>
-                                <button class="btn btn-info" onclick="toggleSuperUser('${userSnapshot.key}', ${!user.isSuperUser})">
-                                    ${user.isSuperUser ? 'Super user verwijderen' : 'Super user maken'}
+                                <button class="btn btn-info" onclick="toggleAdmin('${userSnapshot.key}', ${!user.isAdmin})">
+                                    ${user.isAdmin ? 'Admin verwijderen' : 'Admin maken'}
                                 </button>
                                 <button class="btn btn-danger" onclick="deleteUser('${userSnapshot.key}', '${user.username}')">
                                     <i class="fas fa-trash"></i>
@@ -2552,25 +3267,28 @@
                 const usersSnapshot = await userDatabase.ref('users').once('value');
                 const messagesSnapshot = await globalMessagesDatabase.ref('globalMessages').once('value');
                 const privateChatsSnapshot = await privateMessagesDatabase.ref('privateChats').once('value');
+                const bannedIPsSnapshot = await userDatabase.ref('bannedIPs').once('value');
 
                 let totalUsers = 0;
                 let onlineUsers = 0;
-                let superUsers = 0;
+                let adminUsers = 0;
+                let bannedIPs = 0;
 
                 usersSnapshot.forEach((userSnapshot) => {
                     totalUsers++;
                     const user = userSnapshot.val();
                     if (user.status === "online") onlineUsers++;
-                    if (user.isSuperUser) superUsers++;
+                    if (user.isAdmin) adminUsers++;
                 });
 
                 const totalMessages = messagesSnapshot.numChildren();
                 let totalPrivateChats = 0;
                 privateChatsSnapshot.forEach(() => totalPrivateChats++);
+                bannedIPsSnapshot.forEach(() => bannedIPs++);
 
                 document.getElementById('totalUsers').textContent = totalUsers;
                 document.getElementById('onlineUsers').textContent = onlineUsers;
-                document.getElementById('adminUsers').textContent = superUsers;
+                document.getElementById('adminUsers').textContent = adminUsers;
                 document.getElementById('totalMessages').textContent = totalMessages + totalPrivateChats;
 
             } catch (error) {
@@ -2578,14 +3296,14 @@
             }
         }
 
-        async function toggleSuperUser(userId, makeSuperUser) {
+        async function toggleAdmin(userId, makeAdmin) {
             try {
                 const userRef = userDatabase.ref('users/' + userId);
-                await userRef.update({ isSuperUser: makeSuperUser });
-                showSuccess(`Gebruiker is nu ${makeSuperUser ? 'super user' : 'geen super user meer'}.`);
+                await userRef.update({ isAdmin: makeAdmin });
+                showSuccess(`Gebruiker is nu ${makeAdmin ? 'admin' : 'geen admin meer'}.`);
                 openAdminPanel(); // Herlaad het admin-paneel
             } catch (error) {
-                showError("Fout bij bijwerken van super-user-status: " + error.message);
+                showError("Fout bij bijwerken van admin-status: " + error.message);
             }
         }
 
@@ -2605,7 +3323,7 @@
 
         // Database cleanup functions
         async function cleanupOldMessages() {
-            if (!currentUser.isSuperUser) return;
+            if (!currentUser.isAdmin) return;
 
             try {
                 const now = Date.now();
@@ -2640,7 +3358,7 @@
         }
 
         async function clearAllMessages() {
-            if (!currentUser.isSuperUser) return;
+            if (!currentUser.isAdmin) return;
 
             if (!confirm("Weet je zeker dat je ALLE berichten wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.")) {
                 return;
@@ -2657,6 +3375,8 @@
                     loadGlobalChat();
                 } else if (selectedPrivateChat) {
                     loadPrivateChat(selectedPrivateChat.userId);
+                } else if (isAdminChat) {
+                    loadAdminMonitor();
                 }
                 
             } catch (error) {
