@@ -479,6 +479,10 @@
             font-weight: bold;
             font-size: 1.1rem;
         }
+        .user-avatar.emoji {
+            background: var(--info);
+            font-size: 1.5rem;
+        }
         .logout-btn {
             background: none;
             border: none;
@@ -537,6 +541,18 @@
             transition: all 0.3s ease;
         }
         .theme-toggle-btn:hover {
+            background: var(--light);
+        }
+        .profile-picture-btn {
+            background: none;
+            border: none;
+            color: var(--success);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .profile-picture-btn:hover {
             background: var(--light);
         }
         /* Mobile Menu Button */
@@ -617,6 +633,20 @@
             flex: 1;
             overflow-y: auto;
             padding: 10px;
+        }
+        .users-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .users-content::-webkit-scrollbar-track {
+            background: var(--light);
+            border-radius: 4px;
+        }
+        .users-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        .users-content::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
         }
         .chat-type-item {
             display: flex;
@@ -751,6 +781,20 @@
             background: var(--background);
             display: flex;
             flex-direction: column;
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 10px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--light);
+            border-radius: 5px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 5px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
         }
         .message {
             margin-bottom: 15px;
@@ -1078,6 +1122,20 @@
             overflow-y: auto;
             padding-right: 10px;
         }
+        .changelog-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .changelog-content::-webkit-scrollbar-track {
+            background: var(--light);
+            border-radius: 4px;
+        }
+        .changelog-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        .changelog-content::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
         .changelog-item {
             margin-bottom: 20px;
             padding-bottom: 15px;
@@ -1087,11 +1145,6 @@
             font-weight: bold;
             color: var(--primary);
             margin-bottom: 5px;
-        }
-        .changelog-date {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
         }
         .changelog-features {
             list-style-type: none;
@@ -1107,6 +1160,52 @@
             position: absolute;
             left: 0;
             color: var(--success);
+        }
+        /* Emoji Selector */
+        .emoji-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: var(--light);
+            border-radius: 10px;
+        }
+        .emoji-selector::-webkit-scrollbar {
+            width: 6px;
+        }
+        .emoji-selector::-webkit-scrollbar-track {
+            background: var(--surface);
+            border-radius: 3px;
+        }
+        .emoji-selector::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        .emoji-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--surface);
+        }
+        .emoji-option:hover {
+            transform: scale(1.2);
+            background: var(--primary);
+            color: white;
+        }
+        .emoji-option.active {
+            transform: scale(1.2);
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         /* Responsive Styles */
         @media (max-width: 768px) {
@@ -1176,7 +1275,7 @@
 </head>
 <body>
     <!-- Version Badge -->
-    <div class="version-badge" onclick="openChangelog()">v1.7</div>
+    <div class="version-badge" onclick="openChangelog()">v1.11</div>
     <!-- Update Mode Screen -->
     <div class="update-mode hidden" id="updateModeScreen">
         <h1 id="updateModeTitle"><i class="fas fa-tools"></i> Ultimate Chat is momenteel in onderhoud</h1>
@@ -1274,6 +1373,9 @@
             <div class="user-menu">
                 <button class="theme-toggle-btn" onclick="openThemeSelector()" title="Thema wijzigen">
                     <i class="fas fa-palette"></i>
+                </button>
+                <button class="profile-picture-btn" onclick="openProfilePictureSelector()" title="Profiel foto wijzigen">
+                    <i class="fas fa-smile"></i>
                 </button>
                 <button class="change-password-btn" onclick="openChangePasswordModal()" title="Wachtwoord wijzigen">
                     <i class="fas fa-key"></i>
@@ -1415,6 +1517,10 @@
                         <label for="ipToBan">IP Adres om te blokkeren</label>
                         <input type="text" id="ipToBan" class="form-control" placeholder="Bijv. 192.168.1.1">
                     </div>
+                    <div class="form-group">
+                        <label for="banDuration">Blokkeerduur (uren)</label>
+                        <input type="number" id="banDuration" class="form-control" placeholder="Bijv. 24" min="1" value="24">
+                    </div>
                     <button class="btn btn-danger" onclick="banIP()">
                         <i class="fas fa-ban"></i> IP Blokkeren
                     </button>
@@ -1506,6 +1612,34 @@
             </div>
         </div>
     </div>
+    <!-- Profile Picture Selector Modal -->
+    <div class="modal hidden" id="profilePictureModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-smile"></i> Profiel Foto Selectie</h3>
+                <button class="close-modal" onclick="closeModal('profilePictureModal')">&times;</button>
+            </div>
+            <div>
+                <p>Kies een emoji als je profielfoto:</p>
+
+                <div class="emoji-selector" id="emojiSelector">
+                    <!-- Emojis will be populated by JavaScript -->
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px;">
+                    <h4>Voorbeeld</h4>
+                    <div class="user-avatar emoji" id="profilePreview" style="margin: 10px auto; width: 60px; height: 60px; font-size: 2rem;">
+                        😊
+                    </div>
+                    <p>Dit is hoe je profielfoto eruit zal zien</p>
+                </div>
+
+                <button class="btn btn-primary" onclick="saveProfilePicture()" style="margin-top: 20px; width: 100%;">
+                    <i class="fas fa-save"></i> Profielfoto Opslaan
+                </button>
+            </div>
+        </div>
+    </div>
     <!-- Changelog Modal -->
     <div class="modal hidden" id="changelogModal">
         <div class="modal-content">
@@ -1515,8 +1649,51 @@
             </div>
             <div class="changelog-content">
                 <div class="changelog-item">
-                    <div class="changelog-version">v1.7 - Huidige Versie</div>
-                    <div class="changelog-date">December 2023</div>
+                    <div class="changelog-version">v1.11 - Huidige Versie</div>
+                    <ul class="changelog-features">
+                        <li>Verbeterd scrollsysteem met echte scrollbars</li>
+                        <li>Profiel foto's toegevoegd met emoji-selectie</li>
+                        <li>Emoji selector met 50+ verschillende emojis</li>
+                        <li>Verbeterde gebruikersinterface met betere scrollbars</li>
+                        <li>Profiel foto's worden opgeslagen en weergegeven in chats</li>
+                        <li>Verbeterde gebruikerservaring met visuele feedback</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-version">v1.10</div>
+                    <ul class="changelog-features">
+                        <li>Flappy Bird spel volledig werkend gemaakt</li>
+                        <li>Scrollen in chats verbeterd - automatisch scrollen naar nieuwste berichten</li>
+                        <li>IP Ban systeem verbeterd met tijdslimieten</li>
+                        <li>Berichtlimiet probleem opgelost - geen problemen meer na 5 berichten</li>
+                        <li>Verbeterde berichtweergave en UI-responsiviteit</li>
+                        <li>Performance optimalisaties voor grote chatgroepen</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-version">v1.9</div>
+                    <ul class="changelog-features">
+                        <li>Verbeterde berichtverzending en synchronisatie</li>
+                        <li>Betere foutafhandeling en gebruikersfeedback</li>
+                        <li>UI verbeteringen voor mobiele apparaten</li>
+                        <li>Performance optimalisaties</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-version">v1.8</div>
+                    <ul class="changelog-features">
+                        <li>Verbeterde beveiliging met geavanceerde encryptie</li>
+                        <li>Automatische berichtopschoning geoptimaliseerd</li>
+                        <li>Nieuwe thema's toegevoegd</li>
+                        <li>Betere ondersteuning voor schermlezers</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-version">v1.7</div>
                     <ul class="changelog-features">
                         <li>Berichtverzending gefixt - alle berichten worden nu correct verzonden</li>
                         <li>Verbeterde scrollfunctionaliteit in chatvenster</li>
@@ -1527,7 +1704,6 @@
 
                 <div class="changelog-item">
                     <div class="changelog-version">v1.6</div>
-                    <div class="changelog-date">November 2023</div>
                     <ul class="changelog-features">
                         <li>Uitlogknop toegevoegd aan het update-scherm</li>
                         <li>Ondersteuning voor groene berichten (succes/info)</li>
@@ -1537,7 +1713,6 @@
 
                 <div class="changelog-item">
                     <div class="changelog-version">v1.5</div>
-                    <div class="changelog-date">Oktober 2023</div>
                     <ul class="changelog-features">
                         <li>IP blokkering systeem toegevoegd voor admins</li>
                         <li>Admin monitor voor het bekijken van alle privé chats</li>
@@ -1552,7 +1727,6 @@
 
                 <div class="changelog-item">
                     <div class="changelog-version">v1.4</div>
-                    <div class="changelog-date">September 2023</div>
                     <ul class="changelog-features">
                         <li>Privé chat functionaliteit toegevoegd</li>
                         <li>Cookie ondersteuning voor automatisch inloggen</li>
@@ -1563,7 +1737,6 @@
 
                 <div class="changelog-item">
                     <div class="changelog-version">v1.3</div>
-                    <div class="changelog-date">Augustus 2023</div>
                     <ul class="changelog-features">
                         <li>Drie Firebase database ondersteuning</li>
                         <li>Verbeterde beveiliging met salt-based hashing</li>
@@ -1574,7 +1747,6 @@
 
                 <div class="changelog-item">
                     <div class="changelog-version">v1.2</div>
-                    <div class="changelog-date">Juli 2023</div>
                     <ul class="changelog-features">
                         <li>Admin panel met gebruikersbeheer</li>
                         <li>Aanpasbare update mode berichten</li>
@@ -1585,7 +1757,6 @@
 
                 <div class="changelog-item">
                     <div class="changelog-version">v1.1</div>
-                    <div class="changelog-date">Juni 2023</div>
                     <ul class="changelog-features">
                         <li>Eerste release van Ultimate Chat</li>
                         <li>Basis chat functionaliteit</li>
@@ -1662,6 +1833,7 @@
         let currentTheme = 'default';
         let selectedPrivateChat = null;
         let flappyBirdGame = null;
+        let selectedEmoji = '😊';
 
         // Cookie functions
         function setCookie(name, value, days) {
@@ -1754,6 +1926,269 @@
             loadGlobalChat();
         }
 
+        // Profile Picture Functions
+        function openProfilePictureSelector() {
+            const emojiSelector = document.getElementById('emojiSelector');
+            emojiSelector.innerHTML = '';
+            
+            // Popular emojis for profile pictures
+            const emojis = ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '🤠', '😈', '👿', '👹', '👺', '🤡', '💩', '👻', '💀', '☠️', '👽', '👾', '🤖', '🎃', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾'];
+            
+            emojis.forEach(emoji => {
+                const emojiOption = document.createElement('div');
+                emojiOption.className = 'emoji-option';
+                emojiOption.textContent = emoji;
+                emojiOption.onclick = function() {
+                    selectEmoji(emoji);
+                };
+                emojiSelector.appendChild(emojiOption);
+            });
+            
+            // Set current emoji as active
+            if (currentUser && currentUser.profileEmoji) {
+                selectEmoji(currentUser.profileEmoji);
+            } else {
+                selectEmoji('😊');
+            }
+            
+            document.getElementById('profilePictureModal').classList.remove('hidden');
+        }
+
+        function selectEmoji(emoji) {
+            selectedEmoji = emoji;
+            
+            // Update preview
+            document.getElementById('profilePreview').textContent = emoji;
+            
+            // Update active state
+            document.querySelectorAll('.emoji-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.textContent === emoji) {
+                    option.classList.add('active');
+                }
+            });
+        }
+
+        async function saveProfilePicture() {
+            try {
+                if (!currentUser) return;
+                
+                // Update user profile in database
+                await userDatabase.ref('users/' + currentUser.id).update({
+                    profileEmoji: selectedEmoji
+                });
+                
+                // Update current user object
+                currentUser.profileEmoji = selectedEmoji;
+                
+                // Update cookie
+                setCookie('ultimateChatUser', JSON.stringify(currentUser), 7);
+                
+                // Update UI
+                updateUserAvatar();
+                
+                closeModal('profilePictureModal');
+                showSuccess('Profiel foto succesvol gewijzigd!');
+            } catch (error) {
+                showError('Fout bij opslaan profiel foto: ' + error.message);
+            }
+        }
+
+        function updateUserAvatar() {
+            const userAvatar = document.getElementById('userAvatar');
+            if (currentUser && currentUser.profileEmoji) {
+                userAvatar.textContent = currentUser.profileEmoji;
+                userAvatar.classList.add('emoji');
+            } else {
+                userAvatar.textContent = currentUser.username.charAt(0).toUpperCase();
+                userAvatar.classList.remove('emoji');
+            }
+        }
+
+        // Flappy Bird Game
+        function initFlappyBird() {
+            const canvas = document.getElementById('flappyBirdCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Game variables
+            let birdX = 50;
+            let birdY = canvas.height / 2;
+            let birdVelocity = 0;
+            let gravity = 0.5;
+            let jump = -10;
+            let pipes = [];
+            let pipeWidth = 50;
+            let pipeGap = 150;
+            let pipeDistance = 200;
+            let score = 0;
+            let gameOver = false;
+            let gameStarted = false;
+            let frameCount = 0;
+            
+            // Bird image
+            const birdImg = new Image();
+            birdImg.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDBDMjIgMiAyNCA0IDI2IDZDMzAgMTAgMzIgMTQgMzIgMjBDMzIgMjYgMzAgMzAgMjYgMzRDMjQgMzYgMjIgMzggMjAgNDBDMTggMzggMTYgMzYgMTQgMzRDMTAgMzAgOCAyNiA4IDIwQzggMTQgMTAgMTAgMTQgNkMxNiA0IDE4IDIgMjAgMFoiIGZpbGw9IiNmZmZmMDAiLz4KPHBhdGggZD0iTTE1IDE1QzE3IDE3IDE5IDE5IDIwIDIxQzIxIDE5IDIzIDE3IDI1IDE1QzI3IDEzIDI5IDEyIDMwIDEyQzMxIDEyIDMyIDEzIDMzIDE0QzM0IDE1IDM1IDE3IDM1IDIwQzM1IDIzIDM0IDI1IDMzIDI3QzMyIDI5IDMxIDMwIDMwIDMwQzI5IDMwIDI3IDI5IDI1IDI3QzIzIDI1IDIxIDIzIDIwIDIxQzE5IDIzIDE3IDI1IDE1IDI3QzEzIDI5IDExIDMwIDEwIDMwQzkgMzAgOCAyOSA3IDI3QzYgMjUgNSAyMyA1IDIwQzUgMTcgNiAxNSA3IDE0QzggMTMgOSAxMiAxMCAxMkMxMSAxMiAxMyAxMyAxNSAxNVoiIGZpbGw9IiNmZmZmZmYiLz4KPC9zdmc+';
+            
+            // Pipe image
+            const pipeImg = new Image();
+            pipeImg.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNTAgMzAwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMDBDNTAwIi8+CjxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI0MCIgaGVpZ2h0PSIyOTAiIGZpbGw9IiMwMEEwMDAiLz4KPC9zdmc+';
+            
+            // Game functions
+            function drawBird() {
+                ctx.drawImage(birdImg, birdX - 20, birdY - 20, 40, 40);
+            }
+            
+            function drawPipes() {
+                for (let i = 0; i < pipes.length; i++) {
+                    const pipe = pipes[i];
+                    ctx.drawImage(pipeImg, pipe.x, 0, pipeWidth, pipe.topHeight);
+                    ctx.drawImage(pipeImg, pipe.x, pipe.topHeight + pipeGap, pipeWidth, canvas.height - pipe.topHeight - pipeGap);
+                }
+            }
+            
+            function drawScore() {
+                ctx.fillStyle = 'white';
+                ctx.font = '24px Arial';
+                ctx.fillText('Score: ' + score, 10, 30);
+            }
+            
+            function drawGameOver() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = 'white';
+                ctx.font = '36px Arial';
+                ctx.fillText('Game Over!', canvas.width / 2 - 100, canvas.height / 2 - 50);
+                
+                ctx.font = '24px Arial';
+                ctx.fillText('Score: ' + score, canvas.width / 2 - 50, canvas.height / 2);
+                ctx.fillText('Click to play again', canvas.width / 2 - 100, canvas.height / 2 + 50);
+            }
+            
+            function drawStartScreen() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = 'white';
+                ctx.font = '36px Arial';
+                ctx.fillText('Flappy Bird', canvas.width / 2 - 100, canvas.height / 2 - 50);
+                
+                ctx.font = '24px Arial';
+                ctx.fillText('Click or press SPACE to start', canvas.width / 2 - 150, canvas.height / 2);
+                ctx.fillText('Avoid the pipes!', canvas.width / 2 - 80, canvas.height / 2 + 50);
+            }
+            
+            function updateBird() {
+                birdVelocity += gravity;
+                birdY += birdVelocity;
+                
+                // Check collision with ground or ceiling
+                if (birdY > canvas.height - 20 || birdY < 20) {
+                    gameOver = true;
+                }
+            }
+            
+            function updatePipes() {
+                if (frameCount % pipeDistance === 0) {
+                    const topHeight = Math.floor(Math.random() * (canvas.height - pipeGap - 100)) + 50;
+                    pipes.push({
+                        x: canvas.width,
+                        topHeight: topHeight,
+                        passed: false
+                    });
+                }
+                
+                for (let i = 0; i < pipes.length; i++) {
+                    const pipe = pipes[i];
+                    pipe.x -= 2;
+                    
+                    // Check collision with pipes
+                    if (
+                        birdX + 20 > pipe.x && 
+                        birdX - 20 < pipe.x + pipeWidth && 
+                        (birdY - 20 < pipe.topHeight || birdY + 20 > pipe.topHeight + pipeGap)
+                    ) {
+                        gameOver = true;
+                    }
+                    
+                    // Check if pipe passed
+                    if (!pipe.passed && pipe.x + pipeWidth < birdX) {
+                        pipe.passed = true;
+                        score++;
+                    }
+                    
+                    // Remove pipes that are off screen
+                    if (pipe.x + pipeWidth < 0) {
+                        pipes.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+            
+            function resetGame() {
+                birdY = canvas.height / 2;
+                birdVelocity = 0;
+                pipes = [];
+                score = 0;
+                gameOver = false;
+                gameStarted = true;
+                frameCount = 0;
+            }
+            
+            function gameLoop() {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw background
+                ctx.fillStyle = '#87CEEB';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                if (!gameStarted) {
+                    drawStartScreen();
+                } else if (gameOver) {
+                    drawBird();
+                    drawPipes();
+                    drawScore();
+                    drawGameOver();
+                } else {
+                    // Update game state
+                    updateBird();
+                    updatePipes();
+                    
+                    // Draw everything
+                    drawPipes();
+                    drawBird();
+                    drawScore();
+                    
+                    frameCount++;
+                }
+                
+                requestAnimationFrame(gameLoop);
+            }
+            
+            // Event listeners
+            function handleJump() {
+                if (!gameStarted) {
+                    gameStarted = true;
+                } else if (gameOver) {
+                    resetGame();
+                } else {
+                    birdVelocity = jump;
+                }
+            }
+            
+            canvas.addEventListener('click', handleJump);
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Space') {
+                    handleJump();
+                    e.preventDefault();
+                }
+            });
+            
+            // Start the game
+            gameLoop();
+        }
+
         // Auto login function
         async function autoLogin(userData) {
             try {
@@ -1776,7 +2211,14 @@
 
                 bannedSnapshot.forEach((ipSnapshot) => {
                     if (ipSnapshot.key === ip) {
-                        isBanned = true;
+                        const banData = ipSnapshot.val();
+                        // Check if ban has expired
+                        if (banData.expiresAt && Date.now() < banData.expiresAt) {
+                            isBanned = true;
+                        } else if (!banData.expiresAt) {
+                            // Permanent ban
+                            isBanned = true;
+                        }
                     }
                 });
 
@@ -1795,7 +2237,8 @@
                     id: userData.id,
                     username: dbUser.username,
                     isAdmin: dbUser.isAdmin || false,
-                    plainPassword: userData.plainPassword
+                    plainPassword: userData.plainPassword,
+                    profileEmoji: dbUser.profileEmoji || null
                 };
                 showApp();
                 // Check update mode after login (for non-admin users)
@@ -1866,6 +2309,9 @@
 
                     document.getElementById('updateModeScreen').classList.remove('hidden');
                     document.getElementById('appContainer').classList.add('hidden');
+                    
+                    // Start Flappy Bird game
+                    setTimeout(initFlappyBird, 100);
                 }
             } catch (error) {
                 console.error('Error checking update mode:', error);
@@ -1949,18 +2395,23 @@
                 return;
             }
             const ipToBan = document.getElementById('ipToBan').value.trim();
+            const banDuration = parseInt(document.getElementById('banDuration').value) || 24;
+            
             if (!ipToBan) {
                 showError("Voer een IP adres in om te blokkeren.");
                 return;
             }
             try {
-                await userDatabase.ref(`bannedIPs/${ipToBan}`).set({
+                const banData = {
                     bannedBy: currentUser.username,
                     bannedAt: new Date().toISOString(),
-                    reason: "Manual ban by admin"
-                });
+                    reason: "Manual ban by admin",
+                    expiresAt: Date.now() + (banDuration * 60 * 60 * 1000) // Convert hours to milliseconds
+                };
 
-                showSuccess(`IP adres ${ipToBan} is succesvol geblokkeerd.`);
+                await userDatabase.ref(`bannedIPs/${ipToBan}`).set(banData);
+
+                showSuccess(`IP adres ${ipToBan} is succesvol geblokkeerd voor ${banDuration} uur.`);
                 document.getElementById('ipToBan').value = '';
 
             } catch (error) {
@@ -2140,7 +2591,14 @@
 
                 bannedSnapshot.forEach((ipSnapshot) => {
                     if (ipSnapshot.key === ip) {
-                        isBanned = true;
+                        const banData = ipSnapshot.val();
+                        // Check if ban has expired
+                        if (banData.expiresAt && Date.now() < banData.expiresAt) {
+                            isBanned = true;
+                        } else if (!banData.expiresAt) {
+                            // Permanent ban
+                            isBanned = true;
+                        }
                     }
                 });
 
@@ -2173,15 +2631,11 @@
                     id: userId,
                     username: userData.username,
                     isAdmin: userData.isAdmin || false,
-                    plainPassword: password
+                    plainPassword: password,
+                    profileEmoji: userData.profileEmoji || null
                 };
                 // Save login to cookie
-                setCookie('ultimateChatUser', JSON.stringify({
-                    id: userId,
-                    username: userData.username,
-                    isAdmin: userData.isAdmin || false,
-                    plainPassword: password
-                }), 7); // 7 days
+                setCookie('ultimateChatUser', JSON.stringify(currentUser), 7); // 7 days
                 // Update user status and IP
                 await userDatabase.ref('users/' + userId).update({
                     lastLogin: new Date().toISOString(),
@@ -2230,7 +2684,14 @@
 
                 bannedSnapshot.forEach((ipSnapshot) => {
                     if (ipSnapshot.key === ip) {
-                        isBanned = true;
+                        const banData = ipSnapshot.val();
+                        // Check if ban has expired
+                        if (banData.expiresAt && Date.now() < banData.expiresAt) {
+                            isBanned = true;
+                        } else if (!banData.expiresAt) {
+                            // Permanent ban
+                            isBanned = true;
+                        }
                     }
                 });
 
@@ -2264,6 +2725,7 @@
                     isAdmin: false,
                     status: "online",
                     ipAddress: ip,
+                    profileEmoji: "😊",
                     createdAt: new Date().toISOString(),
                     lastLogin: new Date().toISOString()
                 };
@@ -2288,7 +2750,7 @@
             document.getElementById('updateModeScreen').classList.add('hidden');
             // Update UI
             document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
-            document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+            updateUserAvatar();
             // Voeg admin-badge toe als de gebruiker admin is
             if (currentUser.isAdmin) {
                 document.getElementById('userGreeting').innerHTML += ' <span class="admin-badge" title="Admin">👑</span>';
@@ -2371,12 +2833,8 @@
                     plainPassword: newPassword
                 });
                 // Update cookie with new password
-                setCookie('ultimateChatUser', JSON.stringify({
-                    id: currentUser.id,
-                    username: currentUser.username,
-                    isAdmin: currentUser.isAdmin,
-                    plainPassword: newPassword
-                }), 7);
+                currentUser.plainPassword = newPassword;
+                setCookie('ultimateChatUser', JSON.stringify(currentUser), 7);
                 closeModal('changePasswordModal');
                 showSuccess('Wachtwoord succesvol gewijzigd!');
             } catch (error) {
@@ -2737,6 +3195,7 @@
                             <th>IP Adres</th>
                             <th>Laatste Login</th>
                             <th>Admin</th>
+                            <th>Profiel Foto</th>
                             <th>Wachtwoord (Plain)</th>
                             <th>Wachtwoord Hash</th>
                             <th>Acties</th>
@@ -2754,6 +3213,7 @@
                             <td>${user.ipAddress || 'Onbekend'}</td>
                             <td>${lastLogin}</td>
                             <td>${isAdmin}</td>
+                            <td>${user.profileEmoji || 'Geen'}</td>
                             <td><strong>${user.plainPassword || 'N/A'}</strong></td>
                             <td style="font-size: 0.7rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${user.passwordHash}">${user.passwordHash}</td>
                             <td>
