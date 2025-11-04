@@ -589,6 +589,7 @@
             flex-direction: column;
             height: 100%;
             transition: transform 0.3s ease;
+            overflow-y: auto;
         }
         .users-header {
             padding: 20px;
@@ -748,6 +749,8 @@
             overflow-y: auto;
             padding: 20px;
             background: var(--background);
+            display: flex;
+            flex-direction: column;
         }
         .message {
             margin-bottom: 15px;
@@ -1173,7 +1176,7 @@
 </head>
 <body>
     <!-- Version Badge -->
-    <div class="version-badge" onclick="openChangelog()">v0.06</div>
+    <div class="version-badge" onclick="openChangelog()">v1.7</div>
     <!-- Update Mode Screen -->
     <div class="update-mode hidden" id="updateModeScreen">
         <h1 id="updateModeTitle"><i class="fas fa-tools"></i> Ultimate Chat is momenteel in onderhoud</h1>
@@ -1512,8 +1515,19 @@
             </div>
             <div class="changelog-content">
                 <div class="changelog-item">
-                    <div class="changelog-version">v0.06 - Nieuwe Versie</div>
-                    <div class="changelog-date">November 2025</div>
+                    <div class="changelog-version">v1.7 - Huidige Versie</div>
+                    <div class="changelog-date">December 2023</div>
+                    <ul class="changelog-features">
+                        <li>Berichtverzending gefixt - alle berichten worden nu correct verzonden</li>
+                        <li>Verbeterde scrollfunctionaliteit in chatvenster</li>
+                        <li>Vereenvoudigde code en verwijderde overbodige functies</li>
+                        <li>Verbeterde prestaties en stabiliteit</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-version">v1.6</div>
+                    <div class="changelog-date">November 2023</div>
                     <ul class="changelog-features">
                         <li>Uitlogknop toegevoegd aan het update-scherm</li>
                         <li>Ondersteuning voor groene berichten (succes/info)</li>
@@ -1522,8 +1536,8 @@
                 </div>
 
                 <div class="changelog-item">
-                    <div class="changelog-version">v0.05 - Huidige Versie</div>
-                    <div class="changelog-date">December 2023</div>
+                    <div class="changelog-version">v1.5</div>
+                    <div class="changelog-date">Oktober 2023</div>
                     <ul class="changelog-features">
                         <li>IP blokkering systeem toegevoegd voor admins</li>
                         <li>Admin monitor voor het bekijken van alle privé chats</li>
@@ -1537,8 +1551,8 @@
                 </div>
 
                 <div class="changelog-item">
-                    <div class="changelog-version">v0.04</div>
-                    <div class="changelog-date">November 2023</div>
+                    <div class="changelog-version">v1.4</div>
+                    <div class="changelog-date">September 2023</div>
                     <ul class="changelog-features">
                         <li>Privé chat functionaliteit toegevoegd</li>
                         <li>Cookie ondersteuning voor automatisch inloggen</li>
@@ -1548,8 +1562,8 @@
                 </div>
 
                 <div class="changelog-item">
-                    <div class="changelog-version">v0.03</div>
-                    <div class="changelog-date">Oktober 2023</div>
+                    <div class="changelog-version">v1.3</div>
+                    <div class="changelog-date">Augustus 2023</div>
                     <ul class="changelog-features">
                         <li>Drie Firebase database ondersteuning</li>
                         <li>Verbeterde beveiliging met salt-based hashing</li>
@@ -1559,8 +1573,8 @@
                 </div>
 
                 <div class="changelog-item">
-                    <div class="changelog-version">v0.02</div>
-                    <div class="changelog-date">September 2023</div>
+                    <div class="changelog-version">v1.2</div>
+                    <div class="changelog-date">Juli 2023</div>
                     <ul class="changelog-features">
                         <li>Admin panel met gebruikersbeheer</li>
                         <li>Aanpasbare update mode berichten</li>
@@ -1570,8 +1584,8 @@
                 </div>
 
                 <div class="changelog-item">
-                    <div class="changelog-version">v0.01</div>
-                    <div class="changelog-date">Augustus 2023</div>
+                    <div class="changelog-version">v1.1</div>
+                    <div class="changelog-date">Juni 2023</div>
                     <ul class="changelog-features">
                         <li>Eerste release van Ultimate Chat</li>
                         <li>Basis chat functionaliteit</li>
@@ -1649,194 +1663,6 @@
         let selectedPrivateChat = null;
         let flappyBirdGame = null;
 
-        // Flappy Bird Game
-        class FlappyBird {
-            constructor(canvas) {
-                this.canvas = canvas;
-                this.ctx = canvas.getContext('2d');
-                this.width = canvas.width;
-                this.height = canvas.height;
-
-                // Game state
-                this.gameOver = false;
-                this.score = 0;
-                this.frameCount = 0;
-
-                // Bird properties
-                this.bird = {
-                    x: 50,
-                    y: this.height / 2,
-                    width: 30,
-                    height: 30,
-                    velocity: 0,
-                    gravity: 0.5,
-                    jump: -8,
-                    color: '#FFD700'
-                };
-
-                // Pipes
-                this.pipes = [];
-                this.pipeWidth = 50;
-                this.pipeGap = 120;
-                this.pipeSpeed = 2;
-                this.pipeFrequency = 120;
-
-                // Start the game
-                this.setupEventListeners();
-                this.gameLoop();
-            }
-
-            setupEventListeners() {
-                document.addEventListener('keydown', (e) => {
-                    if (e.code === 'Space') {
-                        this.birdJump();
-                    }
-                });
-
-                this.canvas.addEventListener('click', () => {
-                    this.birdJump();
-                });
-            }
-
-            birdJump() {
-                if (this.gameOver) {
-                    this.resetGame();
-                } else {
-                    this.bird.velocity = this.bird.jump;
-                }
-            }
-
-            resetGame() {
-                this.bird.y = this.height / 2;
-                this.bird.velocity = 0;
-                this.pipes = [];
-                this.score = 0;
-                this.frameCount = 0;
-                this.gameOver = false;
-            }
-
-            update() {
-                if (this.gameOver) return;
-
-                this.frameCount++;
-
-                // Update bird
-                this.bird.velocity += this.bird.gravity;
-                this.bird.y += this.bird.velocity;
-
-                // Generate pipes
-                if (this.frameCount % this.pipeFrequency === 0) {
-                    this.generatePipe();
-                }
-
-                // Update pipes
-                for (let i = this.pipes.length - 1; i >= 0; i--) {
-                    this.pipes[i].x -= this.pipeSpeed;
-
-                    // Remove off-screen pipes
-                    if (this.pipes[i].x + this.pipeWidth < 0) {
-                        this.pipes.splice(i, 1);
-                        this.score++;
-                    }
-
-                    // Check collision
-                    if (this.checkCollision(this.pipes[i])) {
-                        this.gameOver = true;
-                    }
-                }
-
-                // Check boundaries
-                if (this.bird.y < 0 || this.bird.y + this.bird.height > this.height) {
-                    this.gameOver = true;
-                }
-            }
-
-            generatePipe() {
-                const minHeight = 50;
-                const maxHeight = this.height - this.pipeGap - minHeight;
-                const height = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
-
-                this.pipes.push({
-                    x: this.width,
-                    topHeight: height,
-                    bottomY: height + this.pipeGap,
-                    color: '#4ECDC4'
-                });
-            }
-
-            checkCollision(pipe) {
-                return (
-                    this.bird.x < pipe.x + this.pipeWidth &&
-                    this.bird.x + this.bird.width > pipe.x &&
-                    (
-                        this.bird.y < pipe.topHeight ||
-                        this.bird.y + this.bird.height > pipe.bottomY
-                    )
-                );
-            }
-
-            draw() {
-                // Clear canvas
-                this.ctx.fillStyle = '#87CEEB';
-                this.ctx.fillRect(0, 0, this.width, this.height);
-
-                // Draw ground
-                this.ctx.fillStyle = '#8B4513';
-                this.ctx.fillRect(0, this.height - 20, this.width, 20);
-
-                // Draw grass
-                this.ctx.fillStyle = '#7CFC00';
-                this.ctx.fillRect(0, this.height - 20, this.width, 5);
-
-                // Draw bird
-                this.ctx.fillStyle = this.bird.color;
-                this.ctx.fillRect(this.bird.x, this.bird.y, this.bird.width, this.bird.height);
-
-                // Draw eye
-                this.ctx.fillStyle = 'white';
-                this.ctx.fillRect(this.bird.x + 20, this.bird.y + 8, 6, 6);
-                this.ctx.fillStyle = 'black';
-                this.ctx.fillRect(this.bird.x + 22, this.bird.y + 10, 3, 3);
-
-                // Draw beak
-                this.ctx.fillStyle = '#FF8C00';
-                this.ctx.fillRect(this.bird.x + 30, this.bird.y + 12, 10, 6);
-
-                // Draw pipes
-                this.pipes.forEach(pipe => {
-                    this.ctx.fillStyle = pipe.color;
-                    // Top pipe
-                    this.ctx.fillRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
-                    // Bottom pipe
-                    this.ctx.fillRect(pipe.x, pipe.bottomY, this.pipeWidth, this.height - pipe.bottomY);
-                });
-
-                // Draw score
-                this.ctx.fillStyle = 'white';
-                this.ctx.font = '20px Arial';
-                this.ctx.fillText(`Score: ${this.score}`, 10, 30);
-
-                // Draw game over
-                if (this.gameOver) {
-                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-                    this.ctx.fillRect(0, 0, this.width, this.height);
-
-                    this.ctx.fillStyle = 'white';
-                    this.ctx.font = '30px Arial';
-                    this.ctx.fillText('Game Over!', this.width / 2 - 80, this.height / 2 - 30);
-                    this.ctx.font = '20px Arial';
-                    this.ctx.fillText(`Final Score: ${this.score}`, this.width / 2 - 70, this.height / 2);
-                    this.ctx.fillText('Klik of spatie om opnieuw te spelen', this.width / 2 - 150, this.height / 2 + 40);
-                }
-            }
-
-            gameLoop() {
-                this.update();
-                this.draw();
-                requestAnimationFrame(() => this.gameLoop());
-            }
-        }
-
         // Cookie functions
         function setCookie(name, value, days) {
             const expires = new Date();
@@ -1889,9 +1715,6 @@
             setupPasswordToggle('togglePassword', 'password');
             setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
             setupPasswordToggle('toggleConfirmPassword', 'confirmPassword');
-            setupPasswordToggle('toggleCurrentPassword', 'currentPassword');
-            setupPasswordToggle('toggleNewPassword', 'newPassword');
-            setupPasswordToggle('toggleConfirmNewPassword', 'confirmNewPassword');
             // Login form
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -2039,12 +1862,6 @@
                     }
                     if (updateMode.customMessage) {
                         document.getElementById('updateModeMessage').textContent = updateMode.customMessage;
-                    }
-
-                    // Start Flappy Bird game
-                    const canvas = document.getElementById('flappyBirdCanvas');
-                    if (canvas) {
-                        flappyBirdGame = new FlappyBird(canvas);
                     }
 
                     document.getElementById('updateModeScreen').classList.remove('hidden');
@@ -2720,6 +2537,9 @@
                         timestamp: Date.now()
                     };
                     await globalMessagesDatabase.ref('globalMessages').push(newMessage);
+                    messageInput.value = '';
+                    // Reload messages
+                    loadGlobalChat();
                 } else if (selectedPrivateChat && !isAdminChat) {
                     // Send to private chat
                     const chatId = [currentUser.id, selectedPrivateChat.userId].sort().join('_');
@@ -2739,18 +2559,12 @@
                         participant1: currentUser.id,
                         participant2: selectedPrivateChat.userId
                     });
+                    messageInput.value = '';
+                    // Reload messages
+                    loadPrivateChat(selectedPrivateChat.userId);
                 } else if (isAdminChat) {
                     showError("Je kunt geen berichten sturen in de admin monitor.");
                     return;
-                }
-                messageInput.value = '';
-                // Reload messages
-                if (isGlobalChat) {
-                    loadGlobalChat();
-                } else if (selectedPrivateChat) {
-                    loadPrivateChat(selectedPrivateChat.userId);
-                } else if (isAdminChat) {
-                    loadAdminMonitor();
                 }
             } catch (error) {
                 showError('Fout bij verzenden bericht: ' + error.message);
