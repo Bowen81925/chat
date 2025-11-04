@@ -1602,23 +1602,44 @@
         // Firebase configs voor meerdere databases
         const firebaseConfigs = {
             users: {
-                databaseURL: "https://mijn-startpagina-default-rtdb.europe-west1.firebasedatabase.app/"
+                apiKey: "YOUR_API_KEY",
+                authDomain: "YOUR_AUTH_DOMAIN",
+                databaseURL: "https://mijn-startpagina-default-rtdb.europe-west1.firebasedatabase.app/",
+                projectId: "YOUR_PROJECT_ID",
+                storageBucket: "YOUR_STORAGE_BUCKET",
+                messagingSenderId: "YOUR_SENDER_ID",
+                appId: "YOUR_APP_ID"
             },
             globalMessages: {
-                databaseURL: "https://globalmessages-default-rtdb.europe-west1.firebasedatabase.app/"
+                apiKey: "YOUR_API_KEY",
+                authDomain: "YOUR_AUTH_DOMAIN",
+                databaseURL: "https://globalmessages-default-rtdb.europe-west1.firebasedatabase.app/",
+                projectId: "YOUR_PROJECT_ID",
+                storageBucket: "YOUR_STORAGE_BUCKET",
+                messagingSenderId: "YOUR_SENDER_ID",
+                appId: "YOUR_APP_ID"
             },
             privateMessages: {
-                databaseURL: "https://privatemessages-ab6a3-default-rtdb.europe-west1.firebasedatabase.app/"
+                apiKey: "YOUR_API_KEY",
+                authDomain: "YOUR_AUTH_DOMAIN",
+                databaseURL: "https://privatemessages-ab6a3-default-rtdb.europe-west1.firebasedatabase.app/",
+                projectId: "YOUR_PROJECT_ID",
+                storageBucket: "YOUR_STORAGE_BUCKET",
+                messagingSenderId: "YOUR_SENDER_ID",
+                appId: "YOUR_APP_ID"
             }
         };
+
         // Initialize Firebase apps
         const userApp = firebase.initializeApp(firebaseConfigs.users, "users");
         const globalMessagesApp = firebase.initializeApp(firebaseConfigs.globalMessages, "globalMessages");
         const privateMessagesApp = firebase.initializeApp(firebaseConfigs.privateMessages, "privateMessages");
+
         // Get database instances
         const userDatabase = userApp.database();
         const globalMessagesDatabase = globalMessagesApp.database();
         const privateMessagesDatabase = privateMessagesApp.database();
+
         // Global variables
         let currentUser = null;
         let isGlobalChat = true;
@@ -1627,6 +1648,7 @@
         let currentTheme = 'default';
         let selectedPrivateChat = null;
         let flappyBirdGame = null;
+
         // Flappy Bird Game
         class FlappyBird {
             constructor(canvas) {
@@ -1814,12 +1836,14 @@
                 requestAnimationFrame(() => this.gameLoop());
             }
         }
+
         // Cookie functions
         function setCookie(name, value, days) {
             const expires = new Date();
             expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
             document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`;
         }
+
         function getCookie(name) {
             const nameEQ = name + "=";
             const ca = document.cookie.split(';');
@@ -1830,13 +1854,16 @@
             }
             return null;
         }
+
         function deleteCookie(name) {
             document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
         }
+
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
         });
+
         async function initializeApp() {
             // Check for saved login
             const savedUser = getCookie('ultimateChatUser');
@@ -1903,6 +1930,7 @@
             // Start with global chat
             loadGlobalChat();
         }
+
         // Auto login function
         async function autoLogin(userData) {
             try {
@@ -1961,14 +1989,17 @@
                 showError('Automatisch inloggen mislukt. Log handmatig in.');
             }
         }
+
         // Changelog function
         function openChangelog() {
             document.getElementById('changelogModal').classList.remove('hidden');
         }
+
         // Theme Functions
         function openThemeSelector() {
             document.getElementById('themeSelectorModal').classList.remove('hidden');
         }
+
         function changeTheme(themeName, save = true) {
             // Remove all theme classes
             document.body.classList.remove('theme-dark', 'theme-blue', 'theme-green', 'theme-purple', 'theme-orange', 'theme-pink', 'theme-midnight', 'theme-cyber', 'theme-sunset', 'theme-nature', 'theme-royal');
@@ -1992,6 +2023,7 @@
                 showSuccess('Thema succesvol gewijzigd!');
             }
         }
+
         // Update Mode Functions
         async function checkUpdateMode() {
             try {
@@ -2022,6 +2054,7 @@
                 console.error('Error checking update mode:', error);
             }
         }
+
         async function openUpdateModeModal() {
             if (!currentUser.isAdmin) {
                 showError("Je hebt geen toestemming om de update modus te beheren.");
@@ -2046,6 +2079,7 @@
                 showError("Fout bij laden update modus status: " + error.message);
             }
         }
+
         async function enableUpdateMode() {
             try {
                 const customTitle = document.getElementById('updateModeTitleInput').value.trim();
@@ -2074,6 +2108,7 @@
                 showError("Fout bij inschakelen update modus: " + error.message);
             }
         }
+
         async function disableUpdateMode() {
             try {
                 await userDatabase.ref('appSettings/updateMode').set({
@@ -2089,6 +2124,7 @@
                 showError("Fout bij uitschakelen update modus: " + error.message);
             }
         }
+
         // IP Ban Functions
         async function banIP() {
             if (!currentUser.isAdmin) {
@@ -2114,6 +2150,7 @@
                 showError("Fout bij blokkeren van IP: " + error.message);
             }
         }
+
         async function unbanIP() {
             if (!currentUser.isAdmin) {
                 showError("Je hebt geen toestemming om IP's te deblokkeren.");
@@ -2133,6 +2170,7 @@
                 showError("Fout bij deblokkeren van IP: " + error.message);
             }
         }
+
         // Admin Chat Functions
         function selectAdminChat() {
             isGlobalChat = false;
@@ -2158,6 +2196,7 @@
             // Close mobile menu on selection
             closeMobileMenu();
         }
+
         async function loadAdminMonitor() {
             try {
                 // Get all private chats
@@ -2201,6 +2240,7 @@
                 console.error('Error loading admin monitor:', error);
             }
         }
+
         function setupPasswordToggle(toggleId, inputId) {
             const toggle = document.getElementById(toggleId);
             const input = document.getElementById(inputId);
@@ -2212,25 +2252,30 @@
                 });
             }
         }
+
         function showLoginForm() {
             document.getElementById('registerScreen').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
             clearMessages();
         }
+
         function showRegisterForm() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('registerScreen').classList.remove('hidden');
             clearMessages();
         }
+
         // Mobile menu functions
         function toggleMobileMenu() {
             document.getElementById('usersList').classList.toggle('active');
             document.getElementById('mobileMenuOverlay').classList.toggle('active');
         }
+
         function closeMobileMenu() {
             document.getElementById('usersList').classList.remove('active');
             document.getElementById('mobileMenuOverlay').classList.remove('active');
         }
+
         // Hash een wachtwoord met salt
         function hashPassword(password, salt = '') {
             if (!salt) {
@@ -2238,10 +2283,12 @@
             }
             return salt + ':' + CryptoJS.SHA256(salt + password).toString();
         }
+
         // Extract salt from hashed password
         function extractSalt(hashedPassword) {
             return hashedPassword.split(':')[0];
         }
+
         // Get user IP address
         async function getUserIP() {
             try {
@@ -2253,6 +2300,7 @@
                 return 'Onbekend';
             }
         }
+
         // Authentication functions
         async function handleLogin() {
             const username = document.getElementById('username').value;
@@ -2334,6 +2382,7 @@
                 setLoading(false, 'login');
             }
         }
+
         async function handleRegister() {
             const username = document.getElementById('registerUsername').value;
             const password = document.getElementById('registerPassword').value;
@@ -2414,6 +2463,7 @@
                 setLoading(false, 'register');
             }
         }
+
         function showApp() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('registerScreen').classList.add('hidden');
@@ -2434,6 +2484,7 @@
             startGlobalChatListener();
             clearMessages();
         }
+
         function logout() {
             if (currentUser) {
                 // Update status naar offline
@@ -2451,6 +2502,7 @@
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
         }
+
         function logoutFromUpdateMode() {
             deleteCookie('ultimateChatUser');
             deleteCookie('ultimateChatTheme');
@@ -2459,6 +2511,7 @@
             document.getElementById('loginScreen').classList.remove('hidden');
             showSuccess('Je bent uitgelogd. Log opnieuw in als de update voltooid is.');
         }
+
         // Change password functions
         function openChangePasswordModal() {
             document.getElementById('changePasswordModal').classList.remove('hidden');
@@ -2466,6 +2519,7 @@
             document.getElementById('newPassword').value = '';
             document.getElementById('confirmNewPassword').value = '';
         }
+
         async function changeOwnPassword() {
             const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value;
@@ -2512,6 +2566,7 @@
                 showError('Fout bij wijzigen wachtwoord: ' + error.message);
             }
         }
+
         // Chat functions
         function selectGlobalChat() {
             isGlobalChat = true;
@@ -2531,12 +2586,13 @@
             document.querySelectorAll('.chat-type-item').forEach(item => {
                 item.classList.remove('active');
             });
-            event.target.closest('.chat-type-item').classList.add('active');
+            document.querySelector('.chat-type-item.global-chat').classList.add('active');
             // Load global messages
             loadGlobalChat();
             // Close mobile menu on selection
             closeMobileMenu();
         }
+
         function selectPrivateChat(userId, username) {
             isGlobalChat = false;
             isAdminChat = false;
@@ -2555,12 +2611,13 @@
             document.querySelectorAll('.chat-type-item').forEach(item => {
                 item.classList.remove('active');
             });
-            event.target.closest('.chat-type-item').classList.add('active');
+            document.querySelector(`.chat-type-item[onclick="selectPrivateChat('${userId}', '${username}')"]`).classList.add('active');
             // Load private messages
             loadPrivateChat(userId);
             // Close mobile menu on selection
             closeMobileMenu();
         }
+
         async function loadGlobalChat() {
             try {
                 const globalMessagesRef = globalMessagesDatabase.ref('globalMessages');
@@ -2584,7 +2641,7 @@
                             <div class="message-time">${time} • ${date}</div>
                             ${(isCurrentUser && canDelete) || currentUser.isAdmin ? `
                                 <div class="message-actions">
-                                    <button onclick="editMessage('${messageSnapshot.key}', '${message.text}')"><i class="fas fa-edit"></i></button>
+                                    <button onclick="editMessage('${messageSnapshot.key}', '${escapeHtml(message.text)}')"><i class="fas fa-edit"></i></button>
                                     <button onclick="deleteMessage('${messageSnapshot.key}')"><i class="fas fa-trash"></i></button>
                                 </div>
                             ` : ''}
@@ -2605,6 +2662,7 @@
                 console.error('Error loading global chat:', error);
             }
         }
+
         async function loadPrivateChat(otherUserId) {
             try {
                 // Generate unique chat ID for these two users
@@ -2625,7 +2683,7 @@
                             <div class="message-time">${time} • ${date}</div>
                             ${isCurrentUser ? `
                                 <div class="message-actions">
-                                    <button onclick="editPrivateMessage('${chatId}', '${messageSnapshot.key}', '${message.text}')"><i class="fas fa-edit"></i></button>
+                                    <button onclick="editPrivateMessage('${chatId}', '${messageSnapshot.key}', '${escapeHtml(message.text)}')"><i class="fas fa-edit"></i></button>
                                     <button onclick="deletePrivateMessage('${chatId}', '${messageSnapshot.key}')"><i class="fas fa-trash"></i></button>
                                 </div>
                             ` : ''}
@@ -2646,19 +2704,20 @@
                 console.error('Error loading private chat:', error);
             }
         }
-        async function sendMessage(isSuccessMessage = false) {
+
+        async function sendMessage() {
             const messageInput = document.getElementById('messageInput');
             const text = messageInput.value.trim();
             if (!text) return;
 
             try {
                 if (isGlobalChat) {
+                    // Send to global chat
                     const newMessage = {
                         userId: currentUser.id,
                         username: currentUser.username,
                         text: text,
-                        timestamp: Date.now(),
-                        isSuccess: isSuccessMessage
+                        timestamp: Date.now()
                     };
                     await globalMessagesDatabase.ref('globalMessages').push(newMessage);
                 } else if (selectedPrivateChat && !isAdminChat) {
@@ -2697,6 +2756,7 @@
                 showError('Fout bij verzenden bericht: ' + error.message);
             }
         }
+
         // Messages system functions
         async function loadUsersForChat() {
             try {
@@ -2738,6 +2798,7 @@
                 console.error('Error loading users for chat:', error);
             }
         }
+
         function startGlobalChatListener() {
             globalMessagesDatabase.ref('globalMessages').on('child_added', function(snapshot) {
                 if (isGlobalChat) {
@@ -2745,17 +2806,20 @@
                 }
             });
         }
+
         // Message actions
         function editMessage(messageId, text) {
             currentMessageId = messageId;
             document.getElementById('editMessageText').value = text;
             document.getElementById('editMessageModal').classList.remove('hidden');
         }
+
         function editPrivateMessage(chatId, messageId, text) {
             currentMessageId = { chatId, messageId };
             document.getElementById('editMessageText').value = text;
             document.getElementById('editMessageModal').classList.remove('hidden');
         }
+
         async function saveEditedMessage() {
             const newText = document.getElementById('editMessageText').value.trim();
             if (!newText) return;
@@ -2783,6 +2847,7 @@
                 showError('Fout bij bewerken bericht: ' + error.message);
             }
         }
+
         async function deleteMessage(messageId) {
             try {
                 const twoHoursAgo = Date.now() - (2 * 60 * 60 * 1000); // 2 uur geleden
@@ -2815,6 +2880,7 @@
                 showError("Fout bij verwijderen van bericht: " + error.message);
             }
         }
+
         async function deletePrivateMessage(chatId, messageId) {
             try {
                 // Check if message is from current user
@@ -2836,6 +2902,7 @@
                 showError("Fout bij verwijderen van bericht: " + error.message);
             }
         }
+
         // Admin functions
         async function openAdminPanel() {
             if (!currentUser.isAdmin) {
@@ -2892,6 +2959,7 @@
                 showError("Fout bij laden van gebruikers: " + error.message);
             }
         }
+
         async function loadAdminStats() {
             try {
                 const usersSnapshot = await userDatabase.ref('users').once('value');
@@ -2920,6 +2988,7 @@
                 console.error('Error loading admin stats:', error);
             }
         }
+
         async function toggleAdmin(userId, makeAdmin) {
             try {
                 const userRef = userDatabase.ref('users/' + userId);
@@ -2930,6 +2999,7 @@
                 showError("Fout bij bijwerken van admin-status: " + error.message);
             }
         }
+
         async function deleteUser(userId, username) {
             if (!confirm(`Weet je zeker dat je gebruiker "${username}" wilt verwijderen?`)) {
                 return;
@@ -2942,6 +3012,7 @@
                 showError("Fout bij verwijderen van gebruiker: " + error.message);
             }
         }
+
         // Database cleanup functions
         async function cleanupOldMessages() {
             if (!currentUser.isAdmin) return;
@@ -2976,6 +3047,7 @@
                 showError("Fout bij opschonen van berichten: " + error.message);
             }
         }
+
         async function clearAllMessages() {
             if (!currentUser.isAdmin) return;
             if (!confirm("Weet je zeker dat je ALLE berichten wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.")) {
@@ -3000,6 +3072,7 @@
                 showError("Fout bij verwijderen van berichten: " + error.message);
             }
         }
+
         // Utility functions
         function showError(message, formType = 'login') {
             const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
@@ -3008,6 +3081,7 @@
             const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
             successDiv.style.display = 'none';
         }
+
         function showSuccess(message, formType = 'login') {
             const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
             successDiv.textContent = message;
@@ -3015,12 +3089,14 @@
             const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
             errorDiv.style.display = 'none';
         }
+
         function clearMessages() {
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
             document.getElementById('registerErrorMessage').style.display = 'none';
             document.getElementById('registerSuccessMessage').style.display = 'none';
         }
+
         function setLoading(loading, formType = 'login') {
             const btn = document.getElementById(formType === 'register' ? 'registerBtn' : 'loginBtn');
             if (loading) {
@@ -3033,8 +3109,18 @@
                     : '<i class="fas fa-sign-in-alt"></i> Inloggen';
             }
         }
+
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
     </script>
 </body>
