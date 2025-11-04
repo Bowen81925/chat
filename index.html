@@ -4,17 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ultimate Chat</title>
-
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
     <!-- CryptoJS voor encryptie -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         :root {
             --primary: #667eea;
@@ -32,7 +28,6 @@
             --border: #e1e1e1;
             --accent: #ff6b6b;
         }
-
         .theme-dark {
             --primary: #7c93fb;
             --secondary: #9b6bdf;
@@ -49,7 +44,6 @@
             --border: #4a5568;
             --accent: #ff7b7b;
         }
-
         .theme-blue {
             --primary: #3498db;
             --secondary: #2980b9;
@@ -66,7 +60,6 @@
             --border: #bdc3c7;
             --accent: #e74c3c;
         }
-
         .theme-green {
             --primary: #27ae60;
             --secondary: #2ecc71;
@@ -83,7 +76,6 @@
             --border: #bdc3c7;
             --accent: #c0392b;
         }
-
         .theme-purple {
             --primary: #9b59b6;
             --secondary: #8e44ad;
@@ -100,7 +92,6 @@
             --border: #d2b4de;
             --accent: #e74c3c;
         }
-
         .theme-orange {
             --primary: #e67e22;
             --secondary: #d35400;
@@ -117,7 +108,6 @@
             --border: #f5b041;
             --accent: #c0392b;
         }
-
         .theme-pink {
             --primary: #e84393;
             --secondary: #fd79a8;
@@ -134,7 +124,6 @@
             --border: #fab1a0;
             --accent: #d63031;
         }
-
         .theme-midnight {
             --primary: #0984e3;
             --secondary: #6c5ce7;
@@ -151,7 +140,6 @@
             --border: #636e72;
             --accent: #d63031;
         }
-
         .theme-cyber {
             --primary: #00ff9d;
             --secondary: #00b8ff;
@@ -168,7 +156,6 @@
             --border: #00ff9d;
             --accent: #ff006e;
         }
-
         .theme-sunset {
             --primary: #ff6b6b;
             --secondary: #ffa726;
@@ -185,7 +172,6 @@
             --border: #ffccbc;
             --accent: #ef5350;
         }
-
         .theme-nature {
             --primary: #388e3c;
             --secondary: #689f38;
@@ -202,7 +188,6 @@
             --border: #a5d6a7;
             --accent: #d32f2f;
         }
-
         .theme-royal {
             --primary: #512da8;
             --secondary: #303f9f;
@@ -219,14 +204,12 @@
             --border: #b39ddb;
             --accent: #d32f2f;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             min-height: 100vh;
@@ -234,16 +217,13 @@
             padding: 10px;
             color: var(--text);
         }
-
         .hidden {
             display: none !important;
         }
-
         .loading {
             opacity: 0.7;
             pointer-events: none;
         }
-
         /* Version Badge */
         .version-badge {
             position: fixed;
@@ -259,12 +239,10 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
         }
-
         .version-badge:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-
         /* Update Mode */
         .update-mode {
             position: fixed;
@@ -282,28 +260,23 @@
             text-align: center;
             flex-direction: column;
         }
-
         .update-mode h1 {
             margin-bottom: 20px;
             font-size: 3rem;
         }
-
         .update-mode p {
             font-size: 1.2rem;
             opacity: 0.8;
             margin-bottom: 30px;
         }
-
         .flappy-bird-container {
             margin-top: 30px;
         }
-
         #flappyBirdCanvas {
             border: 3px solid white;
             border-radius: 10px;
             background: #87CEEB;
         }
-
         /* Login/Register Container */
         .login-container {
             background: rgba(255, 255, 255, 0.95);
@@ -318,29 +291,24 @@
             color: var(--text);
             position: relative;
         }
-
         .login-header {
             text-align: center;
             margin-bottom: 25px;
         }
-
         .login-header h1 {
             color: var(--text);
             font-size: 1.8rem;
             font-weight: 600;
             margin-bottom: 8px;
         }
-
         .login-header p {
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
-
         .form-group {
             margin-bottom: 18px;
             position: relative;
         }
-
         .form-group label {
             display: block;
             margin-bottom: 6px;
@@ -348,11 +316,9 @@
             font-weight: 500;
             font-size: 0.9rem;
         }
-
         .input-with-icon {
             position: relative;
         }
-
         .form-control {
             width: 100%;
             padding: 14px 45px 14px 15px;
@@ -363,13 +329,11 @@
             background: var(--surface);
             color: var(--text);
         }
-
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-
         .password-toggle {
             position: absolute;
             right: 15px;
@@ -382,7 +346,6 @@
             padding: 8px;
             font-size: 1rem;
         }
-
         .btn {
             padding: 14px 20px;
             border: none;
@@ -397,54 +360,44 @@
             justify-content: center;
             gap: 8px;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
         }
-
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
-
         .btn-secondary {
             background: transparent;
             color: var(--primary);
             border: 2px solid var(--primary);
         }
-
         .btn-secondary:hover {
             background: var(--primary);
             color: white;
         }
-
         .btn-success {
             background: var(--success);
             color: white;
         }
-
         .btn-info {
             background: var(--info);
             color: white;
         }
-
         .btn-danger {
             background: var(--danger);
             color: white;
         }
-
         .btn-warning {
             background: var(--warning);
             color: var(--dark);
         }
-
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none !important;
         }
-
         .error-message {
             background: var(--danger);
             color: white;
@@ -455,7 +408,6 @@
             display: none;
             font-size: 0.9rem;
         }
-
         .success-message {
             background: var(--success);
             color: white;
@@ -466,25 +418,21 @@
             display: none;
             font-size: 0.9rem;
         }
-
         .switch-form {
             text-align: center;
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid var(--border);
         }
-
         .switch-form a {
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
             cursor: pointer;
         }
-
         .switch-form a:hover {
             text-decoration: underline;
         }
-
         /* Main App */
         .app-container {
             min-height: 100vh;
@@ -495,7 +443,6 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-
         /* Header */
         .app-header {
             background: var(--surface);
@@ -507,7 +454,6 @@
             align-items: center;
             border-bottom: 1px solid var(--border);
         }
-
         .logo {
             display: flex;
             align-items: center;
@@ -516,13 +462,11 @@
             font-size: 1.3rem;
             color: var(--text);
         }
-
         .user-menu {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -535,7 +479,6 @@
             font-weight: bold;
             font-size: 1.1rem;
         }
-
         .logout-btn {
             background: none;
             border: none;
@@ -545,11 +488,9 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-
         .logout-btn:hover {
             background: var(--light);
         }
-
         .change-password-btn {
             background: none;
             border: none;
@@ -559,11 +500,9 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-
         .change-password-btn:hover {
             background: var(--light);
         }
-
         .admin-panel-btn {
             background: none;
             border: none;
@@ -573,11 +512,9 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-
         .admin-panel-btn:hover {
             background: var(--light);
         }
-
         .update-mode-btn {
             background: none;
             border: none;
@@ -587,11 +524,9 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-
         .update-mode-btn:hover {
             background: var(--light);
         }
-
         .theme-toggle-btn {
             background: none;
             border: none;
@@ -601,11 +536,9 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-
         .theme-toggle-btn:hover {
             background: var(--light);
         }
-
         /* Mobile Menu Button */
         .menu-toggle {
             display: none;
@@ -618,11 +551,9 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-
         .menu-toggle:hover {
             background: var(--light);
         }
-
         /* Main Content */
         .main-content {
             flex: 1;
@@ -630,7 +561,6 @@
             display: flex;
             flex-direction: column;
         }
-
         /* Messages System */
         .messages-container {
             display: grid;
@@ -638,7 +568,6 @@
             gap: 0;
             height: calc(100vh - 80px);
         }
-
         /* Mobile Menu */
         .mobile-menu-overlay {
             display: none;
@@ -650,11 +579,9 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 100;
         }
-
         .mobile-menu-overlay.active {
             display: block;
         }
-
         .users-list {
             background: var(--surface);
             border-right: 1px solid var(--border);
@@ -663,7 +590,6 @@
             height: 100%;
             transition: transform 0.3s ease;
         }
-
         .users-header {
             padding: 20px;
             border-bottom: 1px solid var(--border);
@@ -672,7 +598,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .close-menu {
             display: none;
             background: none;
@@ -684,17 +609,14 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-
         .close-menu:hover {
             background: var(--light);
         }
-
         .users-content {
             flex: 1;
             overflow-y: auto;
             padding: 10px;
         }
-
         .chat-type-item {
             display: flex;
             align-items: center;
@@ -709,53 +631,42 @@
             background: var(--surface);
             color: var(--text);
         }
-
         .chat-type-item:hover, .chat-type-item.active {
             background: var(--light);
         }
-
         .chat-type-item.global-chat {
             border-color: var(--info);
             background: rgba(17, 138, 178, 0.1);
         }
-
         .chat-type-item.private-chat {
             border-color: var(--success);
             background: rgba(78, 205, 196, 0.1);
         }
-
         .chat-type-item.admin-chat {
             border-color: var(--danger);
             background: rgba(255, 107, 107, 0.1);
         }
-
         .chat-type-item.global-chat.active {
             background: var(--info);
             color: white;
         }
-
         .chat-type-item.private-chat.active {
             background: var(--success);
             color: white;
         }
-
         .chat-type-item.admin-chat.active {
             background: var(--danger);
             color: white;
         }
-
         .chat-type-item.global-chat.active .chat-type-icon {
             color: white;
         }
-
         .chat-type-item.private-chat.active .chat-type-icon {
             color: white;
         }
-
         .chat-type-item.admin-chat.active .chat-type-icon {
             color: white;
         }
-
         .chat-type-icon {
             font-size: 1.2rem;
             width: 44px;
@@ -767,19 +678,15 @@
             align-items: center;
             justify-content: center;
         }
-
         .global-chat .chat-type-icon {
             background: var(--info);
         }
-
         .private-chat .chat-type-icon {
             background: var(--success);
         }
-
         .admin-chat .chat-type-icon {
             background: var(--danger);
         }
-
         .user-status-indicator {
             width: 10px;
             height: 10px;
@@ -788,26 +695,21 @@
             right: 12px;
             top: 12px;
         }
-
         .status-online {
             background: var(--success);
         }
-
         .status-offline {
             background: var(--danger);
         }
-
         .status-away {
             background: var(--warning);
         }
-
         .chat-window {
             background: var(--surface);
             display: flex;
             flex-direction: column;
             height: 100%;
         }
-
         .chat-header {
             padding: 20px;
             border-bottom: 1px solid var(--border);
@@ -817,44 +719,36 @@
             gap: 12px;
             color: var(--text);
         }
-
         .global-chat-header {
             background: var(--info);
             color: white;
         }
-
         .private-chat-header {
             background: var(--success);
             color: white;
         }
-
         .admin-chat-header {
             background: var(--danger);
             color: white;
         }
-
         .global-chat-header .chat-type-icon {
             background: white;
             color: var(--info);
         }
-
         .private-chat-header .chat-type-icon {
             background: white;
             color: var(--success);
         }
-
         .admin-chat-header .chat-type-icon {
             background: white;
             color: var(--danger);
         }
-
         .chat-messages {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
             background: var(--background);
         }
-
         .message {
             margin-bottom: 15px;
             padding: 12px 16px;
@@ -863,21 +757,18 @@
             position: relative;
             word-wrap: break-word;
         }
-
         .message.sent {
             background: var(--primary);
             color: white;
             margin-left: auto;
             border-bottom-right-radius: 6px;
         }
-
         .message.received {
             background: var(--surface);
             color: var(--text);
             border-bottom-left-radius: 6px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-
         .message.global {
             background: var(--info);
             color: white;
@@ -885,7 +776,6 @@
             margin-left: 0;
             margin-right: 0;
         }
-
         .message.private {
             background: var(--success);
             color: white;
@@ -893,7 +783,6 @@
             margin-left: 0;
             margin-right: 0;
         }
-
         .message.admin {
             background: var(--danger);
             color: white;
@@ -901,43 +790,44 @@
             margin-left: 0;
             margin-right: 0;
         }
-
+        .message.success {
+            background: var(--success);
+            color: white;
+            max-width: 90%;
+            margin-left: 0;
+            margin-right: 0;
+            border-left: 4px solid #27ae60;
+        }
         .message-time {
             font-size: 0.7rem;
             opacity: 0.7;
             margin-top: 4px;
             text-align: right;
         }
-
         .message.received .message-time {
             text-align: left;
         }
-
-        .message.global .message-time, .message.private .message-time, .message.admin .message-time {
+        .message.global .message-time, .message.private .message-time, .message.admin .message-time, .message.success .message-time {
             text-align: left;
         }
-
         .message-sender {
             font-weight: 600;
             font-size: 0.8rem;
             margin-bottom: 4px;
             opacity: 0.9;
         }
-
         .message-status {
             font-size: 0.6rem;
             margin-top: 2px;
             opacity: 0.7;
             text-align: right;
         }
-
         .message-actions {
             display: flex;
             gap: 8px;
             margin-top: 5px;
             opacity: 0.7;
         }
-
         .message-actions button {
             background: none;
             border: none;
@@ -945,19 +835,16 @@
             cursor: pointer;
             font-size: 0.8rem;
         }
-
         .chat-input-container {
             padding: 20px;
             border-top: 1px solid var(--border);
             background: var(--surface);
         }
-
         .chat-input {
             display: flex;
             gap: 12px;
             align-items: flex-end;
         }
-
         .message-input {
             flex: 1;
             padding: 14px 16px;
@@ -970,24 +857,19 @@
             background: var(--background);
             color: var(--text);
         }
-
         .message-input:focus {
             outline: none;
             border-color: var(--primary);
         }
-
         .global-chat .message-input:focus {
             border-color: var(--info);
         }
-
         .private-chat .message-input:focus {
             border-color: var(--success);
         }
-
         .admin-chat .message-input:focus {
             border-color: var(--danger);
         }
-
         .send-btn {
             background: var(--primary);
             color: white;
@@ -1002,42 +884,33 @@
             transition: all 0.3s ease;
             flex-shrink: 0;
         }
-
         .global-chat .send-btn {
             background: var(--info);
         }
-
         .private-chat .send-btn {
             background: var(--success);
         }
-
         .admin-chat .send-btn {
             background: var(--danger);
         }
-
         .send-btn:hover:not(:disabled) {
             background: var(--secondary);
             transform: scale(1.05);
         }
-
         .global-chat .send-btn:hover:not(:disabled) {
             background: #0a7a9c;
         }
-
         .private-chat .send-btn:hover:not(:disabled) {
             background: #3a9b8c;
         }
-
         .admin-chat .send-btn:hover:not(:disabled) {
             background: #cc5252;
         }
-
         .send-btn:disabled {
             background: var(--border);
             cursor: not-allowed;
             transform: none;
         }
-
         /* Modal */
         .modal {
             position: fixed;
@@ -1051,7 +924,6 @@
             justify-content: center;
             z-index: 1000;
         }
-
         .modal-content {
             background: var(--background);
             border-radius: 15px;
@@ -1062,7 +934,6 @@
             overflow-y: auto;
             color: var(--text);
         }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -1070,7 +941,6 @@
             margin-bottom: 20px;
             position: relative;
         }
-
         .close-modal {
             background: none;
             border: none;
@@ -1081,55 +951,46 @@
             top: 0;
             color: var(--text);
         }
-
         /* Admin Panel */
         .admin-panel-content {
             max-height: 400px;
             overflow-y: auto;
         }
-
         .admin-user-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
         }
-
         .admin-user-table th, .admin-user-table td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
-
         .admin-user-table th {
             background-color: var(--light);
             font-weight: 600;
         }
-
         .admin-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
-
         .stat-card {
             background: var(--light);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
         }
-
         .stat-number {
             font-size: 1.5rem;
             font-weight: bold;
             color: var(--primary);
         }
-
         .stat-label {
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
-
         /* Loading Spinner */
         .spinner {
             border: 3px solid var(--border);
@@ -1140,12 +1001,10 @@
             animation: spin 1s linear infinite;
             margin: 20px auto;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
         /* Theme Selector */
         .theme-selector {
             display: grid;
@@ -1153,7 +1012,6 @@
             gap: 10px;
             margin: 10px 0;
         }
-
         .theme-option {
             width: 50px;
             height: 50px;
@@ -1167,114 +1025,91 @@
             font-weight: bold;
             transition: all 0.3s ease;
         }
-
         .theme-option:hover {
             transform: scale(1.1);
         }
-
         .theme-option.active {
             border-color: var(--primary);
             transform: scale(1.1);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-
         .theme-default {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-
         .theme-dark {
             background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
         }
-
         .theme-blue {
             background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
         }
-
         .theme-green {
             background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
         }
-
         .theme-purple {
             background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
         }
-
         .theme-orange {
             background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
         }
-
         .theme-pink {
             background: linear-gradient(135deg, #e84393 0%, #fd79a8 100%);
         }
-
         .theme-midnight {
             background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 100%);
         }
-
         .theme-cyber {
             background: linear-gradient(135deg, #00ff9d 0%, #00b8ff 100%);
         }
-
         .theme-sunset {
             background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
         }
-
         .theme-nature {
             background: linear-gradient(135deg, #388e3c 0%, #689f38 100%);
         }
-
         .theme-royal {
             background: linear-gradient(135deg, #512da8 0%, #303f9f 100%);
         }
-
         /* Changelog Modal */
         .changelog-content {
             max-height: 60vh;
             overflow-y: auto;
             padding-right: 10px;
         }
-
         .changelog-item {
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 1px solid var(--border);
         }
-
         .changelog-version {
             font-weight: bold;
             color: var(--primary);
             margin-bottom: 5px;
         }
-
         .changelog-date {
             font-size: 0.8rem;
             color: var(--text-secondary);
             margin-bottom: 10px;
         }
-
         .changelog-features {
             list-style-type: none;
             padding-left: 0;
         }
-
         .changelog-features li {
             margin-bottom: 5px;
             padding-left: 15px;
             position: relative;
         }
-
         .changelog-features li:before {
             content: "✓";
             position: absolute;
             left: 0;
             color: var(--success);
         }
-
         /* Responsive Styles */
         @media (max-width: 768px) {
             .messages-container {
                 grid-template-columns: 1fr;
             }
-
             .users-list {
                 position: fixed;
                 top: 0;
@@ -1284,66 +1119,51 @@
                 z-index: 200;
                 transform: translateX(-100%);
             }
-
             .users-list.active {
                 transform: translateX(0);
             }
-
             .menu-toggle {
                 display: block;
             }
-
             .close-menu {
                 display: block;
             }
-
             .app-header {
                 padding: 1rem;
             }
-
             .logo span {
                 font-size: 1.1rem;
             }
-
             .user-menu span {
                 display: none;
             }
-
             .chat-header {
                 padding: 15px;
             }
-
             .chat-messages {
                 padding: 15px;
             }
-
             .message {
                 max-width: 90%;
             }
-
             .chat-input-container {
                 padding: 15px;
             }
         }
-
         @media (max-width: 480px) {
             .login-container {
                 padding: 20px 15px;
                 margin: 10px auto;
             }
-
             .app-container {
                 border-radius: 15px;
             }
-
             .message {
                 max-width: 95%;
             }
-
             .chat-input {
                 gap: 8px;
             }
-
             .send-btn {
                 width: 45px;
                 height: 45px;
@@ -1353,35 +1173,33 @@
 </head>
 <body>
     <!-- Version Badge -->
-    <div class="version-badge" onclick="openChangelog()">v0.05</div>
-
+    <div class="version-badge" onclick="openChangelog()">v0.06</div>
     <!-- Update Mode Screen -->
     <div class="update-mode hidden" id="updateModeScreen">
         <h1 id="updateModeTitle"><i class="fas fa-tools"></i> Ultimate Chat is momenteel in onderhoud</h1>
         <p id="updateModeMessage">We zijn even bezig met updates. Probeer het later opnieuw!</p>
-        
+
         <div class="flappy-bird-container">
             <canvas id="flappyBirdCanvas" width="320" height="480"></canvas>
             <p style="margin-top: 15px; font-size: 1rem;">Speel Flappy Bird terwijl je wacht! Gebruik spatiebalk of klik om te springen.</p>
+            <button class="btn btn-danger" onclick="logoutFromUpdateMode()" style="margin-top: 20px;">
+                <i class="fas fa-sign-out-alt"></i> Uitloggen
+            </button>
         </div>
     </div>
-
     <!-- Login Screen -->
     <div class="login-container" id="loginScreen">
         <div class="login-header">
             <h1>Ultimate Chat</h1>
             <p>Log in op je account</p>
         </div>
-
         <div class="error-message" id="errorMessage"></div>
         <div class="success-message" id="successMessage"></div>
-
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Gebruikersnaam</label>
                 <input type="text" id="username" class="form-control" placeholder="Voer gebruikersnaam in" required>
             </div>
-
             <div class="form-group">
                 <label for="password">Wachtwoord</label>
                 <div class="input-with-icon">
@@ -1391,33 +1209,27 @@
                     </button>
                 </div>
             </div>
-
             <button type="submit" class="btn btn-primary" id="loginBtn">
                 <i class="fas fa-sign-in-alt"></i> Inloggen
             </button>
         </form>
-
         <div class="switch-form">
             <p>Nog geen account? <a id="switchToRegister">Account aanmaken</a></p>
         </div>
     </div>
-
     <!-- Register Screen -->
     <div class="login-container hidden" id="registerScreen">
         <div class="login-header">
             <h1>Account Aanmaken</h1>
             <p>Maak een nieuw account aan</p>
         </div>
-
         <div class="error-message" id="registerErrorMessage"></div>
         <div class="success-message" id="registerSuccessMessage"></div>
-
         <form id="registerForm">
             <div class="form-group">
                 <label for="registerUsername">Gebruikersnaam</label>
                 <input type="text" id="registerUsername" class="form-control" placeholder="Kies een gebruikersnaam" required>
             </div>
-
             <div class="form-group">
                 <label for="registerPassword">Wachtwoord</label>
                 <div class="input-with-icon">
@@ -1428,7 +1240,6 @@
                 </div>
                 <small style="color: var(--text-secondary); font-size: 0.8rem;">Minimaal 6 karakters</small>
             </div>
-
             <div class="form-group">
                 <label for="confirmPassword">Bevestig Wachtwoord</label>
                 <div class="input-with-icon">
@@ -1438,17 +1249,14 @@
                     </button>
                 </div>
             </div>
-
             <button type="submit" class="btn btn-success" id="registerBtn">
                 <i class="fas fa-user-plus"></i> Account Aanmaken
             </button>
         </form>
-
         <div class="switch-form">
             <p>Al een account? <a id="switchToLogin">Inloggen</a></p>
         </div>
     </div>
-
     <!-- Main App -->
     <div class="app-container hidden" id="appContainer">
         <!-- Header -->
@@ -1480,13 +1288,11 @@
                 </button>
             </div>
         </header>
-
         <!-- Main Content -->
         <main class="main-content">
             <div class="messages-container">
                 <!-- Mobile Menu Overlay -->
                 <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-
                 <!-- Users List -->
                 <div class="users-list" id="usersList">
                     <div class="users-header">
@@ -1506,7 +1312,6 @@
                                 <div class="user-status">Iedereen kan chatten</div>
                             </div>
                         </div>
-
                         <!-- Admin Chat Item (only for admins) -->
                         <div class="chat-type-item admin-chat hidden" id="adminChatItem" onclick="selectAdminChat()">
                             <div class="chat-type-icon">
@@ -1521,7 +1326,6 @@
                         <div class="spinner"></div>
                     </div>
                 </div>
-
                 <!-- Chat Window -->
                 <div class="chat-window">
                     <div class="chat-header global-chat-header" id="chatHeader">
@@ -1552,7 +1356,6 @@
             </div>
         </main>
     </div>
-
     <!-- Change Password Modal -->
     <div class="modal hidden" id="changePasswordModal">
         <div class="modal-content">
@@ -1577,7 +1380,6 @@
             </form>
         </div>
     </div>
-
     <!-- Admin Panel Modal -->
     <div class="modal hidden" id="adminPanelModal">
         <div class="modal-content">
@@ -1604,7 +1406,6 @@
                         <div class="stat-label">Admin Gebruikers</div>
                     </div>
                 </div>
-
                 <h4>IP Beheer</h4>
                 <div style="margin-bottom: 20px;">
                     <div class="form-group">
@@ -1618,7 +1419,6 @@
                         <i class="fas fa-check"></i> IP Deblokkeren
                     </button>
                 </div>
-
                 <h4>Database Beheer</h4>
                 <div style="margin-bottom: 20px;">
                     <button class="btn btn-warning" onclick="cleanupOldMessages()">
@@ -1628,7 +1428,6 @@
                         <i class="fas fa-broom"></i> Alle Berichten Wissen
                     </button>
                 </div>
-
                 <h4>Gebruikers beheren</h4>
                 <div id="adminUserList">
                     <div class="spinner"></div>
@@ -1636,7 +1435,6 @@
             </div>
         </div>
     </div>
-
     <!-- Update Mode Modal -->
     <div class="modal hidden" id="updateModeModal">
         <div class="modal-content">
@@ -1646,17 +1444,17 @@
             </div>
             <div>
                 <p>Update modus blokkeert de toegang voor niet-admin gebruikers.</p>
-                
+
                 <div class="form-group">
                     <label for="updateModeTitleInput">Update Modus Titel</label>
                     <input type="text" id="updateModeTitleInput" class="form-control" placeholder="Titel voor update modus scherm">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="updateModeMessageInput">Update Modus Bericht</label>
                     <textarea id="updateModeMessageInput" class="form-control" placeholder="Bericht voor update modus scherm" rows="3"></textarea>
                 </div>
-                
+
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button class="btn btn-warning" onclick="enableUpdateMode()">
                         <i class="fas fa-toggle-on"></i> Update Modus Aanzetten
@@ -1671,7 +1469,6 @@
             </div>
         </div>
     </div>
-
     <!-- Theme Selector Modal -->
     <div class="modal hidden" id="themeSelectorModal">
         <div class="modal-content">
@@ -1681,7 +1478,7 @@
             </div>
             <div>
                 <p>Kies een thema voor de applicatie:</p>
-                
+
                 <div class="theme-selector">
                     <div class="theme-option theme-default active" onclick="changeTheme('default')" title="Standaard Thema">D</div>
                     <div class="theme-option theme-dark" onclick="changeTheme('dark')" title="Donker Thema">D</div>
@@ -1696,7 +1493,7 @@
                     <div class="theme-option theme-nature" onclick="changeTheme('nature')" title="Natuur Thema">N</div>
                     <div class="theme-option theme-royal" onclick="changeTheme('royal')" title="Koninklijk Thema">K</div>
                 </div>
-                
+
                 <div style="margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px;">
                     <h4>Voorbeeld</h4>
                     <p>Dit is een voorbeeldtekst in het geselecteerde thema.</p>
@@ -1706,7 +1503,6 @@
             </div>
         </div>
     </div>
-
     <!-- Changelog Modal -->
     <div class="modal hidden" id="changelogModal">
         <div class="modal-content">
@@ -1715,6 +1511,16 @@
                 <button class="close-modal" onclick="closeModal('changelogModal')">&times;</button>
             </div>
             <div class="changelog-content">
+                <div class="changelog-item">
+                    <div class="changelog-version">v0.06 - Nieuwe Versie</div>
+                    <div class="changelog-date">November 2025</div>
+                    <ul class="changelog-features">
+                        <li>Uitlogknop toegevoegd aan het update-scherm</li>
+                        <li>Ondersteuning voor groene berichten (succes/info)</li>
+                        <li>Kleine UI-verbeteringen en bugfixes</li>
+                    </ul>
+                </div>
+
                 <div class="changelog-item">
                     <div class="changelog-version">v0.05 - Huidige Versie</div>
                     <div class="changelog-date">December 2023</div>
@@ -1729,7 +1535,7 @@
                         <li>Verbeterde beveiliging en prestaties</li>
                     </ul>
                 </div>
-                
+
                 <div class="changelog-item">
                     <div class="changelog-version">v0.04</div>
                     <div class="changelog-date">November 2023</div>
@@ -1740,7 +1546,7 @@
                         <li>Wachtwoord zichtbaarheid voor admins</li>
                     </ul>
                 </div>
-                
+
                 <div class="changelog-item">
                     <div class="changelog-version">v0.03</div>
                     <div class="changelog-date">Oktober 2023</div>
@@ -1751,7 +1557,7 @@
                         <li>Update mode verbeteringen</li>
                     </ul>
                 </div>
-                
+
                 <div class="changelog-item">
                     <div class="changelog-version">v0.02</div>
                     <div class="changelog-date">September 2023</div>
@@ -1762,7 +1568,7 @@
                         <li>Responsive design verbeteringen</li>
                     </ul>
                 </div>
-                
+
                 <div class="changelog-item">
                     <div class="changelog-version">v0.01</div>
                     <div class="changelog-date">Augustus 2023</div>
@@ -1776,7 +1582,6 @@
             </div>
         </div>
     </div>
-
     <!-- Edit Message Modal -->
     <div class="modal hidden" id="editMessageModal">
         <div class="modal-content">
@@ -1793,7 +1598,6 @@
             </form>
         </div>
     </div>
-
     <script>
         // Firebase configs voor meerdere databases
         const firebaseConfigs = {
@@ -1807,17 +1611,14 @@
                 databaseURL: "https://privatemessages-ab6a3-default-rtdb.europe-west1.firebasedatabase.app/"
             }
         };
-
         // Initialize Firebase apps
         const userApp = firebase.initializeApp(firebaseConfigs.users, "users");
         const globalMessagesApp = firebase.initializeApp(firebaseConfigs.globalMessages, "globalMessages");
         const privateMessagesApp = firebase.initializeApp(firebaseConfigs.privateMessages, "privateMessages");
-
         // Get database instances
         const userDatabase = userApp.database();
         const globalMessagesDatabase = globalMessagesApp.database();
         const privateMessagesDatabase = privateMessagesApp.database();
-
         // Global variables
         let currentUser = null;
         let isGlobalChat = true;
@@ -1826,7 +1627,6 @@
         let currentTheme = 'default';
         let selectedPrivateChat = null;
         let flappyBirdGame = null;
-
         // Flappy Bird Game
         class FlappyBird {
             constructor(canvas) {
@@ -1834,12 +1634,12 @@
                 this.ctx = canvas.getContext('2d');
                 this.width = canvas.width;
                 this.height = canvas.height;
-                
+
                 // Game state
                 this.gameOver = false;
                 this.score = 0;
                 this.frameCount = 0;
-                
+
                 // Bird properties
                 this.bird = {
                     x: 50,
@@ -1851,31 +1651,31 @@
                     jump: -8,
                     color: '#FFD700'
                 };
-                
+
                 // Pipes
                 this.pipes = [];
                 this.pipeWidth = 50;
                 this.pipeGap = 120;
                 this.pipeSpeed = 2;
                 this.pipeFrequency = 120;
-                
+
                 // Start the game
                 this.setupEventListeners();
                 this.gameLoop();
             }
-            
+
             setupEventListeners() {
                 document.addEventListener('keydown', (e) => {
                     if (e.code === 'Space') {
                         this.birdJump();
                     }
                 });
-                
+
                 this.canvas.addEventListener('click', () => {
                     this.birdJump();
                 });
             }
-            
+
             birdJump() {
                 if (this.gameOver) {
                     this.resetGame();
@@ -1883,7 +1683,7 @@
                     this.bird.velocity = this.bird.jump;
                 }
             }
-            
+
             resetGame() {
                 this.bird.y = this.height / 2;
                 this.bird.velocity = 0;
@@ -1892,48 +1692,48 @@
                 this.frameCount = 0;
                 this.gameOver = false;
             }
-            
+
             update() {
                 if (this.gameOver) return;
-                
+
                 this.frameCount++;
-                
+
                 // Update bird
                 this.bird.velocity += this.bird.gravity;
                 this.bird.y += this.bird.velocity;
-                
+
                 // Generate pipes
                 if (this.frameCount % this.pipeFrequency === 0) {
                     this.generatePipe();
                 }
-                
+
                 // Update pipes
                 for (let i = this.pipes.length - 1; i >= 0; i--) {
                     this.pipes[i].x -= this.pipeSpeed;
-                    
+
                     // Remove off-screen pipes
                     if (this.pipes[i].x + this.pipeWidth < 0) {
                         this.pipes.splice(i, 1);
                         this.score++;
                     }
-                    
+
                     // Check collision
                     if (this.checkCollision(this.pipes[i])) {
                         this.gameOver = true;
                     }
                 }
-                
+
                 // Check boundaries
                 if (this.bird.y < 0 || this.bird.y + this.bird.height > this.height) {
                     this.gameOver = true;
                 }
             }
-            
+
             generatePipe() {
                 const minHeight = 50;
                 const maxHeight = this.height - this.pipeGap - minHeight;
                 const height = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
-                
+
                 this.pipes.push({
                     x: this.width,
                     topHeight: height,
@@ -1941,7 +1741,7 @@
                     color: '#4ECDC4'
                 });
             }
-            
+
             checkCollision(pipe) {
                 return (
                     this.bird.x < pipe.x + this.pipeWidth &&
@@ -1952,34 +1752,34 @@
                     )
                 );
             }
-            
+
             draw() {
                 // Clear canvas
                 this.ctx.fillStyle = '#87CEEB';
                 this.ctx.fillRect(0, 0, this.width, this.height);
-                
+
                 // Draw ground
                 this.ctx.fillStyle = '#8B4513';
                 this.ctx.fillRect(0, this.height - 20, this.width, 20);
-                
+
                 // Draw grass
                 this.ctx.fillStyle = '#7CFC00';
                 this.ctx.fillRect(0, this.height - 20, this.width, 5);
-                
+
                 // Draw bird
                 this.ctx.fillStyle = this.bird.color;
                 this.ctx.fillRect(this.bird.x, this.bird.y, this.bird.width, this.bird.height);
-                
+
                 // Draw eye
                 this.ctx.fillStyle = 'white';
                 this.ctx.fillRect(this.bird.x + 20, this.bird.y + 8, 6, 6);
                 this.ctx.fillStyle = 'black';
                 this.ctx.fillRect(this.bird.x + 22, this.bird.y + 10, 3, 3);
-                
+
                 // Draw beak
                 this.ctx.fillStyle = '#FF8C00';
                 this.ctx.fillRect(this.bird.x + 30, this.bird.y + 12, 10, 6);
-                
+
                 // Draw pipes
                 this.pipes.forEach(pipe => {
                     this.ctx.fillStyle = pipe.color;
@@ -1988,17 +1788,17 @@
                     // Bottom pipe
                     this.ctx.fillRect(pipe.x, pipe.bottomY, this.pipeWidth, this.height - pipe.bottomY);
                 });
-                
+
                 // Draw score
                 this.ctx.fillStyle = 'white';
                 this.ctx.font = '20px Arial';
                 this.ctx.fillText(`Score: ${this.score}`, 10, 30);
-                
+
                 // Draw game over
                 if (this.gameOver) {
                     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
                     this.ctx.fillRect(0, 0, this.width, this.height);
-                    
+
                     this.ctx.fillStyle = 'white';
                     this.ctx.font = '30px Arial';
                     this.ctx.fillText('Game Over!', this.width / 2 - 80, this.height / 2 - 30);
@@ -2007,21 +1807,19 @@
                     this.ctx.fillText('Klik of spatie om opnieuw te spelen', this.width / 2 - 150, this.height / 2 + 40);
                 }
             }
-            
+
             gameLoop() {
                 this.update();
                 this.draw();
                 requestAnimationFrame(() => this.gameLoop());
             }
         }
-
         // Cookie functions
         function setCookie(name, value, days) {
             const expires = new Date();
             expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
             document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`;
         }
-
         function getCookie(name) {
             const nameEQ = name + "=";
             const ca = document.cookie.split(';');
@@ -2032,25 +1830,21 @@
             }
             return null;
         }
-
         function deleteCookie(name) {
             document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
         }
-
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
         });
-
         async function initializeApp() {
             // Check for saved login
             const savedUser = getCookie('ultimateChatUser');
             const savedTheme = getCookie('ultimateChatTheme');
-            
+
             if (savedTheme) {
                 changeTheme(savedTheme, false);
             }
-
             if (savedUser) {
                 try {
                     const userData = JSON.parse(savedUser);
@@ -2062,10 +1856,8 @@
                     deleteCookie('ultimateChatUser');
                 }
             }
-
             // Check update mode first
             await checkUpdateMode();
-
             // Password toggles
             setupPasswordToggle('togglePassword', 'password');
             setupPasswordToggle('toggleRegisterPassword', 'registerPassword');
@@ -2073,35 +1865,29 @@
             setupPasswordToggle('toggleCurrentPassword', 'currentPassword');
             setupPasswordToggle('toggleNewPassword', 'newPassword');
             setupPasswordToggle('toggleConfirmNewPassword', 'confirmNewPassword');
-
             // Login form
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 handleLogin();
             });
-
             // Register form
             document.getElementById('registerForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 handleRegister();
             });
-
             // Change password form
             document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 changeOwnPassword();
             });
-
             // Edit message form
             document.getElementById('editMessageForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 saveEditedMessage();
             });
-
             // Form switching
             document.getElementById('switchToRegister').addEventListener('click', showRegisterForm);
             document.getElementById('switchToLogin').addEventListener('click', showLoginForm);
-
             // Message sending
             document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
             document.getElementById('messageInput').addEventListener('keypress', function(e) {
@@ -2110,122 +1896,109 @@
                     sendMessage();
                 }
             });
-
             // Mobile menu
             document.getElementById('menuToggle').addEventListener('click', toggleMobileMenu);
             document.getElementById('closeMenu').addEventListener('click', closeMobileMenu);
             document.getElementById('mobileMenuOverlay').addEventListener('click', closeMobileMenu);
-
             // Start with global chat
             loadGlobalChat();
         }
-
         // Auto login function
         async function autoLogin(userData) {
             try {
                 // Verify user still exists
                 const userRef = userDatabase.ref('users/' + userData.id);
                 const snapshot = await userRef.once('value');
-                
+
                 if (!snapshot.exists()) {
                     deleteCookie('ultimateChatUser');
                     showError('Je sessie is verlopen. Log opnieuw in.');
                     return;
                 }
-
                 const dbUser = snapshot.val();
-                
+
                 // Check if user IP is banned
                 const ip = await getUserIP();
                 const bannedIPsRef = userDatabase.ref('bannedIPs');
                 const bannedSnapshot = await bannedIPsRef.once('value');
                 let isBanned = false;
-                
+
                 bannedSnapshot.forEach((ipSnapshot) => {
                     if (ipSnapshot.key === ip) {
                         isBanned = true;
                     }
                 });
-                
+
                 if (isBanned) {
                     showError('Je IP adres is geblokkeerd. Je kunt niet inloggen.');
                     deleteCookie('ultimateChatUser');
                     return;
                 }
-
                 // Update user status and IP
                 await userDatabase.ref('users/' + userData.id).update({
                     lastLogin: new Date().toISOString(),
                     status: "online",
                     ipAddress: ip
                 });
-
                 currentUser = {
                     id: userData.id,
                     username: dbUser.username,
                     isAdmin: dbUser.isAdmin || false,
                     plainPassword: userData.plainPassword
                 };
-
                 showApp();
-
                 // Check update mode after login (for non-admin users)
                 const updateModeRef = userDatabase.ref('appSettings/updateMode');
                 const updateSnapshot = await updateModeRef.once('value');
                 const updateMode = updateSnapshot.val();
-                
+
                 if (updateMode && updateMode.enabled && !currentUser.isAdmin) {
                     await checkUpdateMode();
                 }
-
             } catch (error) {
                 console.error('Auto-login error:', error);
                 deleteCookie('ultimateChatUser');
                 showError('Automatisch inloggen mislukt. Log handmatig in.');
             }
         }
-
         // Changelog function
         function openChangelog() {
             document.getElementById('changelogModal').classList.remove('hidden');
         }
-
         // Theme Functions
         function openThemeSelector() {
             document.getElementById('themeSelectorModal').classList.remove('hidden');
         }
-
         function changeTheme(themeName, save = true) {
             // Remove all theme classes
             document.body.classList.remove('theme-dark', 'theme-blue', 'theme-green', 'theme-purple', 'theme-orange', 'theme-pink', 'theme-midnight', 'theme-cyber', 'theme-sunset', 'theme-nature', 'theme-royal');
-            
+
             // Add selected theme class
             if (themeName !== 'default') {
                 document.body.classList.add(`theme-${themeName}`);
             }
-            
+
             // Update active state in theme selector
             document.querySelectorAll('.theme-option').forEach(option => {
                 option.classList.remove('active');
             });
             document.querySelector(`.theme-${themeName}`).classList.add('active');
-            
+
             currentTheme = themeName;
-            
+
             if (save) {
                 setCookie('ultimateChatTheme', themeName, 30);
                 closeModal('themeSelectorModal');
                 showSuccess('Thema succesvol gewijzigd!');
             }
         }
-
         // Update Mode Functions
         async function checkUpdateMode() {
             try {
                 const updateModeRef = userDatabase.ref('appSettings/updateMode');
                 const snapshot = await updateModeRef.once('value');
                 const updateMode = snapshot.val();
-                
+
                 // Update mode only affects non-admin users who are logged in
                 if (updateMode && updateMode.enabled && currentUser && !currentUser.isAdmin) {
                     // Update de UI met aangepaste berichten als ze bestaan
@@ -2235,13 +2008,13 @@
                     if (updateMode.customMessage) {
                         document.getElementById('updateModeMessage').textContent = updateMode.customMessage;
                     }
-                    
+
                     // Start Flappy Bird game
                     const canvas = document.getElementById('flappyBirdCanvas');
                     if (canvas) {
                         flappyBirdGame = new FlappyBird(canvas);
                     }
-                    
+
                     document.getElementById('updateModeScreen').classList.remove('hidden');
                     document.getElementById('appContainer').classList.add('hidden');
                 }
@@ -2249,44 +2022,41 @@
                 console.error('Error checking update mode:', error);
             }
         }
-
         async function openUpdateModeModal() {
             if (!currentUser.isAdmin) {
                 showError("Je hebt geen toestemming om de update modus te beheren.");
                 return;
             }
-
             try {
                 const updateModeRef = userDatabase.ref('appSettings/updateMode');
                 const snapshot = await updateModeRef.once('value');
                 const updateMode = snapshot.val();
-                
-                document.getElementById('updateModeStatus').textContent = 
+
+                document.getElementById('updateModeStatus').textContent =
                     updateMode && updateMode.enabled ? 'AAN' : 'UIT';
-                
+
                 // Vul de velden in met bestaande waarden
                 if (updateMode) {
                     document.getElementById('updateModeTitleInput').value = updateMode.customTitle || '';
                     document.getElementById('updateModeMessageInput').value = updateMode.customMessage || '';
                 }
-                
+
                 document.getElementById('updateModeModal').classList.remove('hidden');
             } catch (error) {
                 showError("Fout bij laden update modus status: " + error.message);
             }
         }
-
         async function enableUpdateMode() {
             try {
                 const customTitle = document.getElementById('updateModeTitleInput').value.trim();
                 const customMessage = document.getElementById('updateModeMessageInput').value.trim();
-                
+
                 const updateModeData = {
                     enabled: true,
                     enabledBy: currentUser.username,
                     enabledAt: new Date().toISOString()
                 };
-                
+
                 // Voeg aangepaste berichten toe als ze zijn ingevuld
                 if (customTitle) {
                     updateModeData.customTitle = customTitle;
@@ -2294,17 +2064,16 @@
                 if (customMessage) {
                     updateModeData.customMessage = customMessage;
                 }
-                
+
                 await userDatabase.ref('appSettings/updateMode').set(updateModeData);
-                
+
                 showSuccess("Update modus is nu ingeschakeld!");
                 document.getElementById('updateModeStatus').textContent = 'AAN';
-                
+
             } catch (error) {
                 showError("Fout bij inschakelen update modus: " + error.message);
             }
         }
-
         async function disableUpdateMode() {
             try {
                 await userDatabase.ref('appSettings/updateMode').set({
@@ -2312,117 +2081,102 @@
                     disabledBy: currentUser.username,
                     disabledAt: new Date().toISOString()
                 });
-                
+
                 showSuccess("Update modus is nu uitgeschakeld!");
                 document.getElementById('updateModeStatus').textContent = 'UIT';
-                
+
             } catch (error) {
                 showError("Fout bij uitschakelen update modus: " + error.message);
             }
         }
-
         // IP Ban Functions
         async function banIP() {
             if (!currentUser.isAdmin) {
                 showError("Je hebt geen toestemming om IP's te blokkeren.");
                 return;
             }
-
             const ipToBan = document.getElementById('ipToBan').value.trim();
             if (!ipToBan) {
                 showError("Voer een IP adres in om te blokkeren.");
                 return;
             }
-
             try {
                 await userDatabase.ref(`bannedIPs/${ipToBan}`).set({
                     bannedBy: currentUser.username,
                     bannedAt: new Date().toISOString(),
                     reason: "Manual ban by admin"
                 });
-                
+
                 showSuccess(`IP adres ${ipToBan} is succesvol geblokkeerd.`);
                 document.getElementById('ipToBan').value = '';
-                
+
             } catch (error) {
                 showError("Fout bij blokkeren van IP: " + error.message);
             }
         }
-
         async function unbanIP() {
             if (!currentUser.isAdmin) {
                 showError("Je hebt geen toestemming om IP's te deblokkeren.");
                 return;
             }
-
             const ipToUnban = document.getElementById('ipToBan').value.trim();
             if (!ipToUnban) {
                 showError("Voer een IP adres in om te deblokkeren.");
                 return;
             }
-
             try {
                 await userDatabase.ref(`bannedIPs/${ipToUnban}`).remove();
                 showSuccess(`IP adres ${ipToUnban} is succesvol gedeblokkeerd.`);
                 document.getElementById('ipToBan').value = '';
-                
+
             } catch (error) {
                 showError("Fout bij deblokkeren van IP: " + error.message);
             }
         }
-
         // Admin Chat Functions
         function selectAdminChat() {
             isGlobalChat = false;
             isAdminChat = true;
             selectedPrivateChat = null;
-
             // Update UI
             document.getElementById('selectedUserInfo').innerHTML = `
                 <h4>Admin Monitor</h4>
                 <small>Bekijk alle privé chats</small>
             `;
-
             // Update chat header
             document.getElementById('chatHeader').className = 'chat-header admin-chat-header';
             document.getElementById('chatHeader').querySelector('.chat-type-icon').innerHTML = '<i class="fas fa-shield-alt"></i>';
-
             // Update input styling
             document.querySelector('.chat-input').className = 'chat-input admin-chat';
-
             // Set active state
             document.querySelectorAll('.chat-type-item').forEach(item => {
                 item.classList.remove('active');
             });
-
             event.target.closest('.chat-type-item').classList.add('active');
-
             // Load admin monitor
             loadAdminMonitor();
-
             // Close mobile menu on selection
             closeMobileMenu();
         }
-
         async function loadAdminMonitor() {
             try {
                 // Get all private chats
                 const privateChatsRef = privateMessagesDatabase.ref('privateChats');
                 const snapshot = await privateChatsRef.once('value');
-                
+
                 let messagesHtml = '';
-                
+
                 snapshot.forEach((chatSnapshot) => {
                     const chat = chatSnapshot.val();
                     const chatId = chatSnapshot.key;
-                    
+
                     // Get messages for this chat
                     if (chat.messages) {
                         Object.keys(chat.messages).forEach(messageKey => {
                             const message = chat.messages[messageKey];
                             const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                             const date = new Date(message.timestamp).toLocaleDateString();
-                            
+
                             messagesHtml += `
                                 <div class="message admin" data-message-id="${messageKey}">
                                     <div class="message-sender">${message.senderName} → ${message.receiverName}</div>
@@ -2433,7 +2187,6 @@
                         });
                     }
                 });
-
                 document.getElementById('chatMessages').innerHTML = messagesHtml || `
                     <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
                         <i class="fas fa-shield-alt" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
@@ -2441,20 +2194,16 @@
                         <p>Hier kun je alle privé chats tussen gebruikers bekijken</p>
                     </div>
                 `;
-
                 // Scroll to bottom
                 const chatMessages = document.getElementById('chatMessages');
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-
             } catch (error) {
                 console.error('Error loading admin monitor:', error);
             }
         }
-
         function setupPasswordToggle(toggleId, inputId) {
             const toggle = document.getElementById(toggleId);
             const input = document.getElementById(inputId);
-
             if (toggle && input) {
                 toggle.addEventListener('click', function() {
                     const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -2463,30 +2212,25 @@
                 });
             }
         }
-
         function showLoginForm() {
             document.getElementById('registerScreen').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
             clearMessages();
         }
-
         function showRegisterForm() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('registerScreen').classList.remove('hidden');
             clearMessages();
         }
-
         // Mobile menu functions
         function toggleMobileMenu() {
             document.getElementById('usersList').classList.toggle('active');
             document.getElementById('mobileMenuOverlay').classList.toggle('active');
         }
-
         function closeMobileMenu() {
             document.getElementById('usersList').classList.remove('active');
             document.getElementById('mobileMenuOverlay').classList.remove('active');
         }
-
         // Hash een wachtwoord met salt
         function hashPassword(password, salt = '') {
             if (!salt) {
@@ -2494,12 +2238,10 @@
             }
             return salt + ':' + CryptoJS.SHA256(salt + password).toString();
         }
-
         // Extract salt from hashed password
         function extractSalt(hashedPassword) {
             return hashedPassword.split(':')[0];
         }
-
         // Get user IP address
         async function getUserIP() {
             try {
@@ -2511,49 +2253,41 @@
                 return 'Onbekend';
             }
         }
-
         // Authentication functions
         async function handleLogin() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-
             if (!username || !password) {
                 showError('Vul zowel gebruikersnaam als wachtwoord in!');
                 return;
             }
-
             setLoading(true, 'login');
-
             try {
                 // Check update mode first
                 const updateModeRef = userDatabase.ref('appSettings/updateMode');
                 const updateSnapshot = await updateModeRef.once('value');
                 const updateMode = updateSnapshot.val();
-
                 // Check if IP is banned
                 const ip = await getUserIP();
                 const bannedIPsRef = userDatabase.ref('bannedIPs');
                 const bannedSnapshot = await bannedIPsRef.once('value');
                 let isBanned = false;
-                
+
                 bannedSnapshot.forEach((ipSnapshot) => {
                     if (ipSnapshot.key === ip) {
                         isBanned = true;
                     }
                 });
-                
+
                 if (isBanned) {
                     showError('Je IP adres is geblokkeerd. Je kunt niet inloggen.');
                     return;
                 }
-
                 const usersRef = userDatabase.ref('users');
                 const snapshot = await usersRef.once('value');
-
                 let userFound = false;
                 let userData = null;
                 let userId = null;
-
                 snapshot.forEach((childSnapshot) => {
                     const user = childSnapshot.val();
                     if (user.username === username) {
@@ -2566,19 +2300,16 @@
                         }
                     }
                 });
-
                 if (!userFound) {
                     showError('Ongeldige gebruikersnaam of wachtwoord!');
                     return;
                 }
-
                 currentUser = {
                     id: userId,
                     username: userData.username,
                     isAdmin: userData.isAdmin || false,
                     plainPassword: password
                 };
-
                 // Save login to cookie
                 setCookie('ultimateChatUser', JSON.stringify({
                     id: userId,
@@ -2586,81 +2317,67 @@
                     isAdmin: userData.isAdmin || false,
                     plainPassword: password
                 }), 7); // 7 days
-
                 // Update user status and IP
                 await userDatabase.ref('users/' + userId).update({
                     lastLogin: new Date().toISOString(),
                     status: "online",
                     ipAddress: ip
                 });
-
                 showApp();
-
                 // Check update mode after login (for non-admin users)
                 if (updateMode && updateMode.enabled && !currentUser.isAdmin) {
                     await checkUpdateMode();
                 }
-
             } catch (error) {
                 showError('Fout bij inloggen: ' + error.message);
             } finally {
                 setLoading(false, 'login');
             }
         }
-
         async function handleRegister() {
             const username = document.getElementById('registerUsername').value;
             const password = document.getElementById('registerPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-
             if (!username || !password || !confirmPassword) {
                 showError('Vul alle velden in!', 'register');
                 return;
             }
-
             if (password.length < 6) {
                 showError('Wachtwoord moet minimaal 6 karakters lang zijn!', 'register');
                 return;
             }
-
             if (password !== confirmPassword) {
                 showError('Wachtwoorden komen niet overeen!', 'register');
                 return;
             }
-
             setLoading(true, 'register');
-
             try {
                 // Check update mode first
                 const updateModeRef = userDatabase.ref('appSettings/updateMode');
                 const updateSnapshot = await updateModeRef.once('value');
                 const updateMode = updateSnapshot.val();
-
                 // Check if IP is banned
                 const ip = await getUserIP();
                 const bannedIPsRef = userDatabase.ref('bannedIPs');
                 const bannedSnapshot = await bannedIPsRef.once('value');
                 let isBanned = false;
-                
+
                 bannedSnapshot.forEach((ipSnapshot) => {
                     if (ipSnapshot.key === ip) {
                         isBanned = true;
                     }
                 });
-                
+
                 if (isBanned) {
                     showError('Je IP adres is geblokkeerd. Je kunt geen account aanmaken.', 'register');
                     return;
                 }
-
                 if (updateMode && updateMode.enabled) {
                     showError('Registratie is tijdelijk uitgeschakeld vanwege onderhoud.', 'register');
                     return;
                 }
-
                 const usersRef = userDatabase.ref('users');
                 const snapshot = await usersRef.once('value');
-
                 // Check if username already exists
                 let usernameExists = false;
                 snapshot.forEach((childSnapshot) => {
@@ -2669,12 +2386,10 @@
                         usernameExists = true;
                     }
                 });
-
                 if (usernameExists) {
                     showError('Deze gebruikersnaam bestaat al!', 'register');
                     return;
                 }
-
                 // Create new user with encrypted password and store plain password
                 const newUser = {
                     username: username,
@@ -2686,33 +2401,27 @@
                     createdAt: new Date().toISOString(),
                     lastLogin: new Date().toISOString()
                 };
-
                 await usersRef.push(newUser);
                 showSuccess('Account succesvol aangemaakt! Je kunt nu inloggen.', 'register');
-
                 // Switch back to login form after 2 seconds
                 setTimeout(() => {
                     showLoginForm();
                     document.getElementById('username').value = username;
                 }, 2000);
-
             } catch (error) {
                 showError('Fout bij registreren: ' + error.message, 'register');
             } finally {
                 setLoading(false, 'register');
             }
         }
-
         function showApp() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('registerScreen').classList.add('hidden');
             document.getElementById('appContainer').classList.remove('hidden');
             document.getElementById('updateModeScreen').classList.add('hidden');
-
             // Update UI
             document.getElementById('userGreeting').textContent = `Welkom, ${currentUser.username}`;
             document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
-
             // Voeg admin-badge toe als de gebruiker admin is
             if (currentUser.isAdmin) {
                 document.getElementById('userGreeting').innerHTML += ' <span class="admin-badge" title="Admin">👑</span>';
@@ -2720,14 +2429,11 @@
                 document.getElementById('updateModeBtn').classList.remove('hidden');
                 document.getElementById('adminChatItem').classList.remove('hidden');
             }
-
             // Load chat data
             loadUsersForChat();
             startGlobalChatListener();
-
             clearMessages();
         }
-
         function logout() {
             if (currentUser) {
                 // Update status naar offline
@@ -2736,18 +2442,23 @@
                     lastSeen: new Date().toISOString()
                 });
             }
-
             // Delete cookies
             deleteCookie('ultimateChatUser');
             deleteCookie('ultimateChatTheme');
-
             currentUser = null;
             document.getElementById('appContainer').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
         }
-
+        function logoutFromUpdateMode() {
+            deleteCookie('ultimateChatUser');
+            deleteCookie('ultimateChatTheme');
+            currentUser = null;
+            document.getElementById('updateModeScreen').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            showSuccess('Je bent uitgelogd. Log opnieuw in als de update voltooid is.');
+        }
         // Change password functions
         function openChangePasswordModal() {
             document.getElementById('changePasswordModal').classList.remove('hidden');
@@ -2755,27 +2466,22 @@
             document.getElementById('newPassword').value = '';
             document.getElementById('confirmNewPassword').value = '';
         }
-
         async function changeOwnPassword() {
             const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-
             if (!currentPassword || !newPassword || !confirmNewPassword) {
                 showError('Vul alle velden in!');
                 return;
             }
-
             if (newPassword.length < 6) {
                 showError('Nieuw wachtwoord moet minimaal 6 karakters lang zijn!');
                 return;
             }
-
             if (newPassword !== confirmNewPassword) {
                 showError('Nieuwe wachtwoorden komen niet overeen!');
                 return;
             }
-
             try {
                 // Verify current password
                 const userRef = userDatabase.ref('users/' + currentUser.id);
@@ -2783,19 +2489,16 @@
                 const userData = snapshot.val();
                 const salt = extractSalt(userData.passwordHash);
                 const currentPasswordHash = hashPassword(currentPassword, salt);
-
                 if (userData.passwordHash !== currentPasswordHash) {
                     showError('Huidig wachtwoord is incorrect!');
                     return;
                 }
-
                 // Update to new password
                 const newPasswordHash = hashPassword(newPassword);
                 await userRef.update({
                     passwordHash: newPasswordHash,
                     plainPassword: newPassword
                 });
-
                 // Update cookie with new password
                 setCookie('ultimateChatUser', JSON.stringify({
                     id: currentUser.id,
@@ -2803,100 +2506,77 @@
                     isAdmin: currentUser.isAdmin,
                     plainPassword: newPassword
                 }), 7);
-
                 closeModal('changePasswordModal');
                 showSuccess('Wachtwoord succesvol gewijzigd!');
-
             } catch (error) {
                 showError('Fout bij wijzigen wachtwoord: ' + error.message);
             }
         }
-
         // Chat functions
         function selectGlobalChat() {
             isGlobalChat = true;
             isAdminChat = false;
             selectedPrivateChat = null;
-
             // Update UI
             document.getElementById('selectedUserInfo').innerHTML = `
                 <h4>Global Chat</h4>
                 <small>Chat met iedereen</small>
             `;
-
             // Update chat header
             document.getElementById('chatHeader').className = 'chat-header global-chat-header';
             document.getElementById('chatHeader').querySelector('.chat-type-icon').innerHTML = '<i class="fas fa-globe"></i>';
-
             // Update input styling
             document.querySelector('.chat-input').className = 'chat-input global-chat';
-
             // Set active state
             document.querySelectorAll('.chat-type-item').forEach(item => {
                 item.classList.remove('active');
             });
-
             event.target.closest('.chat-type-item').classList.add('active');
-
             // Load global messages
             loadGlobalChat();
-
             // Close mobile menu on selection
             closeMobileMenu();
         }
-
         function selectPrivateChat(userId, username) {
             isGlobalChat = false;
             isAdminChat = false;
             selectedPrivateChat = { userId, username };
-
             // Update UI
             document.getElementById('selectedUserInfo').innerHTML = `
                 <h4>Privé Chat met ${username}</h4>
                 <small>Privé gesprek</small>
             `;
-
             // Update chat header
             document.getElementById('chatHeader').className = 'chat-header private-chat-header';
             document.getElementById('chatHeader').querySelector('.chat-type-icon').innerHTML = '<i class="fas fa-lock"></i>';
-
             // Update input styling
             document.querySelector('.chat-input').className = 'chat-input private-chat';
-
             // Set active state
             document.querySelectorAll('.chat-type-item').forEach(item => {
                 item.classList.remove('active');
             });
-
             event.target.closest('.chat-type-item').classList.add('active');
-
             // Load private messages
             loadPrivateChat(userId);
-
             // Close mobile menu on selection
             closeMobileMenu();
         }
-
         async function loadGlobalChat() {
             try {
                 const globalMessagesRef = globalMessagesDatabase.ref('globalMessages');
                 const snapshot = await globalMessagesRef.orderByChild('timestamp').once('value');
-
                 let messagesHtml = '';
                 const twoHoursAgo = Date.now() - (2 * 60 * 60 * 1000); // 2 uur geleden
-
                 snapshot.forEach((messageSnapshot) => {
                     const message = messageSnapshot.val();
-                    
+
                     // Check if message is older than 2 hours and user is not admin
                     const canDelete = currentUser.isAdmin || message.timestamp > twoHoursAgo;
-                    
+
                     const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     const date = new Date(message.timestamp).toLocaleDateString();
-
                     const isCurrentUser = message.userId === currentUser.id;
-                    const messageClass = isCurrentUser ? 'sent' : 'global';
-
+                    const messageClass = message.isSuccess ? 'message success' : (isCurrentUser ? 'sent' : 'global');
                     messagesHtml += `
                         <div class="message ${messageClass}" data-message-id="${messageSnapshot.key}">
                             ${!isCurrentUser ? `<div class="message-sender">${message.username}</div>` : ''}
@@ -2911,7 +2591,6 @@
                         </div>
                     `;
                 });
-
                 document.getElementById('chatMessages').innerHTML = messagesHtml || `
                     <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
                         <i class="fas fa-globe" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
@@ -2919,33 +2598,26 @@
                         <p>Dit is een openbare chat waar iedereen kan berichten sturen</p>
                     </div>
                 `;
-
                 // Scroll to bottom
                 const chatMessages = document.getElementById('chatMessages');
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-
             } catch (error) {
                 console.error('Error loading global chat:', error);
             }
         }
-
         async function loadPrivateChat(otherUserId) {
             try {
                 // Generate unique chat ID for these two users
                 const chatId = [currentUser.id, otherUserId].sort().join('_');
                 const privateMessagesRef = privateMessagesDatabase.ref(`privateChats/${chatId}/messages`);
                 const snapshot = await privateMessagesRef.orderByChild('timestamp').once('value');
-
                 let messagesHtml = '';
-
                 snapshot.forEach((messageSnapshot) => {
                     const message = messageSnapshot.val();
                     const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     const date = new Date(message.timestamp).toLocaleDateString();
-
                     const isCurrentUser = message.senderId === currentUser.id;
                     const messageClass = isCurrentUser ? 'sent' : 'private';
-
                     messagesHtml += `
                         <div class="message ${messageClass}" data-message-id="${messageSnapshot.key}">
                             ${!isCurrentUser ? `<div class="message-sender">${message.senderName}</div>` : ''}
@@ -2960,7 +2632,6 @@
                         </div>
                     `;
                 });
-
                 document.getElementById('chatMessages').innerHTML = messagesHtml || `
                     <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
                         <i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
@@ -2968,32 +2639,27 @@
                         <p>Dit is een privé gesprek tussen jou en ${selectedPrivateChat.username}</p>
                     </div>
                 `;
-
                 // Scroll to bottom
                 const chatMessages = document.getElementById('chatMessages');
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-
             } catch (error) {
                 console.error('Error loading private chat:', error);
             }
         }
-
-        async function sendMessage() {
+        async function sendMessage(isSuccessMessage = false) {
             const messageInput = document.getElementById('messageInput');
             const text = messageInput.value.trim();
-
             if (!text) return;
 
             try {
                 if (isGlobalChat) {
-                    // Send to global chat
                     const newMessage = {
                         userId: currentUser.id,
                         username: currentUser.username,
                         text: text,
-                        timestamp: Date.now()
+                        timestamp: Date.now(),
+                        isSuccess: isSuccessMessage
                     };
-
                     await globalMessagesDatabase.ref('globalMessages').push(newMessage);
                 } else if (selectedPrivateChat && !isAdminChat) {
                     // Send to private chat
@@ -3006,9 +2672,8 @@
                         text: text,
                         timestamp: Date.now()
                     };
-
                     await privateMessagesDatabase.ref(`privateChats/${chatId}/messages`).push(newMessage);
-                    
+
                     // Also update the last message timestamp for the chat list
                     await privateMessagesDatabase.ref(`privateChats/${chatId}`).update({
                         lastActivity: Date.now(),
@@ -3019,9 +2684,7 @@
                     showError("Je kunt geen berichten sturen in de admin monitor.");
                     return;
                 }
-
                 messageInput.value = '';
-
                 // Reload messages
                 if (isGlobalChat) {
                     loadGlobalChat();
@@ -3030,12 +2693,10 @@
                 } else if (isAdminChat) {
                     loadAdminMonitor();
                 }
-
             } catch (error) {
                 showError('Fout bij verzenden bericht: ' + error.message);
             }
         }
-
         // Messages system functions
         async function loadUsersForChat() {
             try {
@@ -3051,14 +2712,13 @@
                         </div>
                     </div>
                 `;
-
                 // Add private chats
                 usersSnapshot.forEach((userSnapshot) => {
                     const user = userSnapshot.val();
                     if (userSnapshot.key !== currentUser.id) {
-                        const statusClass = user.status === "online" ? "status-online" : 
+                        const statusClass = user.status === "online" ? "status-online" :
                                           user.status === "away" ? "status-away" : "status-offline";
-                        
+
                         usersHtml += `
                             <div class="chat-type-item private-chat" onclick="selectPrivateChat('${userSnapshot.key}', '${user.username}')">
                                 <div class="chat-type-icon">
@@ -3073,14 +2733,11 @@
                         `;
                     }
                 });
-
                 document.getElementById('usersChatList').innerHTML = usersHtml;
-
             } catch (error) {
                 console.error('Error loading users for chat:', error);
             }
         }
-
         function startGlobalChatListener() {
             globalMessagesDatabase.ref('globalMessages').on('child_added', function(snapshot) {
                 if (isGlobalChat) {
@@ -3088,24 +2745,20 @@
                 }
             });
         }
-
         // Message actions
         function editMessage(messageId, text) {
             currentMessageId = messageId;
             document.getElementById('editMessageText').value = text;
             document.getElementById('editMessageModal').classList.remove('hidden');
         }
-
         function editPrivateMessage(chatId, messageId, text) {
             currentMessageId = { chatId, messageId };
             document.getElementById('editMessageText').value = text;
             document.getElementById('editMessageModal').classList.remove('hidden');
         }
-
         async function saveEditedMessage() {
             const newText = document.getElementById('editMessageText').value.trim();
             if (!newText) return;
-
             try {
                 if (isGlobalChat) {
                     await globalMessagesDatabase.ref(`globalMessages/${currentMessageId}`).update({
@@ -3118,27 +2771,22 @@
                         edited: true
                     });
                 }
-
                 closeModal('editMessageModal');
                 showSuccess('Bericht succesvol bewerkt!');
-
                 // Reload messages
                 if (isGlobalChat) {
                     loadGlobalChat();
                 } else if (selectedPrivateChat) {
                     loadPrivateChat(selectedPrivateChat.userId);
                 }
-
             } catch (error) {
                 showError('Fout bij bewerken bericht: ' + error.message);
             }
         }
-
         async function deleteMessage(messageId) {
             try {
                 const twoHoursAgo = Date.now() - (2 * 60 * 60 * 1000); // 2 uur geleden
                 let canDelete = false;
-
                 if (currentUser.isAdmin) {
                     canDelete = true;
                 } else {
@@ -3146,71 +2794,58 @@
                     const messageRef = globalMessagesDatabase.ref(`globalMessages/${messageId}`);
                     const snapshot = await messageRef.once('value');
                     const message = snapshot.val();
-                    
+
                     if (message.userId === currentUser.id && message.timestamp > twoHoursAgo) {
                         canDelete = true;
                     }
                 }
-
                 if (!canDelete) {
                     showError("Je kunt dit bericht niet verwijderen. Berichten kunnen alleen binnen 2 uur na verzenden worden verwijderd, tenzij je een admin bent.");
                     return;
                 }
-
                 if (isGlobalChat) {
                     await globalMessagesDatabase.ref(`globalMessages/${messageId}`).remove();
                 }
-
                 showSuccess("Bericht succesvol verwijderd!");
-
                 // Reload messages
                 if (isGlobalChat) {
                     loadGlobalChat();
                 }
-
             } catch (error) {
                 showError("Fout bij verwijderen van bericht: " + error.message);
             }
         }
-
         async function deletePrivateMessage(chatId, messageId) {
             try {
                 // Check if message is from current user
                 const messageRef = privateMessagesDatabase.ref(`privateChats/${chatId}/messages/${messageId}`);
                 const snapshot = await messageRef.once('value');
                 const message = snapshot.val();
-                
+
                 if (message.senderId !== currentUser.id) {
                     showError("Je kunt alleen je eigen berichten verwijderen.");
                     return;
                 }
-
                 await privateMessagesDatabase.ref(`privateChats/${chatId}/messages/${messageId}`).remove();
                 showSuccess("Bericht succesvol verwijderd!");
-
                 // Reload messages
                 if (selectedPrivateChat) {
                     loadPrivateChat(selectedPrivateChat.userId);
                 }
-
             } catch (error) {
                 showError("Fout bij verwijderen van bericht: " + error.message);
             }
         }
-
         // Admin functions
         async function openAdminPanel() {
             if (!currentUser.isAdmin) {
                 showError("Je hebt geen toestemming om het admin-paneel te openen.");
                 return;
             }
-
             document.getElementById('adminPanelModal').classList.remove('hidden');
-
             try {
                 // Load statistics
                 await loadAdminStats();
-
                 // Load users
                 const usersSnapshot = await userDatabase.ref('users').once('value');
                 let usersHtml = `
@@ -3226,13 +2861,11 @@
                             <th>Acties</th>
                         </tr>
                 `;
-
                 usersSnapshot.forEach((userSnapshot) => {
                     const user = userSnapshot.val();
                     const isAdmin = user.isAdmin ? 'Ja' : 'Nee';
                     const statusText = user.status === "online" ? "Online" : "Offline";
                     const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Onbekend';
-
                     usersHtml += `
                         <tr>
                             <td>${user.username}</td>
@@ -3253,49 +2886,40 @@
                         </tr>
                     `;
                 });
-
                 usersHtml += '</table>';
                 document.getElementById('adminUserList').innerHTML = usersHtml;
-
             } catch (error) {
                 showError("Fout bij laden van gebruikers: " + error.message);
             }
         }
-
         async function loadAdminStats() {
             try {
                 const usersSnapshot = await userDatabase.ref('users').once('value');
                 const messagesSnapshot = await globalMessagesDatabase.ref('globalMessages').once('value');
                 const privateChatsSnapshot = await privateMessagesDatabase.ref('privateChats').once('value');
                 const bannedIPsSnapshot = await userDatabase.ref('bannedIPs').once('value');
-
                 let totalUsers = 0;
                 let onlineUsers = 0;
                 let adminUsers = 0;
                 let bannedIPs = 0;
-
                 usersSnapshot.forEach((userSnapshot) => {
                     totalUsers++;
                     const user = userSnapshot.val();
                     if (user.status === "online") onlineUsers++;
                     if (user.isAdmin) adminUsers++;
                 });
-
                 const totalMessages = messagesSnapshot.numChildren();
                 let totalPrivateChats = 0;
                 privateChatsSnapshot.forEach(() => totalPrivateChats++);
                 bannedIPsSnapshot.forEach(() => bannedIPs++);
-
                 document.getElementById('totalUsers').textContent = totalUsers;
                 document.getElementById('onlineUsers').textContent = onlineUsers;
                 document.getElementById('adminUsers').textContent = adminUsers;
                 document.getElementById('totalMessages').textContent = totalMessages + totalPrivateChats;
-
             } catch (error) {
                 console.error('Error loading admin stats:', error);
             }
         }
-
         async function toggleAdmin(userId, makeAdmin) {
             try {
                 const userRef = userDatabase.ref('users/' + userId);
@@ -3306,12 +2930,10 @@
                 showError("Fout bij bijwerken van admin-status: " + error.message);
             }
         }
-
         async function deleteUser(userId, username) {
             if (!confirm(`Weet je zeker dat je gebruiker "${username}" wilt verwijderen?`)) {
                 return;
             }
-
             try {
                 await userDatabase.ref('users/' + userId).remove();
                 showSuccess(`Gebruiker "${username}" succesvol verwijderd.`);
@@ -3320,21 +2942,19 @@
                 showError("Fout bij verwijderen van gebruiker: " + error.message);
             }
         }
-
         // Database cleanup functions
         async function cleanupOldMessages() {
             if (!currentUser.isAdmin) return;
-
             try {
                 const now = Date.now();
                 const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000); // 30 dagen geleden
-                
+
                 const globalMessagesRef = globalMessagesDatabase.ref('globalMessages');
                 const snapshot = await globalMessagesRef.once('value');
-                
+
                 let deletedCount = 0;
                 const updates = {};
-                
+
                 snapshot.forEach((messageSnapshot) => {
                     const message = messageSnapshot.val();
                     if (message.timestamp < thirtyDaysAgo) {
@@ -3342,34 +2962,31 @@
                         deletedCount++;
                     }
                 });
-                
+
                 if (deletedCount > 0) {
                     await globalMessagesDatabase.ref().update(updates);
                     showSuccess(`${deletedCount} oude berichten (ouder dan 30 dagen) verwijderd.`);
                 } else {
                     showSuccess("Geen oude berichten gevonden om te verwijderen.");
                 }
-                
+
                 openAdminPanel(); // Herlaad het admin-paneel
-                
+
             } catch (error) {
                 showError("Fout bij opschonen van berichten: " + error.message);
             }
         }
-
         async function clearAllMessages() {
             if (!currentUser.isAdmin) return;
-
             if (!confirm("Weet je zeker dat je ALLE berichten wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.")) {
                 return;
             }
-
             try {
                 await globalMessagesDatabase.ref('globalMessages').remove();
                 await privateMessagesDatabase.ref('privateChats').remove();
                 showSuccess("Alle berichten succesvol verwijderd.");
                 openAdminPanel(); // Herlaad het admin-paneel
-                
+
                 // Herlaad de chat
                 if (isGlobalChat) {
                     loadGlobalChat();
@@ -3378,38 +2995,32 @@
                 } else if (isAdminChat) {
                     loadAdminMonitor();
                 }
-                
+
             } catch (error) {
                 showError("Fout bij verwijderen van berichten: " + error.message);
             }
         }
-
         // Utility functions
         function showError(message, formType = 'login') {
             const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
             errorDiv.textContent = message;
             errorDiv.style.display = 'block';
-
             const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
             successDiv.style.display = 'none';
         }
-
         function showSuccess(message, formType = 'login') {
             const successDiv = document.getElementById(formType === 'register' ? 'registerSuccessMessage' : 'successMessage');
             successDiv.textContent = message;
             successDiv.style.display = 'block';
-
             const errorDiv = document.getElementById(formType === 'register' ? 'registerErrorMessage' : 'errorMessage');
             errorDiv.style.display = 'none';
         }
-
         function clearMessages() {
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
             document.getElementById('registerErrorMessage').style.display = 'none';
             document.getElementById('registerSuccessMessage').style.display = 'none';
         }
-
         function setLoading(loading, formType = 'login') {
             const btn = document.getElementById(formType === 'register' ? 'registerBtn' : 'loginBtn');
             if (loading) {
@@ -3422,7 +3033,6 @@
                     : '<i class="fas fa-sign-in-alt"></i> Inloggen';
             }
         }
-
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
         }
