@@ -204,6 +204,22 @@
             --border: #b39ddb;
             --accent: #d32f2f;
         }
+        .theme-black-rgb {
+            --primary: #ff0000;
+            --secondary: #00ff00;
+            --success: #00ff00;
+            --danger: #ff0000;
+            --warning: #ffff00;
+            --info: #00ffff;
+            --dark: #ffffff;
+            --light: #000000;
+            --background: #000000;
+            --surface: #111111;
+            --text: #ffffff;
+            --text-secondary: #cccccc;
+            --border: #ff00ff;
+            --accent: #ff0000;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -276,6 +292,30 @@
             border: 3px solid white;
             border-radius: 10px;
             background: #87CEEB;
+        }
+        /* Admin Broadcast */
+        .admin-broadcast {
+            background: linear-gradient(135deg, var(--warning) 0%, var(--danger) 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: 10px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .admin-broadcast h4 {
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        .admin-broadcast p {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
         /* Login/Register Container */
         .login-container {
@@ -553,6 +593,18 @@
             transition: all 0.3s ease;
         }
         .profile-picture-btn:hover {
+            background: var(--light);
+        }
+        .broadcast-btn {
+            background: none;
+            border: none;
+            color: var(--warning);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .broadcast-btn:hover {
             background: var(--light);
         }
         /* Mobile Menu Button */
@@ -862,6 +914,24 @@
             font-size: 0.8rem;
             margin-bottom: 4px;
             opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sender-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .sender-avatar.emoji {
+            background: var(--info);
+            font-size: 0.9rem;
         }
         .message-status {
             font-size: 0.6rem;
@@ -1116,6 +1186,21 @@
         .theme-royal {
             background: linear-gradient(135deg, #512da8 0%, #303f9f 100%);
         }
+        .theme-black-rgb {
+            background: linear-gradient(135deg, #ff0000 0%, #00ff00 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-black-rgb::before {
+            content: "ADMIN";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.7rem;
+            color: white;
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+        }
         /* Changelog Modal */
         .changelog-content {
             max-height: 60vh;
@@ -1207,6 +1292,46 @@
             color: white;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
+        /* Admin Chat Monitor */
+        .admin-monitor-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 15px 0;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px;
+            background: var(--light);
+        }
+        .admin-monitor-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .admin-monitor-list::-webkit-scrollbar-track {
+            background: var(--surface);
+            border-radius: 3px;
+        }
+        .admin-monitor-list::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        .monitor-chat-item {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: var(--surface);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .monitor-chat-item:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(5px);
+        }
+        .monitor-chat-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--secondary);
+        }
         /* Responsive Styles */
         @media (max-width: 768px) {
             .messages-container {
@@ -1275,7 +1400,11 @@
 </head>
 <body>
     <!-- Version Badge -->
-    <div class="version-badge" onclick="openChangelog()">v1.11</div>
+    <div class="version-badge" onclick="openChangelog()">v1.13</div>
+    
+    <!-- Global Broadcasts Container -->
+    <div id="globalBroadcasts"></div>
+    
     <!-- Update Mode Screen -->
     <div class="update-mode hidden" id="updateModeScreen">
         <h1 id="updateModeTitle"><i class="fas fa-tools"></i> Ultimate Chat is momenteel in onderhoud</h1>
@@ -1289,6 +1418,7 @@
             </button>
         </div>
     </div>
+    
     <!-- Login Screen -->
     <div class="login-container" id="loginScreen">
         <div class="login-header">
@@ -1319,6 +1449,7 @@
             <p>Nog geen account? <a id="switchToRegister">Account aanmaken</a></p>
         </div>
     </div>
+    
     <!-- Register Screen -->
     <div class="login-container hidden" id="registerScreen">
         <div class="login-header">
@@ -1359,6 +1490,7 @@
             <p>Al een account? <a id="switchToLogin">Inloggen</a></p>
         </div>
     </div>
+    
     <!-- Main App -->
     <div class="app-container hidden" id="appContainer">
         <!-- Header -->
@@ -1380,6 +1512,9 @@
                 <button class="change-password-btn" onclick="openChangePasswordModal()" title="Wachtwoord wijzigen">
                     <i class="fas fa-key"></i>
                 </button>
+                <button class="broadcast-btn hidden" id="broadcastBtn" onclick="openBroadcastModal()" title="Broadcast Bericht">
+                    <i class="fas fa-bullhorn"></i>
+                </button>
                 <button class="admin-panel-btn hidden" id="adminPanelBtn" onclick="openAdminPanel()" title="Admin Paneel">
                     <i class="fas fa-cog"></i>
                 </button>
@@ -1393,11 +1528,13 @@
                 </button>
             </div>
         </header>
+        
         <!-- Main Content -->
         <main class="main-content">
             <div class="messages-container">
                 <!-- Mobile Menu Overlay -->
                 <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+                
                 <!-- Users List -->
                 <div class="users-list" id="usersList">
                     <div class="users-header">
@@ -1431,6 +1568,7 @@
                         <div class="spinner"></div>
                     </div>
                 </div>
+                
                 <!-- Chat Window -->
                 <div class="chat-window">
                     <div class="chat-header global-chat-header" id="chatHeader">
@@ -1461,6 +1599,7 @@
             </div>
         </main>
     </div>
+    
     <!-- Change Password Modal -->
     <div class="modal hidden" id="changePasswordModal">
         <div class="modal-content">
@@ -1485,6 +1624,7 @@
             </form>
         </div>
     </div>
+    
     <!-- Admin Panel Modal -->
     <div class="modal hidden" id="adminPanelModal">
         <div class="modal-content">
@@ -1544,6 +1684,7 @@
             </div>
         </div>
     </div>
+    
     <!-- Update Mode Modal -->
     <div class="modal hidden" id="updateModeModal">
         <div class="modal-content">
@@ -1578,6 +1719,65 @@
             </div>
         </div>
     </div>
+    
+    <!-- Broadcast Modal -->
+    <div class="modal hidden" id="broadcastModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bullhorn"></i> Broadcast Bericht</h3>
+                <button class="close-modal" onclick="closeModal('broadcastModal')">&times;</button>
+            </div>
+            <div>
+                <p>Stuur een belangrijk bericht naar alle gebruikers:</p>
+
+                <div class="form-group">
+                    <label for="broadcastTitle">Titel</label>
+                    <input type="text" id="broadcastTitle" class="form-control" placeholder="Titel van het broadcast bericht" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="broadcastMessage">Bericht</label>
+                    <textarea id="broadcastMessage" class="form-control" placeholder="Bericht voor alle gebruikers" rows="4" required></textarea>
+                </div>
+
+                <button class="btn btn-warning" onclick="sendBroadcast()" style="width: 100%;">
+                    <i class="fas fa-bullhorn"></i> Broadcast Versturen
+                </button>
+
+                <div style="margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px;">
+                    <h4>Actieve Broadcasts</h4>
+                    <div id="activeBroadcasts">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Chat Monitor Modal -->
+    <div class="modal hidden" id="adminMonitorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-shield-alt"></i> Admin Chat Monitor</h3>
+                <button class="close-modal" onclick="closeModal('adminMonitorModal')">&times;</button>
+            </div>
+            <div>
+                <p>Selecteer een chat om te monitoren:</p>
+
+                <div class="admin-monitor-list" id="adminMonitorList">
+                    <div class="spinner"></div>
+                </div>
+
+                <div id="monitoredChat" class="hidden">
+                    <h4 style="margin-top: 20px;">Berichten in geselecteerde chat:</h4>
+                    <div class="chat-messages" id="monitoredChatMessages" style="max-height: 300px; margin-top: 10px;">
+                        <!-- Monitored messages will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Theme Selector Modal -->
     <div class="modal hidden" id="themeSelectorModal">
         <div class="modal-content">
@@ -1601,6 +1801,7 @@
                     <div class="theme-option theme-sunset" onclick="changeTheme('sunset')" title="Zonsondergang Thema">Z</div>
                     <div class="theme-option theme-nature" onclick="changeTheme('nature')" title="Natuur Thema">N</div>
                     <div class="theme-option theme-royal" onclick="changeTheme('royal')" title="Koninklijk Thema">K</div>
+                    <div class="theme-option theme-black-rgb hidden" id="blackRgbThemeOption" onclick="changeTheme('black-rgb')" title="Zwart + RGB Thema (Alleen voor admins)"></div>
                 </div>
 
                 <div style="margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px;">
@@ -1612,6 +1813,7 @@
             </div>
         </div>
     </div>
+    
     <!-- Profile Picture Selector Modal -->
     <div class="modal hidden" id="profilePictureModal">
         <div class="modal-content">
@@ -1640,6 +1842,7 @@
             </div>
         </div>
     </div>
+    
     <!-- Changelog Modal -->
     <div class="modal hidden" id="changelogModal">
         <div class="modal-content">
@@ -1649,7 +1852,31 @@
             </div>
             <div class="changelog-content">
                 <div class="changelog-item">
-                    <div class="changelog-version">v1.11 - Huidige Versie</div>
+                    <div class="changelog-version">v1.13 - Huidige Versie</div>
+                    <ul class="changelog-features">
+                        <li>Berichtlimiet volledig verwijderd - geen limiet meer op berichten per chat</li>
+                        <li>Scrollen volledig gefixt - automatisch scrollen naar nieuwste berichten</li>
+                        <li>Admin broadcast systeem verbeterd - toont broadcasts boven alles, ook voor niet-ingelogde gebruikers</li>
+                        <li>Zwart + RGB thema toegevoegd (alleen voor admins)</li>
+                        <li>Verbeterde berichtverzending en synchronisatie</li>
+                        <li>Performance optimalisaties voor grote chatgroepen</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-version">v1.12</div>
+                    <ul class="changelog-features">
+                        <li>Berichtlimiet systeem - Maximaal 6 berichten per chat</li>
+                        <li>Admin broadcast systeem voor belangrijke mededelingen</li>
+                        <li>Verbeterde admin monitor met chat selectie menu</li>
+                        <li>Profielfoto's werken nu voor alle gebruikers in chats</li>
+                        <li>Scrollen gefixt met automatisch scrollen naar beneden</li>
+                        <li>Verbeterde gebruikersinterface met betere chat herkenning</li>
+                    </ul>
+                </div>
+
+                <div class="changelog-item">
+                    <div class="changelog-version">v1.11</div>
                     <ul class="changelog-features">
                         <li>Verbeterd scrollsysteem met echte scrollbars</li>
                         <li>Profiel foto's toegevoegd met emoji-selectie</li>
@@ -1767,6 +1994,7 @@
             </div>
         </div>
     </div>
+    
     <!-- Edit Message Modal -->
     <div class="modal hidden" id="editMessageModal">
         <div class="modal-content">
@@ -1783,6 +2011,7 @@
             </form>
         </div>
     </div>
+    
     <script>
         // Firebase configs voor meerdere databases
         const firebaseConfigs = {
@@ -1834,6 +2063,7 @@
         let selectedPrivateChat = null;
         let flappyBirdGame = null;
         let selectedEmoji = '😊';
+        let monitoredChatId = null;
 
         // Cookie functions
         function setCookie(name, value, days) {
@@ -1870,6 +2100,10 @@
             if (savedTheme) {
                 changeTheme(savedTheme, false);
             }
+            
+            // Load broadcasts first - for all users (logged in or not)
+            loadGlobalBroadcasts();
+            
             if (savedUser) {
                 try {
                     const userData = JSON.parse(savedUser);
@@ -1924,6 +2158,226 @@
             document.getElementById('mobileMenuOverlay').addEventListener('click', closeMobileMenu);
             // Start with global chat
             loadGlobalChat();
+        }
+
+        // Global Broadcast Functions
+        async function loadGlobalBroadcasts() {
+            try {
+                const broadcastsRef = userDatabase.ref('broadcasts');
+                const snapshot = await broadcastsRef.orderByChild('active').equalTo(true).once('value');
+                
+                let broadcastsHtml = '';
+                
+                snapshot.forEach((broadcastSnapshot) => {
+                    const broadcast = broadcastSnapshot.val();
+                    
+                    broadcastsHtml += `
+                        <div class="admin-broadcast">
+                            <h4>${broadcast.title}</h4>
+                            <p>${broadcast.message}</p>
+                            <small>Verzonden door ${broadcast.sentBy}</small>
+                        </div>
+                    `;
+                });
+                
+                // Add broadcasts to global container
+                document.getElementById('globalBroadcasts').innerHTML = broadcastsHtml;
+            } catch (error) {
+                console.error('Error loading global broadcasts:', error);
+            }
+        }
+
+        // Broadcast Functions
+        function openBroadcastModal() {
+            if (!currentUser.isAdmin) {
+                showError("Je hebt geen toestemming om broadcast berichten te sturen.");
+                return;
+            }
+            document.getElementById('broadcastModal').classList.remove('hidden');
+            loadActiveBroadcasts();
+        }
+
+        async function sendBroadcast() {
+            const title = document.getElementById('broadcastTitle').value.trim();
+            const message = document.getElementById('broadcastMessage').value.trim();
+            
+            if (!title || !message) {
+                showError("Vul zowel titel als bericht in!");
+                return;
+            }
+            
+            try {
+                const broadcastData = {
+                    title: title,
+                    message: message,
+                    sentBy: currentUser.username,
+                    sentAt: Date.now(),
+                    active: true
+                };
+                
+                await userDatabase.ref('broadcasts').push(broadcastData);
+                
+                showSuccess("Broadcast bericht succesvol verzonden!");
+                document.getElementById('broadcastTitle').value = '';
+                document.getElementById('broadcastMessage').value = '';
+                
+                loadActiveBroadcasts();
+                loadGlobalBroadcasts(); // Update global broadcasts
+            } catch (error) {
+                showError("Fout bij verzenden broadcast: " + error.message);
+            }
+        }
+
+        async function loadActiveBroadcasts() {
+            try {
+                const broadcastsRef = userDatabase.ref('broadcasts');
+                const snapshot = await broadcastsRef.orderByChild('active').equalTo(true).once('value');
+                
+                let broadcastsHtml = '';
+                
+                snapshot.forEach((broadcastSnapshot) => {
+                    const broadcast = broadcastSnapshot.val();
+                    const time = new Date(broadcast.sentAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const date = new Date(broadcast.sentAt).toLocaleDateString();
+                    
+                    broadcastsHtml += `
+                        <div style="padding: 10px; margin-bottom: 10px; background: var(--surface); border-radius: 8px;">
+                            <strong>${broadcast.title}</strong>
+                            <p style="margin: 5px 0;">${broadcast.message}</p>
+                            <small style="color: var(--text-secondary);">Verzonden door ${broadcast.sentBy} op ${time} • ${date}</small>
+                            <button class="btn btn-danger" onclick="removeBroadcast('${broadcastSnapshot.key}')" style="margin-top: 5px; padding: 5px 10px; font-size: 0.8rem;">
+                                <i class="fas fa-times"></i> Verwijderen
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('activeBroadcasts').innerHTML = broadcastsHtml || '<p>Geen actieve broadcasts</p>';
+            } catch (error) {
+                console.error('Error loading broadcasts:', error);
+            }
+        }
+
+        async function removeBroadcast(broadcastId) {
+            try {
+                await userDatabase.ref(`broadcasts/${broadcastId}`).update({
+                    active: false,
+                    removedAt: Date.now(),
+                    removedBy: currentUser.username
+                });
+                
+                showSuccess("Broadcast verwijderd!");
+                loadActiveBroadcasts();
+                loadGlobalBroadcasts(); // Update global broadcasts
+            } catch (error) {
+                showError("Fout bij verwijderen broadcast: " + error.message);
+            }
+        }
+
+        // Admin Chat Monitor Functions
+        function selectAdminChat() {
+            document.getElementById('adminMonitorModal').classList.remove('hidden');
+            loadAdminMonitorList();
+        }
+
+        async function loadAdminMonitorList() {
+            try {
+                const privateChatsRef = privateMessagesDatabase.ref('privateChats');
+                const snapshot = await privateChatsRef.once('value');
+                
+                let monitorHtml = '';
+                
+                snapshot.forEach((chatSnapshot) => {
+                    const chat = chatSnapshot.val();
+                    const participants = chatSnapshot.key.split('_');
+                    
+                    // Get usernames for both participants
+                    const getUserName = async (userId) => {
+                        const userRef = userDatabase.ref('users/' + userId);
+                        const userSnapshot = await userRef.once('value');
+                        return userSnapshot.val().username;
+                    };
+                    
+                    Promise.all([getUserName(participants[0]), getUserName(participants[1])]).then(([user1, user2]) => {
+                        monitorHtml += `
+                            <div class="monitor-chat-item" onclick="monitorChat('${chatSnapshot.key}', '${user1}', '${user2}')">
+                                <strong>${user1} ↔ ${user2}</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">
+                                    Laatste activiteit: ${chat.lastActivity ? new Date(chat.lastActivity).toLocaleString() : 'Onbekend'}
+                                </div>
+                            </div>
+                        `;
+                        
+                        document.getElementById('adminMonitorList').innerHTML = monitorHtml;
+                    });
+                });
+                
+                if (!monitorHtml) {
+                    document.getElementById('adminMonitorList').innerHTML = '<p>Geen privé chats gevonden</p>';
+                }
+            } catch (error) {
+                console.error('Error loading admin monitor list:', error);
+            }
+        }
+
+        async function monitorChat(chatId, user1, user2) {
+            monitoredChatId = chatId;
+            
+            // Update UI
+            document.querySelectorAll('.monitor-chat-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.monitor-chat-item').classList.add('active');
+            
+            document.getElementById('monitoredChat').classList.remove('hidden');
+            
+            // Load chat messages
+            const privateMessagesRef = privateMessagesDatabase.ref(`privateChats/${chatId}/messages`);
+            const snapshot = await privateMessagesRef.orderByChild('timestamp').once('value');
+            
+            let messagesHtml = '';
+            
+            snapshot.forEach((messageSnapshot) => {
+                const message = messageSnapshot.val();
+                const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const date = new Date(message.timestamp).toLocaleDateString();
+                
+                // Get sender profile emoji
+                const getSenderEmoji = async (senderId) => {
+                    const userRef = userDatabase.ref('users/' + senderId);
+                    const userSnapshot = await userRef.once('value');
+                    return userSnapshot.val().profileEmoji || '👤';
+                };
+                
+                getSenderEmoji(message.senderId).then(emoji => {
+                    messagesHtml += `
+                        <div class="message ${message.senderId === currentUser.id ? 'sent' : 'private'}" data-message-id="${messageSnapshot.key}">
+                            <div class="message-sender">
+                                <div class="sender-avatar emoji">${emoji}</div>
+                                ${message.senderName}
+                            </div>
+                            ${message.text}
+                            <div class="message-time">${time} • ${date}</div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('monitoredChatMessages').innerHTML = messagesHtml;
+                    
+                    // Scroll to bottom
+                    const monitoredChatMessages = document.getElementById('monitoredChatMessages');
+                    monitoredChatMessages.scrollTop = monitoredChatMessages.scrollHeight;
+                });
+            });
+            
+            if (!messagesHtml) {
+                document.getElementById('monitoredChatMessages').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        <i class="fas fa-lock" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3>Privé Chat Monitor</h3>
+                        <p>Bekijk berichten tussen ${user1} en ${user2}</p>
+                    </div>
+                `;
+            }
         }
 
         // Profile Picture Functions
@@ -2263,12 +2717,19 @@
 
         // Theme Functions
         function openThemeSelector() {
+            // Show black-rgb theme only for admins
+            if (currentUser && currentUser.isAdmin) {
+                document.getElementById('blackRgbThemeOption').classList.remove('hidden');
+            } else {
+                document.getElementById('blackRgbThemeOption').classList.add('hidden');
+            }
+            
             document.getElementById('themeSelectorModal').classList.remove('hidden');
         }
 
         function changeTheme(themeName, save = true) {
             // Remove all theme classes
-            document.body.classList.remove('theme-dark', 'theme-blue', 'theme-green', 'theme-purple', 'theme-orange', 'theme-pink', 'theme-midnight', 'theme-cyber', 'theme-sunset', 'theme-nature', 'theme-royal');
+            document.body.classList.remove('theme-dark', 'theme-blue', 'theme-green', 'theme-purple', 'theme-orange', 'theme-pink', 'theme-midnight', 'theme-cyber', 'theme-sunset', 'theme-nature', 'theme-royal', 'theme-black-rgb');
 
             // Add selected theme class
             if (themeName !== 'default') {
@@ -2436,76 +2897,6 @@
 
             } catch (error) {
                 showError("Fout bij deblokkeren van IP: " + error.message);
-            }
-        }
-
-        // Admin Chat Functions
-        function selectAdminChat() {
-            isGlobalChat = false;
-            isAdminChat = true;
-            selectedPrivateChat = null;
-            // Update UI
-            document.getElementById('selectedUserInfo').innerHTML = `
-                <h4>Admin Monitor</h4>
-                <small>Bekijk alle privé chats</small>
-            `;
-            // Update chat header
-            document.getElementById('chatHeader').className = 'chat-header admin-chat-header';
-            document.getElementById('chatHeader').querySelector('.chat-type-icon').innerHTML = '<i class="fas fa-shield-alt"></i>';
-            // Update input styling
-            document.querySelector('.chat-input').className = 'chat-input admin-chat';
-            // Set active state
-            document.querySelectorAll('.chat-type-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.closest('.chat-type-item').classList.add('active');
-            // Load admin monitor
-            loadAdminMonitor();
-            // Close mobile menu on selection
-            closeMobileMenu();
-        }
-
-        async function loadAdminMonitor() {
-            try {
-                // Get all private chats
-                const privateChatsRef = privateMessagesDatabase.ref('privateChats');
-                const snapshot = await privateChatsRef.once('value');
-
-                let messagesHtml = '';
-
-                snapshot.forEach((chatSnapshot) => {
-                    const chat = chatSnapshot.val();
-                    const chatId = chatSnapshot.key;
-
-                    // Get messages for this chat
-                    if (chat.messages) {
-                        Object.keys(chat.messages).forEach(messageKey => {
-                            const message = chat.messages[messageKey];
-                            const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                            const date = new Date(message.timestamp).toLocaleDateString();
-
-                            messagesHtml += `
-                                <div class="message admin" data-message-id="${messageKey}">
-                                    <div class="message-sender">${message.senderName} → ${message.receiverName}</div>
-                                    ${message.text}
-                                    <div class="message-time">${time} • ${date}</div>
-                                </div>
-                            `;
-                        });
-                    }
-                });
-                document.getElementById('chatMessages').innerHTML = messagesHtml || `
-                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
-                        <i class="fas fa-shield-alt" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                        <h3>Admin Monitor</h3>
-                        <p>Hier kun je alle privé chats tussen gebruikers bekijken</p>
-                    </div>
-                `;
-                // Scroll to bottom
-                const chatMessages = document.getElementById('chatMessages');
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            } catch (error) {
-                console.error('Error loading admin monitor:', error);
             }
         }
 
@@ -2757,6 +3148,7 @@
                 document.getElementById('adminPanelBtn').classList.remove('hidden');
                 document.getElementById('updateModeBtn').classList.remove('hidden');
                 document.getElementById('adminChatItem').classList.remove('hidden');
+                document.getElementById('broadcastBtn').classList.remove('hidden');
             }
             // Load chat data
             loadUsersForChat();
@@ -2899,6 +3291,15 @@
                 const snapshot = await globalMessagesRef.orderByChild('timestamp').once('value');
                 let messagesHtml = '';
                 const twoHoursAgo = Date.now() - (2 * 60 * 60 * 1000); // 2 uur geleden
+                
+                // Get all users for profile emojis
+                const usersSnapshot = await userDatabase.ref('users').once('value');
+                const userEmojis = {};
+                usersSnapshot.forEach((userSnapshot) => {
+                    const user = userSnapshot.val();
+                    userEmojis[userSnapshot.key] = user.profileEmoji || '👤';
+                });
+                
                 snapshot.forEach((messageSnapshot) => {
                     const message = messageSnapshot.val();
 
@@ -2909,9 +3310,16 @@
                     const date = new Date(message.timestamp).toLocaleDateString();
                     const isCurrentUser = message.userId === currentUser.id;
                     const messageClass = message.isSuccess ? 'message success' : (isCurrentUser ? 'sent' : 'global');
+                    const senderEmoji = userEmojis[message.userId] || '👤';
+                    
                     messagesHtml += `
                         <div class="message ${messageClass}" data-message-id="${messageSnapshot.key}">
-                            ${!isCurrentUser ? `<div class="message-sender">${message.username}</div>` : ''}
+                            ${!isCurrentUser ? `
+                                <div class="message-sender">
+                                    <div class="sender-avatar emoji">${senderEmoji}</div>
+                                    ${message.username}
+                                </div>
+                            ` : ''}
                             ${message.text}
                             <div class="message-time">${time} • ${date}</div>
                             ${(isCurrentUser && canDelete) || currentUser.isAdmin ? `
@@ -2945,15 +3353,31 @@
                 const privateMessagesRef = privateMessagesDatabase.ref(`privateChats/${chatId}/messages`);
                 const snapshot = await privateMessagesRef.orderByChild('timestamp').once('value');
                 let messagesHtml = '';
+                
+                // Get user profile emojis
+                const usersSnapshot = await userDatabase.ref('users').once('value');
+                const userEmojis = {};
+                usersSnapshot.forEach((userSnapshot) => {
+                    const user = userSnapshot.val();
+                    userEmojis[userSnapshot.key] = user.profileEmoji || '👤';
+                });
+                
                 snapshot.forEach((messageSnapshot) => {
                     const message = messageSnapshot.val();
                     const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                     const date = new Date(message.timestamp).toLocaleDateString();
                     const isCurrentUser = message.senderId === currentUser.id;
                     const messageClass = isCurrentUser ? 'sent' : 'private';
+                    const senderEmoji = userEmojis[message.senderId] || '👤';
+                    
                     messagesHtml += `
                         <div class="message ${messageClass}" data-message-id="${messageSnapshot.key}">
-                            ${!isCurrentUser ? `<div class="message-sender">${message.senderName}</div>` : ''}
+                            ${!isCurrentUser ? `
+                                <div class="message-sender">
+                                    <div class="sender-avatar emoji">${senderEmoji}</div>
+                                    ${message.senderName}
+                                </div>
+                            ` : ''}
                             ${message.text}
                             <div class="message-time">${time} • ${date}</div>
                             ${isCurrentUser ? `
