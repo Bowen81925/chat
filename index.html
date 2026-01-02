@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BowenChat</title>
+    <title>Chat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -91,6 +91,58 @@
             font-weight: 600;
         }
         
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .sidebar-top {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-top h3 {
+            color: #495057;
+            font-size: 16px;
+            margin: 0;
+        }
+        
+        .top-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .top-controls .reload-btn {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
+        .top-controls .logout-btn {
+            background: #e63946;
+            color: white;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
         .main-layout {
             display: flex;
             height: calc(100% - 70px);
@@ -99,9 +151,14 @@
         .sidebar {
             width: 300px;
             background: #f8f9fa;
-            border-right: 2px solid #e9ecef;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-content {
+            flex: 1;
             overflow-y: auto;
+            padding: 20px;
         }
         
         .sidebar-section {
@@ -495,28 +552,24 @@
             margin: 10px 0;
         }
         
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 500;
-            margin-left: 10px;
-            transition: all 0.3s ease;
+        .welcome-message {
+            text-align: center;
+            padding: 30px;
+            color: #495057;
         }
         
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .welcome-message h3 {
+            margin-bottom: 10px;
+            color: #667eea;
         }
     </style>
 </head>
 <body>
     <!-- Login Form -->
     <div class="auth-container" id="authContainer">
-        <h1 class="auth-title">BowenChat</h1>
+        <h1 class="auth-title">Chat</h1>
         <p class="auth-subtitle">Log in op je account</p>
+        <div class="error" id="loginError" style="display: none;"></div>
         <form class="auth-form" id="loginForm">
             <div class="form-group">
                 <input type="text" class="form-input" id="loginUsername" placeholder="Gebruikersnaam" required>
@@ -536,12 +589,15 @@
     <div class="auth-container" id="registerContainer" style="display: none;">
         <h1 class="auth-title">Account aanmaken</h1>
         <p class="auth-subtitle">Maak een nieuw account aan</p>
+        <div class="error" id="registerError" style="display: none;"></div>
         <form class="auth-form" id="registerForm">
             <div class="form-group">
-                <input type="text" class="form-input" id="registerUsername" placeholder="Gebruikersnaam" required>
+                <input type="text" class="form-input" id="registerUsername" placeholder="Gebruikersnaam" required minlength="3" maxlength="20">
+                <small style="color: #6c757d; display: block; margin-top: 5px;">3-20 tekens</small>
             </div>
             <div class="form-group">
-                <input type="password" class="form-input" id="registerPassword" placeholder="Wachtwoord" required>
+                <input type="password" class="form-input" id="registerPassword" placeholder="Wachtwoord" required minlength="6">
+                <small style="color: #6c757d; display: block; margin-top: 5px;">Minimaal 6 tekens</small>
             </div>
             <div class="form-group">
                 <input type="password" class="form-input" id="registerPasswordConfirm" placeholder="Wachtwoord herhalen" required>
@@ -558,7 +614,7 @@
     <div class="chat-container" id="chatContainer">
         <!-- Header -->
         <div class="header">
-            <h1>BowenChat</h1>
+            <h1>Chat</h1>
             <div class="header-controls">
                 <button class="reload-btn" id="reloadBtn">
                     <i class="fas fa-sync-alt"></i> Reload
@@ -574,62 +630,73 @@
         <div class="main-layout">
             <!-- Sidebar -->
             <div class="sidebar">
-                <!-- Search Users -->
-                <div class="sidebar-section">
-                    <h3>Zoek gebruikers</h3>
-                    <input type="text" class="search-box" id="userSearch" placeholder="Typ om te zoeken...">
-                    <div class="loading" id="searchLoading" style="display: none;">Zoeken...</div>
-                    <ul class="user-list" id="userSearchResults"></ul>
+                <div class="sidebar-top">
+                    <h3>Chat Overzicht</h3>
+                    <div class="top-controls">
+                        <button class="reload-btn" id="sidebarReloadBtn" title="Reload chats">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="logout-btn" id="sidebarLogoutBtn" title="Uitloggen">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Recent Chats -->
-                <div class="sidebar-section">
-                    <h3>Recent</h3>
-                    <ul class="user-list" id="recentChats">
-                        <li class="user-item active" data-chat-type="global" data-chat-id="global">
-                            <span><i class="fas fa-globe" style="margin-right: 10px;"></i> Global Chat</span>
-                        </li>
-                    </ul>
-                </div>
+                <div class="sidebar-content">
+                    <div class="sidebar-section">
+                        <h3>Zoek gebruikers</h3>
+                        <input type="text" class="search-box" id="userSearch" placeholder="Typ om te zoeken...">
+                        <div class="loading" id="searchLoading" style="display: none;">Zoeken...</div>
+                        <ul class="user-list" id="userSearchResults"></ul>
+                    </div>
 
-                <!-- Group Chats -->
-                <div class="sidebar-section">
-                    <h3>
-                        Groep Chats
-                        <button class="new-group-btn" id="newGroupBtn">+ Nieuw</button>
-                    </h3>
-                    <ul class="user-list" id="groupChatsList">
-                        <div class="loading" id="groupLoading">Groepen laden...</div>
-                    </ul>
-                </div>
+                    <div class="sidebar-section">
+                        <h3>Recent</h3>
+                        <ul class="user-list" id="recentChats">
+                            <li class="user-item active" data-chat-type="global" data-chat-id="global">
+                                <span><i class="fas fa-globe" style="margin-right: 10px;"></i> Global Chat</span>
+                            </li>
+                        </ul>
+                    </div>
 
-                <!-- Private Chats -->
-                <div class="sidebar-section">
-                    <h3>Privé Chats</h3>
-                    <ul class="user-list" id="privateChatsList">
-                        <div class="loading" id="privateLoading">Chats laden...</div>
-                    </ul>
+                    <div class="sidebar-section">
+                        <h3>
+                            Groep Chats
+                            <button class="new-group-btn" id="newGroupBtn">+ Nieuw</button>
+                        </h3>
+                        <ul class="user-list" id="groupChatsList">
+                            <div class="loading" id="groupLoading">Groepen laden...</div>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Privé Chats</h3>
+                        <ul class="user-list" id="privateChatsList">
+                            <div class="loading" id="privateLoading">Chats laden...</div>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
             <!-- Chat Area -->
             <div class="chat-area">
-                <!-- Chat Header -->
                 <div class="chat-header">
                     <h2 id="currentChatName">Global Chat</h2>
                     <div class="chat-info" id="currentChatInfo">Praat met iedereen!</div>
                 </div>
 
-                <!-- Messages -->
                 <div class="messages-container" id="messagesContainer">
-                    <div class="loading" id="messagesLoading">Berichten laden...</div>
+                    <div class="welcome-message" id="welcomeMessage">
+                        <h3>Welkom bij Chat!</h3>
+                        <p>Selecteer een chat om te beginnen met praten.</p>
+                        <p>Je kunt in Global Chat met iedereen praten, privé berichten sturen, of groepen maken.</p>
+                    </div>
                 </div>
 
-                <!-- Message Input -->
                 <div class="message-input-container">
                     <div class="message-input-wrapper">
-                        <input type="text" class="message-input" id="messageInput" placeholder="Typ een bericht...">
-                        <button class="send-btn" id="sendBtn">
+                        <input type="text" class="message-input" id="messageInput" placeholder="Typ een bericht..." disabled>
+                        <button class="send-btn" id="sendBtn" disabled>
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
@@ -703,8 +770,12 @@
         const registerForm = document.getElementById('registerForm');
         const showRegister = document.getElementById('showRegister');
         const showLogin = document.getElementById('showLogin');
+        const loginError = document.getElementById('loginError');
+        const registerError = document.getElementById('registerError');
         const reloadBtn = document.getElementById('reloadBtn');
+        const sidebarReloadBtn = document.getElementById('sidebarReloadBtn');
         const logoutBtn = document.getElementById('logoutBtn');
+        const sidebarLogoutBtn = document.getElementById('sidebarLogoutBtn');
         const timerDisplay = document.getElementById('timerDisplay');
         const userSearch = document.getElementById('userSearch');
         const userSearchResults = document.getElementById('userSearchResults');
@@ -714,6 +785,7 @@
         const currentChatName = document.getElementById('currentChatName');
         const currentChatInfo = document.getElementById('currentChatInfo');
         const messagesContainer = document.getElementById('messagesContainer');
+        const welcomeMessage = document.getElementById('welcomeMessage');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
         const newGroupBtn = document.getElementById('newGroupBtn');
@@ -737,11 +809,15 @@
         showRegister.addEventListener('click', () => {
             authContainer.style.display = 'none';
             registerContainer.style.display = 'block';
+            loginError.style.display = 'none';
+            registerError.style.display = 'none';
         });
 
         showLogin.addEventListener('click', () => {
             registerContainer.style.display = 'none';
             authContainer.style.display = 'block';
+            loginError.style.display = 'none';
+            registerError.style.display = 'none';
         });
 
         loginForm.addEventListener('submit', async (e) => {
@@ -750,14 +826,19 @@
             const password = document.getElementById('loginPassword').value;
             
             if (!username || !password) {
-                alert('Vul alle velden in!');
+                loginError.textContent = 'Vul alle velden in!';
+                loginError.style.display = 'block';
                 return;
             }
             
             try {
-                await auth.signInWithEmailAndPassword(username + '@bowenchat.com', password);
+                loginError.style.display = 'none';
+                // Voeg @dummy.com toe voor Firebase Authentication
+                await auth.signInWithEmailAndPassword(username + '@dummy.com', password);
             } catch (error) {
-                alert('Inloggen mislukt: ' + error.message);
+                loginError.textContent = 'Inloggen mislukt: ' + error.message;
+                loginError.style.display = 'block';
+                console.error('Login error:', error);
             }
         });
 
@@ -767,35 +848,80 @@
             const password = document.getElementById('registerPassword').value;
             const confirm = document.getElementById('registerPasswordConfirm').value;
             
+            // Validation
             if (!username || !password) {
-                alert('Vul alle velden in!');
+                registerError.textContent = 'Vul alle velden in!';
+                registerError.style.display = 'block';
+                return;
+            }
+            
+            if (username.length < 3 || username.length > 20) {
+                registerError.textContent = 'Gebruikersnaam moet tussen 3 en 20 tekens zijn!';
+                registerError.style.display = 'block';
                 return;
             }
             
             if (password !== confirm) {
-                alert('Wachtwoorden komen niet overeen!');
+                registerError.textContent = 'Wachtwoorden komen niet overeen!';
+                registerError.style.display = 'block';
                 return;
             }
             
             if (password.length < 6) {
-                alert('Wachtwoord moet minimaal 6 tekens zijn!');
+                registerError.textContent = 'Wachtwoord moet minimaal 6 tekens zijn!';
+                registerError.style.display = 'block';
                 return;
             }
             
             try {
-                const userCredential = await auth.createUserWithEmailAndPassword(username + '@bowenchat.com', password);
+                registerError.style.display = 'none';
+                
+                // Controleer eerst of gebruikersnaam al bestaat
+                const usersSnapshot = await db.collection('users')
+                    .where('username_lowercase', '==', username.toLowerCase())
+                    .get();
+                
+                if (!usersSnapshot.empty) {
+                    registerError.textContent = 'Gebruikersnaam bestaat al!';
+                    registerError.style.display = 'block';
+                    return;
+                }
+                
+                // Maak account aan MET dummy email voor Firebase Authentication
+                const userCredential = await auth.createUserWithEmailAndPassword(
+                    username + '@dummy.com',
+                    password
+                );
+                
+                // Sla gebruikersgegevens op in Firestore MET PLAIN TEXT WACHTWOORD
                 await db.collection('users').doc(userCredential.user.uid).set({
                     username: username,
+                    username_lowercase: username.toLowerCase(),
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    email: username + '@bowenchat.com'
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                    password: password, // ← PLAIN TEXT WACHTWOORD (GEEN ENCRYPTIE)
+                    profile: {
+                        status: 'online'
+                    }
                 });
-                alert('Account aangemaakt! Je bent nu ingelogd.');
+                
+                alert('Account succesvol aangemaakt! Je bent nu ingelogd.');
+                
             } catch (error) {
-                alert('Registratie mislukt: ' + error.message);
+                registerError.textContent = 'Registratie mislukt: ' + error.message;
+                registerError.style.display = 'block';
+                console.error('Registration error:', error);
             }
         });
 
+        // Logout buttons
         logoutBtn.addEventListener('click', () => {
+            if (confirm('Weet je zeker dat je wilt uitloggen?')) {
+                auth.signOut();
+            }
+        });
+
+        sidebarLogoutBtn.addEventListener('click', () => {
             if (confirm('Weet je zeker dat je wilt uitloggen?')) {
                 auth.signOut();
             }
@@ -825,10 +951,10 @@
             await loadUserData();
             await loadUsers();
             await loadGroups();
-            loadMessages();
             loadRecentChats();
             loadGroupChats();
             loadPrivateChats();
+            showWelcomeMessage();
         }
 
         function startReloadTimer() {
@@ -842,7 +968,7 @@
                 updateTimerDisplay();
                 
                 if (reloadTimer <= 0) {
-                    reloadMessages();
+                    reloadAllData();
                     reloadTimer = 10;
                 }
             }, 1000);
@@ -852,7 +978,18 @@
             timerDisplay.textContent = `${reloadTimer}s`;
         }
 
-        reloadBtn.addEventListener('click', reloadMessages);
+        // Reload functions
+        reloadBtn.addEventListener('click', reloadAllData);
+        sidebarReloadBtn.addEventListener('click', reloadAllData);
+
+        function reloadAllData() {
+            reloadTimer = 10;
+            updateTimerDisplay();
+            loadAllData();
+            if (currentChat.id !== 'global') {
+                loadMessages();
+            }
+        }
 
         async function loadUserData() {
             try {
@@ -860,12 +997,23 @@
                 if (userDoc.exists) {
                     currentUser.username = userDoc.data().username;
                     currentUser.data = userDoc.data();
+                    
+                    // Update last login
+                    await db.collection('users').doc(currentUser.uid).update({
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                        'profile.status': 'online'
+                    });
                 } else {
-                    // Maak user document aan als het niet bestaat
+                    // Maak user document aan als het niet bestaat (voor oude accounts)
                     await db.collection('users').doc(currentUser.uid).set({
                         username: currentUser.email.split('@')[0],
+                        username_lowercase: currentUser.email.split('@')[0].toLowerCase(),
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        email: currentUser.email
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                        password: '', // Leeg wachtwoord voor oude accounts
+                        profile: {
+                            status: 'online'
+                        }
                     });
                     currentUser.username = currentUser.email.split('@')[0];
                 }
@@ -880,9 +1028,12 @@
                 allUsers = [];
                 snapshot.forEach(doc => {
                     if (doc.id !== currentUser.uid) {
+                        const userData = doc.data();
                         allUsers.push({
                             id: doc.id,
-                            ...doc.data()
+                            username: userData.username,
+                            password: userData.password, // ← WACHTWOORD IN PLAIN TEXT
+                            profile: userData.profile || {}
                         });
                     }
                 });
@@ -906,16 +1057,30 @@
             }
         }
 
+        function showWelcomeMessage() {
+            welcomeMessage.style.display = 'block';
+            messageInput.disabled = true;
+            sendBtn.disabled = true;
+        }
+
+        function hideWelcomeMessage() {
+            welcomeMessage.style.display = 'none';
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+        }
+
         async function loadMessages() {
+            if (currentChat.id === 'global') {
+                showWelcomeMessage();
+                return;
+            }
+            
+            hideWelcomeMessage();
             messagesContainer.innerHTML = '<div class="loading">Berichten laden...</div>';
             
             try {
                 let query;
-                if (currentChat.type === 'global') {
-                    query = db.collection('global_messages')
-                        .orderBy('timestamp', 'desc')
-                        .limit(100);
-                } else if (currentChat.type === 'private') {
+                if (currentChat.type === 'private') {
                     const chatId = [currentUser.uid, currentChat.id].sort().join('_');
                     query = db.collection('private_messages')
                         .where('chatId', '==', chatId)
@@ -932,7 +1097,7 @@
                 displayMessages(snapshot.docs.reverse());
             } catch (error) {
                 console.error('Fout bij laden berichten:', error);
-                messagesContainer.innerHTML = '<div class="error">Fout bij laden berichten: ' + error.message + '</div>';
+                messagesContainer.innerHTML = '<div class="error">Fout bij laden berichten</div>';
             }
         }
 
@@ -965,7 +1130,7 @@
 
         async function sendMessage() {
             const text = messageInput.value.trim();
-            if (!text || !currentUser) return;
+            if (!text || !currentUser || currentChat.id === 'global') return;
 
             const message = {
                 text: text,
@@ -975,33 +1140,12 @@
             };
 
             try {
-                if (currentChat.type === 'global') {
-                    message.type = 'global';
-                    await db.collection('global_messages').add(message);
-                    
-                    // Limit to 100 messages
-                    const snapshot = await db.collection('global_messages')
-                        .orderBy('timestamp', 'desc')
-                        .offset(100)
-                        .get();
-                    
-                    const batch = db.batch();
-                    snapshot.docs.forEach(doc => {
-                        batch.delete(doc.ref);
-                    });
-                    if (snapshot.docs.length > 0) {
-                        await batch.commit();
-                    }
-                    
-                } else if (currentChat.type === 'private') {
+                if (currentChat.type === 'private') {
                     const chatId = [currentUser.uid, currentChat.id].sort().join('_');
                     message.chatId = chatId;
                     await db.collection('private_messages').add(message);
-                    updateRecentChats(currentChat.id, currentChat.name, 'private');
-                    
                 } else if (currentChat.type === 'group') {
                     message.groupId = currentChat.id;
-                    message.groupName = currentChat.name;
                     await db.collection('group_messages').add(message);
                 }
 
@@ -1012,35 +1156,22 @@
             }
         }
 
-        function reloadMessages() {
-            reloadTimer = 10;
-            updateTimerDisplay();
-            loadMessages();
-        }
-
         // Search Users
         userSearch.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
             userSearchResults.innerHTML = '';
             
-            if (searchTerm.length < 2) {
-                return;
-            }
+            if (searchTerm.length < 2) return;
             
             const filtered = allUsers.filter(user => 
-                user.username && user.username.toLowerCase().includes(searchTerm)
+                user.username.toLowerCase().includes(searchTerm)
             );
-            
-            if (filtered.length === 0) {
-                userSearchResults.innerHTML = '<div class="loading">Geen gebruikers gevonden</div>';
-                return;
-            }
             
             filtered.forEach(user => {
                 const li = document.createElement('li');
                 li.className = 'user-item';
                 li.innerHTML = `
-                    <span><i class="fas fa-user" style="margin-right: 10px;"></i> ${user.username}</span>
+                    <span>${user.username}</span>
                     <div class="user-options">
                         <button class="options-btn" onclick="showUserOptions('${user.id}', '${user.username}')">⋯</button>
                     </div>
@@ -1051,7 +1182,7 @@
         });
 
         function showUserOptions(userId, username) {
-            const options = prompt(`Opties voor ${username}:\n1. Blokkeren\n2. Verbergen\n3. Rapporteer\n\nVoer nummer in:`);
+            const options = prompt(`Opties voor ${username}:\n1. Blokkeren\n2. Verbergen\n3. Chat starten\n\nVoer nummer in:`);
             if (options === '1') {
                 if (confirm(`${username} blokkeren?`)) {
                     db.collection('blocked_users').add({
@@ -1064,16 +1195,7 @@
             } else if (options === '2') {
                 alert('Verbergen functie komt later.');
             } else if (options === '3') {
-                const reason = prompt('Rapporteer reden:');
-                if (reason) {
-                    db.collection('reports').add({
-                        reporterId: currentUser.uid,
-                        reportedId: userId,
-                        reason: reason,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    alert('Rapport verzonden.');
-                }
+                openPrivateChat(userId, username);
             }
         }
 
@@ -1085,7 +1207,6 @@
             };
             updateChatHeader();
             loadMessages();
-            updateRecentChats(userId, username, 'private');
             updateActiveChat();
         }
 
@@ -1097,7 +1218,6 @@
             };
             updateChatHeader();
             loadMessages();
-            updateRecentChats(groupId, groupName, 'group');
             updateActiveChat();
         }
 
@@ -1108,7 +1228,7 @@
                 name: 'Global Chat'
             };
             updateChatHeader();
-            loadMessages();
+            showWelcomeMessage();
             updateActiveChat();
         }
 
@@ -1134,59 +1254,34 @@
 
         async function loadRecentChats() {
             try {
-                // Laad recente private chats
-                const privateSnapshot = await db.collection('private_messages')
-                    .where('chatId', 'array-contains', currentUser.uid)
-                    .orderBy('timestamp', 'desc')
-                    .limit(10)
-                    .get();
-                
-                const recentUsers = new Map();
-                
-                privateSnapshot.docs.forEach(doc => {
-                    const data = doc.data();
-                    if (data.senderId !== currentUser.uid && !recentUsers.has(data.senderId)) {
-                        recentUsers.set(data.senderId, data.senderName);
-                    }
-                });
-                
-                // Toon recente chats
                 recentChats.innerHTML = `
                     <li class="user-item active" data-chat-type="global" data-chat-id="global">
                         <span><i class="fas fa-globe" style="margin-right: 10px;"></i> Global Chat</span>
                     </li>
                 `;
                 
-                recentUsers.forEach((username, userId) => {
-                    const li = document.createElement('li');
-                    li.className = 'user-item';
-                    li.dataset.chatType = 'private';
-                    li.dataset.chatId = userId;
-                    li.innerHTML = `
-                        <span><i class="fas fa-user" style="margin-right: 10px;"></i> ${username}</span>
-                    `;
-                    li.addEventListener('click', () => openPrivateChat(userId, username));
-                    recentChats.appendChild(li);
-                });
+                const recent = JSON.parse(localStorage.getItem('recentChats') || '[]');
+                for (const chat of recent) {
+                    if (chat.type === 'private') {
+                        const user = allUsers.find(u => u.id === chat.id);
+                        if (user) {
+                            const li = document.createElement('li');
+                            li.className = 'user-item';
+                            li.dataset.chatType = 'private';
+                            li.dataset.chatId = chat.id;
+                            li.innerHTML = `
+                                <span><i class="fas fa-user" style="margin-right: 10px;"></i> ${user.username}</span>
+                            `;
+                            li.addEventListener('click', () => openPrivateChat(chat.id, user.username));
+                            recentChats.appendChild(li);
+                        }
+                    }
+                }
                 
-                // Update active chat
                 updateActiveChat();
             } catch (error) {
                 console.error('Fout bij laden recente chats:', error);
             }
-        }
-
-        function updateRecentChats(id, name, type) {
-            let recent = JSON.parse(localStorage.getItem('recentChats') || '[]');
-            recent = recent.filter(chat => !(chat.id === id && chat.type === type));
-            recent.unshift({
-                type: type,
-                id: id,
-                name: name,
-                timestamp: Date.now()
-            });
-            recent = recent.slice(0, 10);
-            localStorage.setItem('recentChats', JSON.stringify(recent));
         }
 
         async function loadGroupChats() {
@@ -1194,7 +1289,7 @@
                 groupChatsList.innerHTML = '';
                 
                 if (allGroups.length === 0) {
-                    groupChatsList.innerHTML = '<div class="loading">Nog geen groepen. Maak er een!</div>';
+                    groupChatsList.innerHTML = '<div class="loading">Nog geen groepen</div>';
                     return;
                 }
                 
@@ -1205,26 +1300,12 @@
                     li.dataset.chatId = group.id;
                     li.innerHTML = `
                         <span><i class="fas fa-users" style="margin-right: 10px;"></i> ${group.name}</span>
-                        <div class="user-options">
-                            <button class="options-btn" onclick="showGroupOptions('${group.id}')">⋯</button>
-                        </div>
                     `;
                     li.addEventListener('click', () => openGroupChat(group.id, group.name));
                     groupChatsList.appendChild(li);
                 });
             } catch (error) {
                 console.error('Fout bij laden groepen:', error);
-                groupChatsList.innerHTML = '<div class="error">Fout bij laden groepen</div>';
-            }
-        }
-
-        function showGroupOptions(groupId) {
-            const options = prompt('Groep opties:\n1. Verlaten\n2. Leden bekijken\n\nVoer nummer in:');
-            if (options === '1') {
-                if (confirm('Groep verlaten?')) {
-                    // Implement leave group logic
-                    alert('Verlaten functie komt later.');
-                }
             }
         }
 
@@ -1233,11 +1314,10 @@
                 privateChatsList.innerHTML = '';
                 
                 if (allUsers.length === 0) {
-                    privateChatsList.innerHTML = '<div class="loading">Nog geen privé chats</div>';
+                    privateChatsList.innerHTML = '<div class="loading">Nog geen gebruikers</div>';
                     return;
                 }
                 
-                // Toon alle gebruikers als potentiële chats
                 allUsers.forEach(user => {
                     const li = document.createElement('li');
                     li.className = 'user-item';
@@ -1263,10 +1343,12 @@
 
         sendBtn.addEventListener('click', sendMessage);
 
-        // Sidebar chat click
         recentChats.addEventListener('click', (e) => {
             const userItem = e.target.closest('.user-item');
             if (!userItem) return;
+            
+            document.querySelectorAll('.user-item').forEach(item => item.classList.remove('active'));
+            userItem.classList.add('active');
             
             if (userItem.dataset.chatId === 'global') {
                 openGlobalChat();
@@ -1305,7 +1387,6 @@
                 });
             } catch (error) {
                 console.error('Fout bij laden leden:', error);
-                groupMembersList.innerHTML = '<div class="error">Fout bij laden leden</div>';
             }
         }
 
@@ -1314,11 +1395,6 @@
             const groupName = document.getElementById('groupName').value.trim();
             const selectedMembers = Array.from(document.querySelectorAll('#groupMembersList input:checked'))
                 .map(input => input.value);
-            
-            if (!groupName) {
-                alert('Voer een groepsnaam in!');
-                return;
-            }
             
             if (selectedMembers.length === 0) {
                 alert('Selecteer minimaal 1 lid');
@@ -1330,20 +1406,16 @@
                     name: groupName,
                     createdBy: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    members: [currentUser.uid, ...selectedMembers],
-                    admin: currentUser.uid
+                    members: [currentUser.uid, ...selectedMembers]
                 });
                 
                 alert('Groep aangemaakt!');
                 newGroupModal.classList.remove('show');
                 document.getElementById('groupName').value = '';
-                document.querySelectorAll('#groupMembersList input:checked').forEach(input => input.checked = false);
                 
-                // Reload groups
                 await loadGroups();
                 loadGroupChats();
                 
-                // Open nieuwe groep
                 openGroupChat(groupRef.id, groupName);
             } catch (error) {
                 alert('Fout bij aanmaken groep: ' + error.message);
@@ -1355,9 +1427,7 @@
         
         // Make functions available globally
         window.showUserOptions = showUserOptions;
-        window.showGroupOptions = showGroupOptions;
         window.openPrivateChat = openPrivateChat;
-        window.openGroupChat = openGroupChat;
     </script>
 </body>
 </html>
